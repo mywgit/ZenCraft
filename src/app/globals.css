@@ -1,54 +1,112 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090a0f;
-  --foreground: #f8fafc;
+  --background: #0c0806;
+  --foreground: #fef3c7;
   --primary: #d97706;
-  --primary-foreground: #ffffff;
-  --card: #11141d;
-  --card-foreground: #f8fafc;
-  --border: #1e2433;
+  --primary-foreground: #0c0806;
+  --card: #18110b;
+  --card-foreground: #fef3c7;
+  --border: #2e1d12;
+  --cinnabar: #dc2626;
+  --gold: #f59e0b;
 }
 
 @theme {
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: "Songti SC", "SimSun", "Noto Serif SC", "Source Han Serif SC", STSong, ui-serif, Georgia, Cambria, serif;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+  background-image: 
+    radial-gradient(circle at 50% 15%, rgba(217, 119, 6, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(220, 38, 38, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(30, 20, 15, 0.6) 0%, transparent 70%);
+  background-attachment: fixed;
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Zen subtle woodgrain radial glow */
-.zen-radial-glow {
-  background: radial-gradient(circle at 50% 30%, rgba(217, 119, 6, 0.08) 0%, rgba(15, 23, 42, 0) 70%);
+/* Classical Chinese Rosewood & Silk Tray (红木雕花丝绸托盘) */
+.zen-silk-tray {
+  background: radial-gradient(circle at 50% 50%, #1e140d 0%, #130d08 100%);
+  border: 4px solid #382314;
+  box-shadow: 
+    inset 0 0 40px rgba(0, 0, 0, 0.85),
+    0 20px 50px -10px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(245, 158, 11, 0.2);
+  position: relative;
 }
 
+/* Chinese Brass Corner Inlay (中式铜包角) */
+.zen-corner-brass::before,
+.zen-corner-brass::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #d97706;
+  border-style: solid;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.zen-corner-brass::before {
+  top: 6px;
+  left: 6px;
+  border-width: 2px 0 0 2px;
+}
+
+.zen-corner-brass::after {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 2px 2px 0;
+}
+
+/* Multi-treasure Box Card (多宝阁红木卡片) */
 .zen-wood-card {
-  background: linear-gradient(145deg, rgba(26, 32, 46, 0.7) 0%, rgba(15, 20, 30, 0.85) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.15);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(160deg, rgba(30, 20, 14, 0.85) 0%, rgba(18, 12, 8, 0.95) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.22);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.7);
 }
 
 .zen-wood-card:hover {
-  border-color: rgba(245, 158, 11, 0.35);
-  box-shadow: 0 15px 35px -10px rgba(217, 119, 6, 0.15);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 16px 40px -10px rgba(217, 119, 6, 0.15);
 }
 
-/* Custom scrollbars */
+/* Red Cinnabar Seal Stamp (东方朱砂印章) */
+.zen-seal-stamp {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: 2px solid #ef4444;
+  font-family: var(--font-serif);
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+/* Subtle Parchment Rice Paper Texture */
+.zen-paper-bg {
+  background-color: rgba(24, 17, 11, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(217, 119, 6, 0.18);
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #0f0a07;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #28334a;
+  background: #382314;
   border-radius: 9999px;
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {

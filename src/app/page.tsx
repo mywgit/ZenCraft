@@ -7,16 +7,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import {
   Sparkles,
   TreePine,
-  ShieldCheck,
   Award,
   ChevronDown,
   ChevronUp,
   Star,
   Flame,
   CheckCircle,
-  Truck,
-  Heart,
-  ArrowRight,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -116,35 +112,35 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-5">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold tracking-wide">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold tracking-wide shadow-lg">
           <Sparkles className="w-3.5 h-3.5" />
           <span>{t("heroBadge")}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-serif text-amber-100 tracking-tight leading-tight">
           {t("heroTitle1")}
-          <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent italic px-2">
             {t("heroTitleHighlight")}
           </span>
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-400 max-w-3xl mx-auto font-serif leading-relaxed">
+        <p className="text-sm sm:text-base text-amber-200/70 max-w-3xl mx-auto font-serif leading-relaxed">
           {t("heroSubtitle")}
         </p>
 
         {/* Value Highlights */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs text-slate-300">
+        <div className="flex flex-wrap items-center justify-center gap-5 pt-2 text-xs font-serif text-amber-200/80">
           <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-emerald-400" />
-            <span>360° Real-Time Bead Canvas</span>
+            <CheckCircle className="w-4 h-4 text-amber-400" />
+            <span>{lang === "zh" ? "360° 环形可视化设计台" : "360° Real-Time Bead Canvas"}</span>
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle className="w-4 h-4 text-amber-400" />
-            <span>Patina Aging Simulator</span>
+            <span>{lang === "zh" ? "十年包浆时光机演化" : "Patina Aging Simulator"}</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-emerald-400" />
-            <span>7 Chakras & Zodiac Analysis</span>
+            <CheckCircle className="w-4 h-4 text-amber-400" />
+            <span>{lang === "zh" ? "七脉轮与生肖能量测评" : "7 Chakras & Zodiac Alignment"}</span>
           </span>
         </div>
       </section>
@@ -157,10 +153,10 @@ export default function HomePage() {
       {/* Sourcing & Heritage 3 Pillars Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
         <div className="text-center space-y-2 mb-10">
-          <span className="text-xs font-mono uppercase tracking-widest text-amber-400">
-            {lang === "zh" ? "东方匠心 · 大城老料" : "Sacred Provenance & Craft"}
+          <span className="text-xs font-serif uppercase tracking-widest text-amber-400 font-bold">
+            {lang === "zh" ? "✦ 东方匠心 · 大城老料 ✦" : "✦ Sacred Provenance & Craft ✦"}
           </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-white">
+          <h2 className="text-2xl sm:text-4xl font-bold font-serif text-amber-100">
             {lang === "zh" ? "为什么选择 ZenCraft 大城源头工坊？" : "Why Choose ZenCraft Sacred Ateliers?"}
           </h2>
         </div>
@@ -170,10 +166,10 @@ export default function HomePage() {
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <TreePine className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold font-serif text-amber-100">
               {lang === "zh" ? "100% 大城源头野生老料" : "100% Wild Sourced Old Stock"}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed font-serif">
+            <p className="text-xs text-amber-200/70 leading-relaxed font-serif">
               {lang === "zh"
                 ? "直采自中国红木之乡大城，严选陈化百年老木。高油密、高光泽、入水秒沉，绝不采用廉价速生木或化学药泡。"
                 : "Sourced directly from Dacheng's ancient imperial timber hub. Hand-selected century-aged timber with high oil density and zero chemical dyes."}
@@ -184,10 +180,10 @@ export default function HomePage() {
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Flame className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold font-serif text-amber-100">
               {lang === "zh" ? "包浆蜕变与天然木香" : "The Living Patina & Aroma"}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed font-serif">
+            <p className="text-xs text-amber-200/70 leading-relaxed font-serif">
               {lang === "zh"
                 ? "野生绿檀与崖柏天然散发纯净檀香，随每日把玩吸收油脂，在手中逐渐氧化为如羊脂白玉或琥珀般的温润镜面包浆。"
                 : "Verawood and cypress breathe natural aromatic essential oils. Daily meditation and wear deepens its color into a silky, jade-like heirloom."}
@@ -198,10 +194,10 @@ export default function HomePage() {
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold font-serif text-amber-100">
               {lang === "zh" ? "专属能量证书与礼盒" : "Certified Metaphysical Blessing"}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed font-serif">
+            <p className="text-xs text-amber-200/70 leading-relaxed font-serif">
               {lang === "zh"
                 ? "每条手串均附赠烫金能量证书，题写持有人姓名与七脉轮五行得分，盖上朱砂印鉴，装入实木礼盒直邮全球。"
                 : "Every custom mala arrives in a solid wooden gift box with a personalized, hand-stamped Certificate of Authenticity & Energy Blessing."}
@@ -218,44 +214,44 @@ export default function HomePage() {
               <Star key={i} className="w-4 h-4 fill-amber-400" />
             ))}
           </div>
-          <h2 className="text-xl sm:text-3xl font-black text-white">
+          <h2 className="text-xl sm:text-3xl font-bold font-serif text-amber-100">
             {lang === "zh" ? "全球修行者与文玩藏家的真实好评" : "Loved by Mindful Seekers Worldwide"}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
+          <div className="p-5 rounded-2xl bg-[#140b06]/90 border border-amber-900/40 space-y-3 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-xs font-bold text-slate-950">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-xs font-bold font-serif text-amber-100 border border-amber-500/40">
                   EW
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white">Emily Watson</p>
-                  <p className="text-[10px] text-slate-400">Yoga Instructor, California 🇺🇸</p>
+                  <p className="text-xs font-bold text-amber-100 font-serif">Emily Watson</p>
+                  <p className="text-[10px] text-amber-200/60 font-serif">Yoga Instructor, California 🇺🇸</p>
                 </div>
               </div>
-              <span className="text-xs text-amber-400">★★★★★</span>
+              <span className="text-xs text-amber-400 font-serif">★★★★★</span>
             </div>
-            <p className="text-xs text-slate-300 font-serif leading-relaxed">
+            <p className="text-xs text-amber-200/80 font-serif leading-relaxed italic">
               &ldquo;The customizer studio is hypnotic! I mixed Green Sandalwood with Turquoise for my Heart Chakra. When the box arrived, the natural sweet sandalwood scent filled the entire room. The printed certificate with my name made it feel like a sacred gift.&rdquo;
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
+          <div className="p-5 rounded-2xl bg-[#140b06]/90 border border-amber-900/40 space-y-3 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-700 flex items-center justify-center text-xs font-bold text-slate-950">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-700 to-amber-900 flex items-center justify-center text-xs font-bold font-serif text-amber-100 border border-red-500/40">
                   MK
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white">Marcus Klein</p>
-                  <p className="text-[10px] text-slate-400">Sound Healer, Berlin 🇩🇪</p>
+                  <p className="text-xs font-bold text-amber-100 font-serif">Marcus Klein</p>
+                  <p className="text-[10px] text-amber-200/60 font-serif">Sound Healer, Berlin 🇩🇪</p>
                 </div>
               </div>
-              <span className="text-xs text-amber-400">★★★★★</span>
+              <span className="text-xs text-amber-400 font-serif">★★★★★</span>
             </div>
-            <p className="text-xs text-slate-300 font-serif leading-relaxed">
+            <p className="text-xs text-amber-200/80 font-serif leading-relaxed italic">
               &ldquo;The Patina slider was so accurate. After 2 months of daily mantra counting, my Ebony beads have developed a rich mirror shine just like the 1-year simulation. Unmatched density and authentic wild timber.&rdquo;
             </p>
           </div>
@@ -264,7 +260,7 @@ export default function HomePage() {
 
       {/* FAQ Accordion */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-10 space-y-4">
-        <h2 className="text-xl sm:text-2xl font-black text-white text-center mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold font-serif text-amber-100 text-center mb-6">
           {lang === "zh" ? "常见问题答疑 (FAQ)" : "Frequently Asked Questions"}
         </h2>
 
@@ -274,23 +270,23 @@ export default function HomePage() {
             return (
               <div
                 key={index}
-                className="rounded-2xl bg-slate-900/60 border border-slate-800 overflow-hidden transition-colors"
+                className="rounded-2xl bg-[#140b06]/90 border border-amber-900/40 overflow-hidden transition-colors"
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : index)}
                   className="w-full p-4 text-left flex items-center justify-between gap-4"
                 >
-                  <span className="text-xs sm:text-sm font-bold text-slate-200">
+                  <span className="text-xs sm:text-sm font-bold font-serif text-amber-100">
                     {faq.q}
                   </span>
                   {isOpen ? (
                     <ChevronUp className="w-4 h-4 text-amber-400 flex-shrink-0" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-amber-200/50 flex-shrink-0" />
                   )}
                 </button>
                 {isOpen && (
-                  <div className="px-4 pb-4 text-xs text-slate-400 leading-relaxed font-serif border-t border-slate-800/60 pt-3">
+                  <div className="px-4 pb-4 text-xs text-amber-200/70 leading-relaxed font-serif border-t border-amber-950/60 pt-3">
                     {faq.a}
                   </div>
                 )}

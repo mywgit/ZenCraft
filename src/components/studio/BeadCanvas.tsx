@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { getMaterialById } from "@/lib/materialsData";
 import { drawRealisticBead, preloadBeadImages } from "@/lib/beadTextureRenderer";
-import { Trash2, RotateCw, Sparkles, RefreshCw } from "lucide-react";
+import { Trash2, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function BeadCanvas() {
@@ -49,11 +49,25 @@ export function BeadCanvas() {
     const centerY = height / 2;
     const count = beads.length;
 
+    // 1. Draw Traditional Silk Tray Watermark (莲花暗纹)
+    ctx.save();
+    ctx.strokeStyle = "rgba(217, 119, 6, 0.08)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 75, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(217, 119, 6, 0.04)";
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 160, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
     if (count === 0) {
-      // Empty state
-      ctx.strokeStyle = "rgba(245, 158, 11, 0.25)";
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([8, 8]);
+      // Empty state dashed guide
+      ctx.strokeStyle = "rgba(217, 119, 6, 0.25)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
       ctx.beginPath();
       ctx.arc(centerX, centerY, 140, 0, Math.PI * 2);
       ctx.stroke();
@@ -64,22 +78,22 @@ export function BeadCanvas() {
     // Radius of circular string (dynamic based on bead count)
     const baseRadius = Math.max(115, Math.min(155, 90 + count * 3.4));
 
-    // 1. Draw elastic braided silk string connecting beads
+    // 2. Draw braided silk string connecting beads (天然丝线)
     ctx.save();
-    ctx.strokeStyle = "rgba(180, 83, 9, 0.4)";
+    ctx.strokeStyle = "rgba(180, 83, 9, 0.5)";
     ctx.lineWidth = 3.5;
     ctx.beginPath();
     ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
-    // 2. Draw each bead along circle with realistic textures
+    // 3. Draw each bead along circle with realistic textures
     beads.forEach((bead, i) => {
       const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
       const x = centerX + Math.cos(angle) * baseRadius;
       const y = centerY + Math.sin(angle) * baseRadius;
 
-      // Bead radius on canvas (proportional to sizeMm)
+      // Bead radius on canvas
       const beadRadius = Math.max(11, Math.min(25, bead.sizeMm * 1.45));
       const isSelected = activeBeadIndex === i;
 
@@ -126,18 +140,15 @@ export function BeadCanvas() {
   const activeMaterial = activeBead ? getMaterialById(activeBead.materialId) : null;
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 bg-slate-950/90 rounded-3xl border border-amber-500/25 shadow-2xl overflow-hidden">
-      {/* Background Zen Glow */}
-      <div className="absolute inset-0 zen-radial-glow pointer-events-none" />
-
+    <div className="zen-silk-tray zen-corner-brass rounded-3xl p-5 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden">
       {/* Top Toolbar */}
       <div className="w-full flex items-center justify-between z-10 mb-2 px-2">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/35 text-amber-300 text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-bold font-serif">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span>{energyResult.totalBeads} {t("totalBeads")}</span>
           </span>
-          <span className="text-xs text-slate-300 font-mono">
+          <span className="text-xs text-amber-200/70 font-serif">
             {energyResult.totalLengthCm}cm ({energyResult.recommendedWristCm}cm {t("wristSize")})
           </span>
         </div>
@@ -146,7 +157,7 @@ export function BeadCanvas() {
           {activeBeadIndex !== null && (
             <button
               onClick={() => removeBead(activeBeadIndex)}
-              className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/25 text-red-400 hover:text-red-300 border border-red-500/30 text-xs font-semibold transition-all"
+              className="p-2 rounded-xl bg-red-950/80 hover:bg-red-900/90 text-red-300 border border-red-500/40 text-xs font-semibold transition-all shadow-md"
               title="Remove selected bead"
             >
               <Trash2 className="w-4 h-4" />
@@ -154,9 +165,9 @@ export function BeadCanvas() {
           )}
           <button
             onClick={clearBeads}
-            className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs font-semibold transition-all"
+            className="px-3 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/70 text-amber-300/80 hover:text-amber-200 border border-amber-900/60 text-xs font-serif transition-all"
           >
-            Clear
+            {lang === "zh" ? "重置" : "Clear"}
           </button>
         </div>
       </div>
@@ -169,33 +180,33 @@ export function BeadCanvas() {
           className="rounded-full transition-transform duration-300 hover:scale-[1.01]"
         />
 
-        {/* Center Canvas Hub Status */}
+        {/* Center Canvas Hub Status (东方印章宣纸风格) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4">
           {activeMaterial ? (
-            <div className="space-y-1 bg-slate-950/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-amber-500/40 shadow-2xl max-w-[220px]">
-              <p className="text-xs font-bold text-amber-300 truncate">
+            <div className="space-y-1.5 bg-[#1a110a]/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-amber-500/40 shadow-2xl max-w-[220px]">
+              <p className="text-xs font-bold text-amber-300 font-serif truncate">
                 {lang === "zh" ? activeMaterial.nameZh : activeMaterial.name}
               </p>
-              <p className="text-[11px] text-slate-300 font-mono">
+              <p className="text-[11px] text-amber-100/70 font-mono">
                 {activeBead?.sizeMm}mm • ${activeMaterial.basePrice}
               </p>
               {activeMaterial.aromaNote && (
-                <p className="text-[10px] text-amber-200/90 italic line-clamp-1">
+                <p className="text-[10px] text-amber-200/90 italic font-serif line-clamp-1">
                   🌿 {lang === "zh" ? activeMaterial.aromaNoteZh : activeMaterial.aromaNote}
                 </p>
               )}
             </div>
           ) : (
-            <div className="text-slate-500 text-xs font-serif">
-              Click beads to select & customize
+            <div className="text-amber-300/40 text-xs font-serif">
+              {lang === "zh" ? "点击串珠即可选中搭配" : "Click beads to select & customize"}
             </div>
           )}
         </div>
       </div>
 
       {/* Canvas Bottom Quick Tip */}
-      <p className="text-[11px] text-slate-400 mt-2 text-center">
-        💡 {lang === "zh" ? "点击任意珠子即可选中进行替换或删除，拖拽下方滑块查看包浆光泽蜕变。" : "Click any bead along the ring to select, replace, or customize with raw timber & crystals."}
+      <p className="text-[11px] text-amber-200/60 mt-3 text-center font-serif">
+        🪵 {lang === "zh" ? "点击任意珠子即可选中替换；拖动下方滑块预览十年包浆温润蜕变。" : "Click any bead to replace; slide below to preview 10-year patina evolution."}
       </p>
     </div>
   );
