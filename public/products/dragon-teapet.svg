@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="bgTray" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1f1812" />
+      <stop offset="70%" stop-color="#110c08" />
+      <stop offset="100%" stop-color="#050302" />
+    </radialGradient>
+    <linearGradient id="dragonWood" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a9b388" />
+      <stop offset="30%" stop-color="#5f6f52" />
+      <stop offset="70%" stop-color="#314426" />
+      <stop offset="100%" stop-color="#1a2514" />
+    </linearGradient>
+    <radialGradient id="flamePearl" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </radialGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgTray)" />
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#d97706" stroke-opacity="0.2" stroke-width="2" />
+
+  <!-- Gongfu Tea Table Base Shadow -->
+  <ellipse cx="200" cy="285" rx="140" ry="40" fill="#000000" opacity="0.8" filter="blur(12px)" />
+
+  <!-- Carved Dragon Body & Horns (绿檀精雕祥龙) -->
+  <g transform="translate(190, 180)">
+    <!-- Dragon Coiled Body -->
+    <path d="M -110 50 C -120 -40 -30 -90 40 -80 C 110 -70 120 10 70 60 C 20 100 -60 100 -110 50 Z" fill="url(#dragonWood)" stroke="#1a2514" stroke-width="3" />
+    
+    <!-- Dragon Head -->
+    <path d="M 40 -80 C 70 -130 130 -110 140 -60 C 150 -30 120 0 80 -20 Z" fill="url(#dragonWood)" stroke="#1a2514" stroke-width="3" />
+    
+    <!-- Dragon Antlers / Horns (鹿角) -->
+    <path d="M 90 -105 Q 110 -145 135 -140" stroke="#fef08a" stroke-width="4" stroke-linecap="round" fill="none" />
+    <path d="M 110 -125 Q 130 -135 140 -120" stroke="#fef08a" stroke-width="3" stroke-linecap="round" fill="none" />
+
+    <!-- Dragon Whiskers & Claws (龙须与龙爪) -->
+    <path d="M 130 -50 Q 170 -40 180 -10" stroke="#fef08a" stroke-width="2.5" fill="none" />
+    <path d="M 125 -40 Q 160 -20 165 15" stroke="#fef08a" stroke-width="2.5" fill="none" />
+
+    <!-- Dragon Scale Texture (龙鳞雕刻暗纹) -->
+    <path d="M -60 20 Q -45 5 -30 20" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.6" />
+    <path d="M -30 30 Q -15 15 0 30" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.6" />
+    <path d="M 0 40 Q 15 25 30 40" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.6" />
+    <path d="M -70 -10 Q -55 -25 -40 -10" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.6" />
+    <path d="M -30 -20 Q -15 -35 0 -20" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.6" />
+
+    <!-- Flaming Dragon Pearl (龙珠) -->
+    <circle cx="135" cy="40" r="24" fill="url(#flamePearl)" stroke="#fef08a" stroke-width="2" />
+    <ellipse cx="128" cy="32" rx="8" ry="5" fill="#ffffff" opacity="0.8" />
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="bgAmulet" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1f1812" />
+      <stop offset="70%" stop-color="#100b07" />
+      <stop offset="100%" stop-color="#050302" />
+    </radialGradient>
+    <radialGradient id="peachWood" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fde68a" />
+      <stop offset="30%" stop-color="#d97706" />
+      <stop offset="70%" stop-color="#92400e" />
+      <stop offset="100%" stop-color="#451a03" />
+    </radialGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgAmulet)" />
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#d97706" stroke-opacity="0.2" stroke-width="2" />
+
+  <ellipse cx="200" cy="290" rx="100" ry="30" fill="#000000" opacity="0.8" filter="blur(10px)" />
+
+  <g transform="translate(200, 195)">
+    <!-- Red Silk Hanging Cord (手工朱砂红绳) -->
+    <path d="M 0 -130 L 0 -85" stroke="#dc2626" stroke-width="4" stroke-linecap="round" />
+    <circle cx="0" cy="-85" r="5" fill="#f59e0b" />
+
+    <!-- Rectangular Wooden Plaque with Rounded Corners (护身方牌) -->
+    <rect x="-65" y="-80" width="130" height="170" rx="16" fill="url(#peachWood)" stroke="#78350f" stroke-width="3" />
+
+    <!-- Daoist Bagua Yin-Yang Center (乾坤八卦微雕) -->
+    <circle cx="0" cy="-5" r="38" fill="none" stroke="#451a03" stroke-width="3" />
+    <path d="M 0 -43 L 0 33" stroke="#451a03" stroke-width="2" />
+    <text x="0" y="5" font-family="serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#451a03">道</text>
+    
+    <!-- Blessings Carved Inscriptions (平安吉庆) -->
+    <text x="0" y="55" font-family="serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#78350f">出入平安 · 诸邪回避</text>
+
+    <!-- Bottom Red Silk Tassel -->
+    <path d="M 0 90 L 0 135" stroke="#dc2626" stroke-width="4" stroke-linecap="round" />
+    <circle cx="0" cy="135" r="5" fill="#f59e0b" />
+    <path d="M 0 140 Q -8 165 -10 185" stroke="#dc2626" stroke-width="2.5" fill="none" />
+    <path d="M 0 140 Q 0 165 0 185" stroke="#dc2626" stroke-width="2.5" fill="none" />
+    <path d="M 0 140 Q 8 165 10 185" stroke="#dc2626" stroke-width="2.5" fill="none" />
+  </g>
+</svg>

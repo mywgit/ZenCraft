@@ -19,6 +19,17 @@ export function BeadCanvas() {
   } = useStudio();
   const { lang, t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [renderTick, setRenderTick] = React.useState(0);
+
+  // Re-draw when textures finish hydrating
+  useEffect(() => {
+    const t1 = setTimeout(() => setRenderTick((n) => n + 1), 60);
+    const t2 = setTimeout(() => setRenderTick((n) => n + 1), 200);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
 
   // Render Bracelet on 360 degree circle
   useEffect(() => {
@@ -94,7 +105,7 @@ export function BeadCanvas() {
 
       drawRealisticBead(ctx, bead, x, y, beadRadius, patinaLevel, angle, isSelected);
     });
-  }, [beads, activeBeadIndex, patinaLevel]);
+  }, [beads, activeBeadIndex, patinaLevel, renderTick]);
 
   // Click on Canvas to Select Bead
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {

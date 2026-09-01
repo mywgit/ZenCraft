@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="bgFidget" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1f1812" />
+      <stop offset="70%" stop-color="#100b07" />
+      <stop offset="100%" stop-color="#050302" />
+    </radialGradient>
+    <linearGradient id="cypressWood" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa" />
+      <stop offset="25%" stop-color="#d97706" />
+      <stop offset="60%" stop-color="#9a3412" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgFidget)" />
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#d97706" stroke-opacity="0.2" stroke-width="2" />
+
+  <ellipse cx="200" cy="285" rx="120" ry="35" fill="#000000" opacity="0.85" filter="blur(12px)" />
+
+  <!-- Ergonomic Handheld Roller Shape (随身手捻把件) -->
+  <g transform="translate(200, 190) rotate(-25)">
+    <path d="M -80 -35 C -90 -10 -90 10 -80 35 C -40 50 40 50 80 35 C 90 10 90 -10 80 -35 C 40 -50 -40 -50 -80 -35 Z" fill="url(#cypressWood)" stroke="#451a03" stroke-width="2.5" />
+    
+    <!-- Bird-Eye Knots (满雀眼) -->
+    <circle cx="-50" cy="-10" r="5" fill="#290d02" stroke="#b45309" stroke-width="2.5" />
+    <circle cx="-20" cy="15" r="4.5" fill="#290d02" stroke="#b45309" stroke-width="2.2" />
+    <circle cx="15" cy="-15" r="5.5" fill="#290d02" stroke="#b45309" stroke-width="2.5" />
+    <circle cx="45" cy="10" r="4" fill="#290d02" stroke="#b45309" stroke-width="2" />
+    <circle cx="65" cy="-10" r="4.5" fill="#290d02" stroke="#b45309" stroke-width="2" />
+    <circle cx="-30" cy="-25" r="3.5" fill="#290d02" stroke="#b45309" stroke-width="1.8" />
+    <circle cx="0" cy="20" r="4" fill="#290d02" stroke="#b45309" stroke-width="2" />
+
+    <!-- Gloss Specular Highlight -->
+    <ellipse cx="-20" cy="-25" rx="45" ry="10" fill="#ffffff" opacity="0.5" />
+  </g>
+</svg>
