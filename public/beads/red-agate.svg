@@ -1,30 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
+    <radialGradient id="specularGlow" cx="30%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="bounceGlow" cx="75%" cy="75%" r="45%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="beadClip">
+      <circle cx="100" cy="100" r="100" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#beadClip)">
+    
+  <defs>
     <radialGradient id="agateGrad" cx="35%" cy="35%" r="65%">
       <stop offset="0%" stop-color="#fca5a5" />
       <stop offset="25%" stop-color="#dc2626" />
       <stop offset="65%" stop-color="#991b1b" />
       <stop offset="100%" stop-color="#450a0a" />
     </radialGradient>
-    <radialGradient id="innerJellyFlame" cx="50%" cy="50%" r="50%">
+    <radialGradient id="innerJelly" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#f87171" stop-opacity="0.6" />
       <stop offset="100%" stop-color="#7f1d1d" stop-opacity="0" />
     </radialGradient>
-    <radialGradient id="specularGlow" cx="30%" cy="30%" r="35%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-    </radialGradient>
-    <clipPath id="circleClip">
-      <circle cx="100" cy="100" r="95" />
-    </clipPath>
   </defs>
-  <circle cx="104" cy="105" r="93" fill="#000000" opacity="0.6" />
-  <g clip-path="url(#circleClip)">
-    <rect width="200" height="200" fill="url(#agateGrad)" />
-    <!-- Translucent Jelly Glow -->
-    <circle cx="90" cy="90" r="60" fill="url(#innerJellyFlame)" />
-    <path d="M 40 70 Q 110 85 160 55" stroke="#7f1d1d" stroke-width="2.5" fill="none" opacity="0.5" />
+  <rect width="200" height="200" fill="url(#agateGrad)" />
+  <circle cx="95" cy="95" r="65" fill="url(#innerJelly)" />
+  <path d="M 35 65 Q 110 85 165 50" stroke="#7f1d1d" stroke-width="3" fill="none" opacity="0.5" />
+
+    <!-- Ambient Silk Reflection -->
+    <rect width="200" height="200" fill="url(#bounceGlow)" />
+    <!-- 3D Specular Highlight -->
     <ellipse cx="65" cy="65" rx="35" ry="25" transform="rotate(-30 65 65)" fill="url(#specularGlow)" />
   </g>
-  <ellipse cx="100" cy="12" rx="10" ry="5" fill="#2d0505" />
+
+  <!-- Central Thread Hole & Bevel -->
+  <ellipse cx="100" cy="12" rx="12" ry="6" fill="#2d0505" />
 </svg>

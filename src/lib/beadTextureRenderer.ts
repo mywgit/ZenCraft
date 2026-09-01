@@ -6,9 +6,9 @@ const beadImageCache: Record<string, HTMLImageElement> = {};
 if (typeof window !== "undefined") {
   // Eagerly preload all bead assets
   const beadAssetMap: Record<string, string> = {
-    "green-sandalwood": "/beads/green-sandalwood.jpg",
-    "gold-phoebe": "/beads/gold-phoebe.jpg",
-    "ebony-wood": "/beads/ebony-wood.jpg",
+    "green-sandalwood": "/beads/green-sandalwood.svg",
+    "gold-phoebe": "/beads/gold-phoebe.svg",
+    "ebony-wood": "/beads/ebony-wood.svg",
     "rosewood": "/beads/rosewood.svg",
     "thuja-cypress": "/beads/thuja-cypress.svg",
     "peach-wood": "/beads/peach-wood.svg",

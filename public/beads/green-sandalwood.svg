@@ -17,21 +17,20 @@
   <g clip-path="url(#beadClip)">
     
   <defs>
-    <radialGradient id="lapisGrad" cx="35%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#93c5fd" />
-      <stop offset="25%" stop-color="#1d4ed8" />
-      <stop offset="65%" stop-color="#1e3a8a" />
-      <stop offset="100%" stop-color="#0f172a" />
+    <radialGradient id="greenSandalGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#a9b388" />
+      <stop offset="30%" stop-color="#5f6f52" />
+      <stop offset="70%" stop-color="#283618" />
+      <stop offset="100%" stop-color="#141d0b" />
     </radialGradient>
   </defs>
-  <rect width="200" height="200" fill="url(#lapisGrad)" />
-  <circle cx="55" cy="85" r="2.2" fill="#fde047" />
-  <circle cx="85" cy="130" r="1.8" fill="#fef08a" />
-  <circle cx="135" cy="115" r="2.5" fill="#fde047" />
-  <circle cx="150" cy="70" r="2" fill="#fef08a" />
-  <circle cx="105" cy="60" r="2.8" fill="#fde047" />
-  <circle cx="45" cy="140" r="1.5" fill="#fef08a" />
-  <circle cx="165" cy="130" r="1.8" fill="#fde047" />
+  <rect width="200" height="200" fill="url(#greenSandalGrad)" />
+  <circle cx="100" cy="100" r="30" fill="none" stroke="#283618" stroke-width="2" opacity="0.6" />
+  <circle cx="100" cy="100" r="55" fill="none" stroke="#283618" stroke-width="2.5" opacity="0.55" />
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#283618" stroke-width="3" opacity="0.5" />
+  <path d="M 20 60 Q 100 85 180 55" stroke="#a9b388" stroke-width="2" fill="none" opacity="0.4" />
+  <path d="M 30 110 Q 110 135 170 105" stroke="#a9b388" stroke-width="2.5" fill="none" opacity="0.45" />
+  <path d="M 40 150 Q 100 170 160 145" stroke="#a9b388" stroke-width="1.8" fill="none" opacity="0.35" />
 
     <!-- Ambient Silk Reflection -->
     <rect width="200" height="200" fill="url(#bounceGlow)" />
@@ -40,5 +39,5 @@
   </g>
 
   <!-- Central Thread Hole & Bevel -->
-  <ellipse cx="100" cy="12" rx="12" ry="6" fill="#080e1a" />
+  <ellipse cx="100" cy="12" rx="12" ry="6" fill="#141d0b" />
 </svg>

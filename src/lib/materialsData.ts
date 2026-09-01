@@ -56,7 +56,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Known as the Holy Wood. Naturally fragrant, develops an enchanting jade-green patina with sunlight and wear.",
     descriptionZh: "被誉为圣木。自带天然清幽檀香，随日照与佩戴逐渐蜕变为碧玉般的青翠包浆，安神定气。",
     origin: "Dacheng Certified Wild Stock",
-    image: "/beads/green-sandalwood.jpg",
+    image: "/beads/green-sandalwood.svg",
     colors: {
       base: "#5f6f52",
       highlight: "#a9b388",
@@ -82,7 +82,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Imperial Palace wood reserved for royalty. Radiates shimmering golden threads under sunlight with delicate orchid fragrance.",
     descriptionZh: "明清皇室御用帝王木。在阳光下折射流动的天然金丝水波纹，散发幽雅淡竹幽兰香气。",
     origin: "Ancient Root Stock Extraction",
-    image: "/beads/gold-phoebe.jpg",
+    image: "/beads/gold-phoebe.svg",
     colors: {
       base: "#b4843b",
       highlight: "#fde047",
@@ -108,7 +108,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Dense, sinking dark wood that polishes to a piano-lacquer mirror finish. Ultimate grounding and shield against negative energy.",
     descriptionZh: "密度极高秒沉水，抛光后呈现如钢琴烤漆般的深邃镜面光泽。提供强大的定力与避煞护佑。",
     origin: "Dacheng Premium Selection",
-    image: "/beads/ebony-wood.jpg",
+    image: "/beads/ebony-wood.svg",
     colors: {
       base: "#1c1917",
       highlight: "#57534e",

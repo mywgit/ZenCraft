@@ -17,22 +17,23 @@
   <g clip-path="url(#beadClip)">
     
   <defs>
-    <radialGradient id="tigerGrad" cx="35%" cy="35%" r="65%">
+    <radialGradient id="phoebeGrad" cx="35%" cy="35%" r="65%">
       <stop offset="0%" stop-color="#fef08a" />
       <stop offset="30%" stop-color="#ca8a04" />
-      <stop offset="70%" stop-color="#713f12" />
-      <stop offset="100%" stop-color="#291404" />
+      <stop offset="70%" stop-color="#784b16" />
+      <stop offset="100%" stop-color="#3d2305" />
     </radialGradient>
-    <linearGradient id="catEyeBand" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#713f12" stop-opacity="0" />
-      <stop offset="40%" stop-color="#ca8a04" stop-opacity="0.6" />
-      <stop offset="50%" stop-color="#fef9c3" stop-opacity="0.95" />
-      <stop offset="60%" stop-color="#ca8a04" stop-opacity="0.6" />
-      <stop offset="100%" stop-color="#713f12" stop-opacity="0" />
+    <linearGradient id="waveFiber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#fde047" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0.1" />
     </linearGradient>
   </defs>
-  <rect width="200" height="200" fill="url(#tigerGrad)" />
-  <rect width="200" height="200" fill="url(#catEyeBand)" />
+  <rect width="200" height="200" fill="url(#phoebeGrad)" />
+  <path d="M 10 50 Q 70 80 130 40 T 190 60" stroke="url(#waveFiber)" stroke-width="4.5" fill="none" />
+  <path d="M 15 85 Q 75 115 135 75 T 185 95" stroke="url(#waveFiber)" stroke-width="5" fill="none" />
+  <path d="M 20 120 Q 80 150 140 110 T 180 130" stroke="url(#waveFiber)" stroke-width="4.5" fill="none" />
+  <path d="M 35 155 Q 85 180 145 145 T 165 165" stroke="url(#waveFiber)" stroke-width="3.5" fill="none" />
 
     <!-- Ambient Silk Reflection -->
     <rect width="200" height="200" fill="url(#bounceGlow)" />
@@ -41,5 +42,5 @@
   </g>
 
   <!-- Central Thread Hole & Bevel -->
-  <ellipse cx="100" cy="12" rx="12" ry="6" fill="#1c0b02" />
+  <ellipse cx="100" cy="12" rx="12" ry="6" fill="#291502" />
 </svg>
