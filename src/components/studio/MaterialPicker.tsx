@@ -7,11 +7,10 @@ import {
   HEALING_CRYSTALS,
   SACRED_SPACERS,
   BEAD_SIZES,
-  MaterialCategory,
   BeadMaterial,
 } from "@/lib/materialsData";
 import { useLanguage } from "@/context/LanguageContext";
-import { TreePine, Sparkles, Gem, Shield, Plus, RefreshCw, Wand2 } from "lucide-react";
+import { TreePine, Sparkles, Gem, Plus, Wand2 } from "lucide-react";
 
 export function MaterialPicker() {
   const {
@@ -21,7 +20,6 @@ export function MaterialPicker() {
     setSelectedSizeMm,
     activeBeadIndex,
     addBead,
-    replaceBead,
     loadPreset,
   } = useStudio();
   const { lang, t } = useLanguage();
@@ -36,16 +34,17 @@ export function MaterialPicker() {
   const currentSizeObj = BEAD_SIZES.find((s) => s.mm === selectedSizeMm) || BEAD_SIZES[1];
 
   const handleMaterialClick = (materialId: string) => {
-    if (activeBeadIndex !== null) {
-      // Option: replace active bead or add new
-      addBead(materialId, selectedSizeMm);
-    } else {
-      addBead(materialId, selectedSizeMm);
-    }
+    addBead(materialId, selectedSizeMm);
+  };
+
+  const photoThumbnails: Record<string, string> = {
+    "green-sandalwood": "/beads/green-sandalwood.jpg",
+    "gold-phoebe": "/beads/gold-phoebe.jpg",
+    "ebony-wood": "/beads/ebony-wood.jpg",
   };
 
   return (
-    <div className="w-full bg-slate-900/60 backdrop-blur-md rounded-2xl border border-amber-500/20 p-4 sm:p-5 space-y-5">
+    <div className="w-full bg-slate-900/70 backdrop-blur-md rounded-2xl border border-amber-500/20 p-4 sm:p-5 space-y-5">
       {/* Top Presets Row */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
         <div className="flex items-center gap-1.5 text-xs text-amber-300 font-semibold">
@@ -88,7 +87,7 @@ export function MaterialPicker() {
             onClick={() => setSelectedCategory("wood")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               selectedCategory === "wood"
-                ? "bg-amber-500 text-slate-950 shadow-md"
+                ? "bg-amber-500 text-slate-950 shadow-md font-bold"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -99,7 +98,7 @@ export function MaterialPicker() {
             onClick={() => setSelectedCategory("gem")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               selectedCategory === "gem"
-                ? "bg-amber-500 text-slate-950 shadow-md"
+                ? "bg-amber-500 text-slate-950 shadow-md font-bold"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -110,7 +109,7 @@ export function MaterialPicker() {
             onClick={() => setSelectedCategory("spacer")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               selectedCategory === "spacer"
-                ? "bg-amber-500 text-slate-950 shadow-md"
+                ? "bg-amber-500 text-slate-950 shadow-md font-bold"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -141,23 +140,38 @@ export function MaterialPicker() {
       </div>
 
       {/* Materials Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
         {currentList.map((item) => {
           const itemPrice = (item.basePrice * currentSizeObj.multiplier).toFixed(2);
+          const hasPhoto = photoThumbnails[item.id];
+
           return (
             <div
               key={item.id}
               onClick={() => handleMaterialClick(item.id)}
-              className="group relative p-3 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/40 cursor-pointer transition-all duration-200 flex flex-col justify-between"
+              className="group relative p-3 rounded-xl bg-slate-950/85 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/40 cursor-pointer transition-all duration-200 flex flex-col justify-between"
             >
               {/* Top Bead Preview & Origin Badge */}
               <div className="flex items-start justify-between gap-2 mb-2">
-                <div
-                  className="w-8 h-8 rounded-full shadow-lg border border-white/20 flex-shrink-0 group-hover:scale-110 transition-transform"
-                  style={{
-                    background: `radial-gradient(circle at 30% 30%, ${item.colors.highlight} 0%, ${item.colors.base} 60%, ${item.colors.shadow} 100%)`,
-                  }}
-                />
+                {hasPhoto ? (
+                  <div className="w-10 h-10 rounded-full overflow-hidden shadow-lg border border-white/20 flex-shrink-0 group-hover:scale-110 transition-transform bg-black">
+                    <img
+                      src={hasPhoto}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="w-10 h-10 rounded-full shadow-lg border border-white/20 flex-shrink-0 group-hover:scale-110 transition-transform relative overflow-hidden"
+                    style={{
+                      background: `radial-gradient(circle at 32% 32%, ${item.colors.highlight} 0%, ${item.colors.base} 60%, ${item.colors.shadow} 100%)`,
+                    }}
+                  >
+                    {/* Gloss Reflection Flare */}
+                    <div className="absolute top-1 left-1.5 w-3.5 h-2 rounded-full bg-white/40 rotate-[-30deg]" />
+                  </div>
+                )}
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 line-clamp-1">
                   {item.origin}
                 </span>
@@ -175,10 +189,10 @@ export function MaterialPicker() {
 
               {/* Price & Action */}
               <div className="flex items-center justify-between pt-2 mt-2 border-t border-slate-900">
-                <span className="text-xs font-bold text-amber-400">
+                <span className="text-xs font-bold text-amber-400 font-mono">
                   ${itemPrice}
                 </span>
-                <span className="inline-flex items-center gap-1 text-[10px] text-amber-400/80 group-hover:text-amber-300 font-semibold">
+                <span className="inline-flex items-center gap-1 text-[10px] text-amber-400/90 group-hover:text-amber-300 font-bold">
                   <Plus className="w-3 h-3" />
                   {lang === "zh" ? "添加" : "Add"}
                 </span>
