@@ -61,6 +61,16 @@ export function Header() {
             ✨ {t("navStudio")}
           </Link>
           <Link
+            href="/market"
+            className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
+              pathname === "/market"
+                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow"
+                : "text-amber-200/70 hover:text-amber-100 hover:bg-amber-950/50"
+            }`}
+          >
+            🏛️ {lang === "zh" ? "现成集市" : "Market"}
+          </Link>
+          <Link
             href="/about"
             className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
               pathname === "/about"
@@ -143,6 +153,13 @@ export function Header() {
             className="block px-3 py-2 rounded-xl text-xs font-serif font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30"
           >
             ✨ {t("navStudio")}
+          </Link>
+          <Link
+            href="/market"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-xs font-serif font-bold text-amber-200 hover:bg-amber-950/60"
+          >
+            🏛️ {lang === "zh" ? "现成集市" : "Market"}
           </Link>
           <Link
             href="/about"

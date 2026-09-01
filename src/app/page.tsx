@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { StudioWorkspace } from "@/components/studio/StudioWorkspace";
+import { READY_PRODUCTS } from "@/lib/readyProductsData";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Sparkles,
@@ -13,11 +14,17 @@ import {
   Star,
   Flame,
   CheckCircle,
+  ArrowRight,
+  Gem,
+  ShoppingBag,
 } from "lucide-react";
 
 export default function HomePage() {
   const { lang, t } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const masterpieceProducts = READY_PRODUCTS.slice(0, 3);
+  const galleryProducts = READY_PRODUCTS.slice(3, 7);
 
   const faqs = [
     {
@@ -62,95 +69,199 @@ export default function HomePage() {
     },
   ];
 
-  // Schema.org WebApplication + FAQPage
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Product",
-        name: "ZenCraft Custom Handcrafted Energy Mala Bracelet",
-        image: "https://zen.puretoolhub.com/icon.svg",
-        description:
-          "Customizable Zen mala prayer beads and energy bracelets made from authentic wild timber and healing crystals.",
-        brand: {
-          "@type": "Brand",
-          name: "ZenCraft Atelier",
-        },
-        offers: {
-          "@type": "Offer",
-          price: "88.00",
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
-        },
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: "4.95",
-          reviewCount: "842",
-        },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: faqs.map((f) => ({
-          "@type": "Question",
-          name: f.q,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: f.a,
-          },
-        })),
-      },
-    ],
-  };
-
   return (
-    <div className="space-y-16 py-8">
-      {/* Schema Script */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <div className="space-y-16 py-6 sm:py-10">
+      {/* 1. Top Hero Discovery Banner (禅 · 盘个手串) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="relative rounded-3xl overflow-hidden border border-amber-900/50 shadow-2xl bg-gradient-to-b from-[#23150d] to-[#120a06] p-6 sm:p-12 text-center space-y-6">
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute inset-0 bg-radial-gradient from-amber-500/10 via-transparent to-transparent pointer-events-none" />
 
-      {/* Hero Section */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-5">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold tracking-wide shadow-lg">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>{t("heroBadge")}</span>
-        </div>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-serif font-bold tracking-wide shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-red-400 animate-ping" />
+            <span>{lang === "zh" ? "禅 · 盘个手串 · 东方造物" : "✦ The Zen Mala & Timber Atelier ✦"}</span>
+          </div>
 
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-serif text-amber-100 tracking-tight leading-tight">
-          {t("heroTitle1")}
-          <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent italic px-2">
-            {t("heroTitleHighlight")}
-          </span>
-        </h1>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-serif text-amber-100 tracking-tight leading-tight max-w-4xl mx-auto">
+            {t("heroTitle1")}
+            <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent italic px-2">
+              {t("heroTitleHighlight")}
+            </span>
+          </h1>
 
-        <p className="text-sm sm:text-base text-amber-200/70 max-w-3xl mx-auto font-serif leading-relaxed">
-          {t("heroSubtitle")}
-        </p>
+          <p className="text-xs sm:text-base text-amber-200/70 max-w-2xl mx-auto font-serif leading-relaxed">
+            {t("heroSubtitle")}
+          </p>
 
-        {/* Value Highlights */}
-        <div className="flex flex-wrap items-center justify-center gap-5 pt-2 text-xs font-serif text-amber-200/80">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-amber-400" />
-            <span>{lang === "zh" ? "360° 环形可视化设计台" : "360° Real-Time Bead Canvas"}</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-amber-400" />
-            <span>{lang === "zh" ? "十年包浆时光机演化" : "Patina Aging Simulator"}</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4 text-amber-400" />
-            <span>{lang === "zh" ? "七脉轮与生肖能量测评" : "7 Chakras & Zodiac Alignment"}</span>
-          </span>
+          {/* Two Primary Portals (造物 · DIY 与 觅宝 · 集市) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto pt-4">
+            {/* Portal 1: DIY Studio */}
+            <Link
+              href="/studio"
+              className="p-5 rounded-2xl bg-[#1a0f09]/90 hover:bg-[#28170e] border border-amber-500/40 hover:border-amber-400 flex items-center justify-between group transition-all shadow-xl"
+            >
+              <div className="flex items-center gap-3.5 text-left">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-amber-100 font-serif font-black text-lg shadow-md group-hover:scale-110 transition-transform">
+                  造
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
+                    {lang === "zh" ? "造物 · DIY 设计台" : "DIY Customizer Studio"}
+                  </h3>
+                  <p className="text-[11px] text-amber-200/60 font-serif">
+                    {lang === "zh" ? "盘玩由心 · 360° 自由搭配" : "360° Real-time bead arrangement"}
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* Portal 2: Ready Market */}
+            <Link
+              href="/market"
+              className="p-5 rounded-2xl bg-[#1a0f09]/90 hover:bg-[#28170e] border border-amber-900/50 hover:border-amber-400 flex items-center justify-between group transition-all shadow-xl"
+            >
+              <div className="flex items-center gap-3.5 text-left">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-700 to-amber-900 flex items-center justify-center text-amber-100 font-serif font-black text-lg shadow-md group-hover:scale-110 transition-transform">
+                  市
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
+                    {lang === "zh" ? "觅宝 · 现成集市" : "Ready-to-Ship Market"}
+                  </h3>
+                  <p className="text-[11px] text-amber-200/60 font-serif">
+                    {lang === "zh" ? "匠心佳品 · 手串与红木小件" : "Curated heirloom malas & carvings"}
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Main Interactive Studio Canvas Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* 2. 镇店之宝 (Masterpiece Vault) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between mb-6 pb-2 border-b border-amber-900/40">
+          <div className="flex items-center gap-2">
+            <span className="text-red-500 font-serif text-lg">✦</span>
+            <h2 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
+              {lang === "zh" ? "镇店之宝 · 孤品现货" : "Masterpiece Vault · Heirloom Collection"}
+            </h2>
+          </div>
+          <Link
+            href="/market"
+            className="text-xs font-serif text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+          >
+            <span>{lang === "zh" ? "查看全部集市" : "View All Market"}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {masterpieceProducts.map((p) => (
+            <div
+              key={p.id}
+              className="zen-wood-card rounded-3xl p-5 space-y-3 flex flex-col justify-between group"
+            >
+              <div className="space-y-3">
+                <div className="relative aspect-square rounded-2xl overflow-hidden border border-amber-900/40 bg-black/60">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-red-950/90 border border-red-500/50 text-red-200 text-[10px] font-serif font-bold shadow">
+                    {lang === "zh" ? p.accentBadgeZh : p.accentBadge}
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors line-clamp-1">
+                  {lang === "zh" ? p.nameZh : p.name}
+                </h3>
+                <p className="text-[11px] text-amber-200/60 font-serif line-clamp-2">
+                  {lang === "zh" ? p.descriptionZh : p.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-amber-950/60">
+                <span className="text-lg font-black text-amber-400 font-mono">
+                  ${p.priceUsd}
+                </span>
+                <Link
+                  href="/market"
+                  className="px-3.5 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 text-amber-200 border border-amber-500/40 text-xs font-serif transition-colors"
+                >
+                  {lang === "zh" ? "结缘现货" : "View Piece"}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. 藏家雅赏 (Collector's Lifestyle Gallery) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between mb-6 pb-2 border-b border-amber-900/40">
+          <div className="flex items-center gap-2">
+            <span className="text-amber-500 font-serif text-lg">✦</span>
+            <h2 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
+              {lang === "zh" ? "藏家雅赏 · 东方生活美学" : "Collector's Gallery · Zen Lifestyle"}
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {galleryProducts.map((p) => (
+            <div
+              key={p.id}
+              className="zen-wood-card rounded-2xl p-4 space-y-3 flex flex-col justify-between group"
+            >
+              <div className="space-y-2">
+                <div className="aspect-square rounded-xl overflow-hidden border border-amber-900/40 bg-black/60">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-xs font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors line-clamp-1">
+                  {lang === "zh" ? p.nameZh : p.name}
+                </h3>
+                <p className="text-[10px] text-amber-200/50 font-serif line-clamp-1">
+                  {lang === "zh" ? p.woodMaterialZh : p.woodMaterial}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-amber-950/60">
+                <span className="text-sm font-black text-amber-400 font-mono">
+                  ${p.priceUsd}
+                </span>
+                <Link
+                  href="/market"
+                  className="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-serif transition-colors"
+                >
+                  {lang === "zh" ? "求取同款" : "Get Look"}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. Main Interactive Studio Canvas Section (造物设计台) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="text-center space-y-2 mb-8">
+          <span className="text-xs font-serif uppercase tracking-widest text-amber-400 font-bold">
+            {lang === "zh" ? "✦ 360° 环形可视化设计 ✦" : "✦ Interactive 360° Bead Studio ✦"}
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-bold font-serif text-amber-100">
+            {lang === "zh" ? "亲手造物 · 调和身心七脉轮能量" : "Craft Your Bespoke Energy Guardian"}
+          </h2>
+        </div>
         <StudioWorkspace />
       </section>
 
-      {/* Sourcing & Heritage 3 Pillars Section */}
+      {/* 5. Sourcing & Heritage 3 Pillars Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
         <div className="text-center space-y-2 mb-10">
           <span className="text-xs font-serif uppercase tracking-widest text-amber-400 font-bold">
@@ -206,59 +317,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Customer Reviews & Unboxing Wall */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10">
-        <div className="text-center space-y-2 mb-8">
-          <div className="flex items-center justify-center gap-1 text-amber-400">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400" />
-            ))}
-          </div>
-          <h2 className="text-xl sm:text-3xl font-bold font-serif text-amber-100">
-            {lang === "zh" ? "全球修行者与文玩藏家的真实好评" : "Loved by Mindful Seekers Worldwide"}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 rounded-2xl bg-[#140b06]/90 border border-amber-900/40 space-y-3 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-xs font-bold font-serif text-amber-100 border border-amber-500/40">
-                  EW
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-amber-100 font-serif">Emily Watson</p>
-                  <p className="text-[10px] text-amber-200/60 font-serif">Yoga Instructor, California 🇺🇸</p>
-                </div>
-              </div>
-              <span className="text-xs text-amber-400 font-serif">★★★★★</span>
-            </div>
-            <p className="text-xs text-amber-200/80 font-serif leading-relaxed italic">
-              &ldquo;The customizer studio is hypnotic! I mixed Green Sandalwood with Turquoise for my Heart Chakra. When the box arrived, the natural sweet sandalwood scent filled the entire room. The printed certificate with my name made it feel like a sacred gift.&rdquo;
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-[#140b06]/90 border border-amber-900/40 space-y-3 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-700 to-amber-900 flex items-center justify-center text-xs font-bold font-serif text-amber-100 border border-red-500/40">
-                  MK
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-amber-100 font-serif">Marcus Klein</p>
-                  <p className="text-[10px] text-amber-200/60 font-serif">Sound Healer, Berlin 🇩🇪</p>
-                </div>
-              </div>
-              <span className="text-xs text-amber-400 font-serif">★★★★★</span>
-            </div>
-            <p className="text-xs text-amber-200/80 font-serif leading-relaxed italic">
-              &ldquo;The Patina slider was so accurate. After 2 months of daily mantra counting, my Ebony beads have developed a rich mirror shine just like the 1-year simulation. Unmatched density and authentic wild timber.&rdquo;
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Accordion */}
+      {/* 6. FAQ Accordion */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-10 space-y-4">
         <h2 className="text-xl sm:text-2xl font-bold font-serif text-amber-100 text-center mb-6">
           {lang === "zh" ? "常见问题答疑 (FAQ)" : "Frequently Asked Questions"}
