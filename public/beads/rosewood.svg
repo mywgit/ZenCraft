@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="rosewoodGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#85222c" />
+      <stop offset="35%" stop-color="#4a1017" />
+      <stop offset="70%" stop-color="#28070b" />
+      <stop offset="100%" stop-color="#120204" />
+    </radialGradient>
+    <linearGradient id="blackOilStreak" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100305" stop-opacity="0.85" />
+      <stop offset="50%" stop-color="#28070b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#0a0102" stop-opacity="0.9" />
+    </linearGradient>
+    <radialGradient id="specularGlow" cx="30%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7" />
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="bounceAmber" cx="75%" cy="75%" r="45%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="circleClip">
+      <circle cx="100" cy="100" r="95" />
+    </clipPath>
+  </defs>
+
+  <!-- Deep Contact Drop Shadow -->
+  <circle cx="104" cy="105" r="93" fill="#000000" opacity="0.6" />
+
+  <g clip-path="url(#circleClip)">
+    <!-- Base 3D Sphere -->
+    <rect width="200" height="200" fill="url(#rosewoodGrad)" />
+
+    <!-- Dark Chocolate & Black Oil Grain Ribbons (黑筋老料纹理) -->
+    <path d="M 20 50 Q 80 80 160 30 Q 190 70 180 120 Q 120 160 40 140 Z" fill="url(#blackOilStreak)" />
+    <path d="M 10 110 Q 70 130 150 100 Q 180 140 130 180 Q 60 180 20 150 Z" fill="url(#blackOilStreak)" opacity="0.8" />
+    
+    <!-- End-Grain Wood Fibers -->
+    <path d="M 30 70 Q 100 95 170 65" stroke="#1c0407" stroke-width="3" fill="none" opacity="0.75" />
+    <path d="M 25 100 Q 95 125 175 95" stroke="#1c0407" stroke-width="4.5" fill="none" opacity="0.8" />
+    <path d="M 35 130 Q 105 155 165 125" stroke="#1c0407" stroke-width="3" fill="none" opacity="0.75" />
+    <path d="M 50 155 Q 110 175 150 150" stroke="#1c0407" stroke-width="2" fill="none" opacity="0.6" />
+
+    <!-- Fine Golden Wood Pores (棕眼) -->
+    <circle cx="65" cy="85" r="1" fill="#f59e0b" opacity="0.4" />
+    <circle cx="120" cy="110" r="1.2" fill="#f59e0b" opacity="0.3" />
+    <circle cx="90" cy="140" r="1" fill="#f59e0b" opacity="0.4" />
+
+    <!-- Bottom-right Amber Environmental Bounce Light -->
+    <rect width="200" height="200" fill="url(#bounceAmber)" />
+
+    <!-- Top-left Mirror Softbox Specular Highlight -->
+    <ellipse cx="65" cy="65" rx="35" ry="25" transform="rotate(-30 65 65)" fill="url(#specularGlow)" />
+  </g>
+
+  <!-- Drill Hole Bevel (顶部打孔倒角) -->
+  <ellipse cx="100" cy="12" rx="10" ry="5" fill="#050102" stroke="#28070b" stroke-width="1.5" />
+</svg>

@@ -18,23 +18,24 @@ export interface BeadMaterial {
   category: MaterialCategory;
   description: string;
   descriptionZh: string;
-  origin: string; // 产地背书 (e.g., Dacheng Master Studio / Dacheng Rosewood Hub)
+  origin: string;
+  image: string; // Real HD visual asset path
   colors: {
-    base: string; // Base color
-    highlight: string; // Specular shine
-    shadow: string; // Shadow tone
-    patina1y: string; // 1-year patina tone
-    patina5y: string; // 5-year deep patina tone
-    patina10y: string; // 10-year jade-like tone
+    base: string;
+    highlight: string;
+    shadow: string;
+    patina1y: string;
+    patina5y: string;
+    patina10y: string;
     pattern?: "wood-grain" | "gold-fiber" | "speckled" | "swirl" | "metallic";
   };
   chakras: ChakraType[];
   element: ElementType;
-  zodiacs: string[]; // e.g. ["Taurus", "Virgo", "Capricorn"]
-  aromaScore: number; // 1 to 5
+  zodiacs: string[];
+  aromaScore: number;
   aromaNote?: string;
   aromaNoteZh?: string;
-  basePrice: number; // Base price for 8mm bead in USD ($)
+  basePrice: number;
 }
 
 export const BEAD_SIZES = [
@@ -55,6 +56,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Known as the Holy Wood. Naturally fragrant, develops an enchanting jade-green patina with sunlight and wear.",
     descriptionZh: "被誉为圣木。自带天然清幽檀香，随日照与佩戴逐渐蜕变为碧玉般的青翠包浆，安神定气。",
     origin: "Dacheng Certified Wild Stock",
+    image: "/beads/green-sandalwood.jpg",
     colors: {
       base: "#5f6f52",
       highlight: "#a9b388",
@@ -80,6 +82,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Imperial Palace wood reserved for royalty. Radiates shimmering golden threads under sunlight with delicate orchid fragrance.",
     descriptionZh: "明清皇室御用帝王木。在阳光下折射流动的天然金丝水波纹，散发幽雅淡竹幽兰香气。",
     origin: "Ancient Root Stock Extraction",
+    image: "/beads/gold-phoebe.jpg",
     colors: {
       base: "#b4843b",
       highlight: "#fde047",
@@ -105,6 +108,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Dense, sinking dark wood that polishes to a piano-lacquer mirror finish. Ultimate grounding and shield against negative energy.",
     descriptionZh: "密度极高秒沉水，抛光后呈现如钢琴烤漆般的深邃镜面光泽。提供强大的定力与避煞护佑。",
     origin: "Dacheng Premium Selection",
+    image: "/beads/ebony-wood.jpg",
     colors: {
       base: "#1c1917",
       highlight: "#57534e",
@@ -130,6 +134,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Surviving on steep cliffs for centuries. Rich in natural essential oils with swirling bird-eye flames and soothing herbal fragrance.",
     descriptionZh: "长于悬崖峭壁百年陈化。富含天然挥发油，雀眼虎皮纹理绚丽，散发浓郁中草药安神香气。",
     origin: "Taihang Mountain Cliff Harvest",
+    image: "/beads/thuja-cypress.svg",
     colors: {
       base: "#c27838",
       highlight: "#fed7aa",
@@ -155,6 +160,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "The premier protective wood in Eastern culture. Renowned for warding off negativity and preserving inner vitality.",
     descriptionZh: "东方道家首席护身圣木。自古用于避险纳福、固本培元，色泽温和细腻。",
     origin: "Mount Tai Heritage Grove",
+    image: "/beads/peach-wood.svg",
     colors: {
       base: "#d97706",
       highlight: "#fde68a",
@@ -180,13 +186,14 @@ export const SACRED_WOODS: BeadMaterial[] = [
     description: "Classic Chinese imperial timber. Features deep crimson ribbons, oily high-density grain, and timeless stately elegance.",
     descriptionZh: "明清家具正统红木。深红褐沉水黑筋纹理，油脂饱满，岁月沉淀后红润如琥珀。",
     origin: "Dacheng Heritage Kiln Stock",
+    image: "/beads/rosewood.svg",
     colors: {
-      base: "#831843",
-      highlight: "#f472b6",
-      shadow: "#500724",
-      patina1y: "#701a38",
-      patina5y: "#540f28",
-      patina10y: "#3b071a",
+      base: "#4a1017", // True deep crimson mahogany
+      highlight: "#85222c",
+      shadow: "#28070b",
+      patina1y: "#3a0c12",
+      patina5y: "#28060c",
+      patina10y: "#180307",
       pattern: "wood-grain",
     },
     chakras: ["root", "sacral"],
@@ -208,6 +215,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "The stone of the Throat Chakra. Inspires truthful expression, clear communication, and emotional serenity.",
     descriptionZh: "原矿高瓷无优化，青天一抹碧玉色。对应喉轮，增强沟通表达与心灵澄净。",
     origin: "Hubei Zhushan Certified Mine",
+    image: "/beads/natural-turquoise.svg",
     colors: {
       base: "#06b6d4",
       highlight: "#a5f3fc",
@@ -231,6 +239,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "Deep celestial blue with sparkling golden pyrite specks. Awakens the Third Eye for intuition, wisdom, and mental clarity.",
     descriptionZh: "深邃帝王群青点缀天然金色黄铁矿。对应三眼轮与眉心轮，开启灵性智慧与直觉洞察。",
     origin: "Badakhshan Ancient Mine",
+    image: "/beads/lapis-lazuli.svg",
     colors: {
       base: "#1d4ed8",
       highlight: "#93c5fd",
@@ -254,6 +263,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "Vibrant crimson stone of vitality and courage. Activates the Root Chakra to restore physical passion and emotional balance.",
     descriptionZh: "柿子红天然胶质感。对应海底轮，激发充沛生命力、勇气与内在温暖。",
     origin: "Yunnan Baoshan Heritage Mine",
+    image: "/beads/red-agate.svg",
     colors: {
       base: "#dc2626",
       highlight: "#fca5a5",
@@ -277,6 +287,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "Silky chatoyancy with dynamic golden-brown light rays. Amplifies confidence, wealth magnetism, and willpower.",
     descriptionZh: "天然流动丝绢猫眼光彩。对应太阳轮，汇聚财富磁场、决断力与无畏自信。",
     origin: "Southern Africa Select Gem",
+    image: "/beads/tigers-eye.svg",
     colors: {
       base: "#ca8a04",
       highlight: "#fef08a",
@@ -300,6 +311,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "Volcanic glass with subtle iridescent rings. Powerful psychic protection stone that absorbs negative emotional energies.",
     descriptionZh: "火山熔岩天然凝结，逆光泛出神秘彩虹环。最强辟邪排浊与负能量吸收石。",
     origin: "Mexican Volcanic Highlands",
+    image: "/beads/black-obsidian.svg",
     colors: {
       base: "#18181b",
       highlight: "#52525b",
@@ -323,6 +335,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "Translucent royal purple crystal of spiritual serenity. Calms overactive minds and facilitates restful deep sleep.",
     descriptionZh: "晶莹剔透高贵紫罗兰色。对应顶轮，抚平焦虑思绪，助益深度冥想与甜美睡眠。",
     origin: "Uruguay Deep Vault",
+    image: "/beads/amethyst.svg",
     colors: {
       base: "#7c3aed",
       highlight: "#ddd6fe",
@@ -346,6 +359,7 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
     description: "The quintessential stone of Eastern virtue. Oily, tactile smoothness that nurtures gentleness, longevity, and purity.",
     descriptionZh: "东方温润君子之玉。细腻如凝脂，滋养平和心性与长寿安康之福。",
     origin: "Xinjiang Kunlun Mountain River",
+    image: "/beads/hetian-jade.svg",
     colors: {
       base: "#e2e8f0",
       highlight: "#ffffff",
@@ -372,6 +386,7 @@ export const SACRED_SPACERS: BeadMaterial[] = [
     description: "Handcrafted 925 sterling silver centerpiece symbolizing purity, rebirth, and spiritual awakening.",
     descriptionZh: "手工錾刻 925 纯银莲花三通母珠，象征出淤泥而不染的心灵解脱与觉悟。",
     origin: "Master Silver Smith Guild",
+    image: "/beads/silver-lotus.svg",
     colors: {
       base: "#e2e8f0",
       highlight: "#ffffff",
@@ -395,6 +410,7 @@ export const SACRED_SPACERS: BeadMaterial[] = [
     description: "Mythical Eastern beast renowned for attracting wealth, safeguarding fortune, and dispelling misfortune.",
     descriptionZh: "吞吐四方之财的神兽护佑，驱除霉运、守护财富磁场稳固不散。",
     origin: "Heritage Foundry Craft",
+    image: "/beads/pixiu-charm.svg",
     colors: {
       base: "#cbd5e1",
       highlight: "#ffffff",
@@ -418,6 +434,7 @@ export const SACRED_SPACERS: BeadMaterial[] = [
     description: "Embossed with the sacred Sanskrit syllable Om Mani Padme Hum for constant inner protection and spiritual harmony.",
     descriptionZh: "微雕六字大明咒梵文，每转动一次即是一次持咒祈福，清净身口意。",
     origin: "Tibetan Artisan Collective",
+    image: "/beads/om-mantra.svg",
     colors: {
       base: "#94a3b8",
       highlight: "#f1f5f9",
@@ -441,6 +458,7 @@ export const SACRED_SPACERS: BeadMaterial[] = [
     description: "Slim antique brass ring used between beads to protect timber, improve flex, and add warm vintage character.",
     descriptionZh: "手工复古做旧黄铜薄片，保护木质不磨损，增加手串流线韵律感。",
     origin: "Dacheng Handcraft Lab",
+    image: "/beads/brass-ring.svg",
     colors: {
       base: "#ca8a04",
       highlight: "#fef08a",

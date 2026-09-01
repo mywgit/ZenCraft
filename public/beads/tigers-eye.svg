@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="tigerGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="30%" stop-color="#ca8a04" />
+      <stop offset="70%" stop-color="#713f12" />
+      <stop offset="100%" stop-color="#291404" />
+    </radialGradient>
+    <linearGradient id="catEyeBand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#713f12" stop-opacity="0" />
+      <stop offset="42%" stop-color="#ca8a04" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#fef9c3" stop-opacity="0.95" />
+      <stop offset="58%" stop-color="#ca8a04" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#713f12" stop-opacity="0" />
+    </linearGradient>
+    <radialGradient id="specularGlow" cx="30%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="circleClip">
+      <circle cx="100" cy="100" r="95" />
+    </clipPath>
+  </defs>
+  <circle cx="104" cy="105" r="93" fill="#000000" opacity="0.6" />
+  <g clip-path="url(#circleClip)">
+    <rect width="200" height="200" fill="url(#tigerGrad)" />
+    <!-- Dynamic Cat Eye Light Band -->
+    <rect width="200" height="200" fill="url(#catEyeBand)" />
+    <ellipse cx="65" cy="65" rx="35" ry="25" transform="rotate(-30 65 65)" fill="url(#specularGlow)" />
+  </g>
+  <ellipse cx="100" cy="12" rx="10" ry="5" fill="#1c0b02" />
+</svg>

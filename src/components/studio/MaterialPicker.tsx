@@ -134,7 +134,7 @@ export function MaterialPicker() {
       </div>
 
       {/* Materials Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[340px] overflow-y-auto pr-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[360px] overflow-y-auto pr-1">
         {currentList.map((item) => {
           const itemPrice = (item.basePrice * currentSizeObj.multiplier).toFixed(2);
 
@@ -146,15 +146,13 @@ export function MaterialPicker() {
             >
               {/* Top Bead Preview & Origin Badge */}
               <div className="flex items-start justify-between gap-2 mb-2">
-                <div
-                  className="w-10 h-10 rounded-full shadow-2xl border border-amber-500/30 flex-shrink-0 group-hover:scale-110 transition-transform relative overflow-hidden"
-                  style={{
-                    background: `radial-gradient(circle at 30% 30%, ${item.colors.highlight} 0%, ${item.colors.base} 55%, ${item.colors.shadow} 90%, #09090b 100%)`,
-                    boxShadow: "0 6px 14px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4)",
-                  }}
-                >
-                  {/* Gloss Curved Flare */}
-                  <div className="absolute top-1 left-1.5 w-3.5 h-2 rounded-full bg-white/40 rotate-[-30deg]" />
+                {/* 100% Real Macro Bead Photo */}
+                <div className="w-11 h-11 rounded-full overflow-hidden shadow-2xl border border-amber-500/30 flex-shrink-0 group-hover:scale-110 transition-transform bg-black flex items-center justify-center">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
 
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-900/60 font-serif line-clamp-1">
