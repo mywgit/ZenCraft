@@ -1,0 +1,256 @@
+"use client";
+
+import React, { useRef, useEffect } from "react";
+import { useStudio } from "@/context/StudioContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { CHAKRA_METADATA } from "@/lib/energyCalculator";
+import { getMaterialById } from "@/lib/materialsData";
+import { X, Download, Share2, Award, CheckCircle } from "lucide-react";
+
+export function CertificateModal() {
+  const { isCertificateOpen, setIsCertificateOpen, customerName, energyResult, beads, patinaLevel } =
+    useStudio();
+  const { lang, t } = useLanguage();
+  const certCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!isCertificateOpen) return;
+
+    const canvas = certCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // High Resolution for Download (800 x 1050)
+    const dpr = 2;
+    const width = 480;
+    const height = 640;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.scale(dpr, dpr);
+
+    // 1. Dark Parchment & Gold Background
+    const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+    bgGrad.addColorStop(0, "#090a0f");
+    bgGrad.addColorStop(0.5, "#131826");
+    bgGrad.addColorStop(1, "#090a0f");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Gold Border & Ornaments
+    ctx.strokeStyle = "rgba(217, 119, 6, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(16, 16, width - 32, height - 32);
+
+    ctx.strokeStyle = "rgba(217, 119, 6, 0.2)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(22, 22, width - 44, height - 44);
+
+    // Corner Ornaments
+    const drawCorner = (cx: number, cy: number) => {
+      ctx.fillStyle = "#f59e0b";
+      ctx.fillRect(cx - 3, cy - 3, 6, 6);
+    };
+    drawCorner(22, 22);
+    drawCorner(width - 22, 22);
+    drawCorner(22, height - 22);
+    drawCorner(width - 22, height - 22);
+
+    // 3. Header Text
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#f59e0b";
+    ctx.font = "bold 13px serif";
+    ctx.letterSpacing = "3px";
+    ctx.fillText("✦ ZEN CRAFT ATELIER ✦", width / 2, 55);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 18px serif";
+    ctx.letterSpacing = "1px";
+    ctx.fillText("CERTIFICATE OF AUTHENTICITY", width / 2, 82);
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "11px sans-serif";
+    ctx.letterSpacing = "0px";
+    ctx.fillText("& ENERGY BLESSING", width / 2, 98);
+
+    // Serial & Date
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#64748b";
+    ctx.font = "10px monospace";
+    ctx.fillText("SERIAL: ZC-2026-8891", 40, 125);
+
+    ctx.textAlign = "right";
+    ctx.fillText(`DATE: ${new Date().toLocaleDateString()}`, width - 40, 125);
+
+    // Divider
+    ctx.strokeStyle = "rgba(245, 158, 11, 0.25)";
+    ctx.beginPath();
+    ctx.moveTo(40, 135);
+    ctx.lineTo(width - 40, 135);
+    ctx.stroke();
+
+    // 4. Personalized Dedication
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "italic 11px serif";
+    ctx.fillText("Specially Handcrafted For", width / 2, 158);
+
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "bold 17px serif";
+    ctx.fillText(customerName || "Mindful Seeker", width / 2, 180);
+
+    // 5. Mini Bracelet Render in Center
+    const circleCenterX = width / 2;
+    const circleCenterY = 270;
+    const circleR = 65;
+    const count = beads.length;
+
+    // Draw string
+    ctx.strokeStyle = "rgba(217, 119, 6, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(circleCenterX, circleCenterY, circleR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    beads.forEach((bead, i) => {
+      const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
+      const bx = circleCenterX + Math.cos(angle) * circleR;
+      const by = circleCenterY + Math.sin(angle) * circleR;
+      const bRad = 6.5;
+
+      const mat = getMaterialById(bead.materialId);
+      if (!mat) return;
+
+      let color = mat.colors.base;
+      if (patinaLevel === 1) color = mat.colors.patina1y;
+      else if (patinaLevel === 2) color = mat.colors.patina5y;
+      else if (patinaLevel === 3) color = mat.colors.patina10y;
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(bx, by, bRad, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 6. Energy Profile Details Box
+    ctx.fillStyle = "rgba(15, 23, 42, 0.8)";
+    ctx.fillRect(40, 360, width - 80, 130);
+    ctx.strokeStyle = "rgba(245, 158, 11, 0.2)";
+    ctx.strokeRect(40, 360, width - 80, 130);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#f59e0b";
+    ctx.font = "bold 11px sans-serif";
+    ctx.fillText("✦ METAPHYSICAL ENERGY ALIGNMENT", 55, 382);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "11px sans-serif";
+    ctx.fillText(`• Dominant Element: ${energyResult.dominantElement.toUpperCase()}`, 55, 404);
+    ctx.fillText(`• Top Chakra: ${CHAKRA_METADATA[energyResult.topChakra].name}`, 55, 424);
+    ctx.fillText(`• Zodiac Synergy: ${energyResult.topZodiacs.join(", ")}`, 55, 444);
+    ctx.fillText(`• Total Beads: ${energyResult.totalBeads} (${energyResult.totalLengthCm}cm)`, 55, 464);
+
+    // 7. Master Blessing & Oriental Seal
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "italic 11px serif";
+    ctx.fillText(
+      '"May these sacred beads bring clarity, grounding, and inner peace."',
+      width / 2,
+      525
+    );
+
+    // Oriental Red Seal Stamp
+    ctx.save();
+    ctx.fillStyle = "#dc2626";
+    ctx.fillRect(width / 2 - 25, 545, 50, 50);
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(width / 2 - 22, 548, 44, 44);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 13px serif";
+    ctx.fillText("禅印", width / 2, 575);
+    ctx.restore();
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "9px sans-serif";
+    ctx.fillText("DACHENG TIMBER ATELIER • 100% BOTANICAL VERIFIED", width / 2, 615);
+  }, [isCertificateOpen, customerName, energyResult, beads, patinaLevel]);
+
+  const handleDownload = () => {
+    const canvas = certCanvasRef.current;
+    if (!canvas) return;
+    const url = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ZenCraft-Certificate-${(customerName || "Seeker").replace(/\s+/g, "_")}.png`;
+    a.click();
+  };
+
+  if (!isCertificateOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative bg-slate-950 border border-amber-500/30 rounded-3xl p-4 sm:p-6 max-w-lg w-full shadow-2xl flex flex-col items-center space-y-4 my-8">
+        {/* Close Button */}
+        <button
+          onClick={() => setIsCertificateOpen(false)}
+          className="absolute top-4 right-4 p-2 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Modal Header */}
+        <div className="text-center space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
+            <Award className="w-3.5 h-3.5" />
+            <span>{lang === "zh" ? "官方专属能量证书" : "Official Energy Blessing Certificate"}</span>
+          </div>
+          <h3 className="text-lg font-bold text-white">
+            {lang === "zh" ? "您的专属手作认证海报已生成" : "Your Custom Energy Certificate is Ready"}
+          </h3>
+        </div>
+
+        {/* Canvas Display */}
+        <div className="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-black">
+          <canvas ref={certCanvasRef} className="max-w-full h-auto shadow-inner" />
+        </div>
+
+        {/* Download & Share Actions */}
+        <div className="flex flex-wrap items-center justify-center gap-3 w-full pt-2">
+          <button
+            onClick={handleDownload}
+            className="flex-1 py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 text-xs sm:text-sm transition-all"
+          >
+            <Download className="w-4 h-4" />
+            <span>{lang === "zh" ? "下载高清证书海报 (PNG)" : "Download HD Certificate (PNG)"}</span>
+          </button>
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: "My Custom ZenCraft Energy Mala",
+                  text: `Check out my custom handcrafted energy bracelet for ${customerName}!`,
+                  url: window.location.href,
+                });
+              } else {
+                handleDownload();
+              }
+            }}
+            className="p-3 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl border border-slate-800 text-xs transition-colors"
+            title="Share"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+        </div>
+
+        <p className="text-[10px] text-slate-500 text-center">
+          📜 {lang === "zh" ? "此证书随每个实物订单一并烫金打印并加盖工坊朱砂印章寄出。" : "This certificate is physically gold-foil printed and hand-stamped with red vermilion in every parcel."}
+        </p>
+      </div>
+    </div>
+  );
+}

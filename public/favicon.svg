@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="zenBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#241407" />
+      <stop offset="50%" stop-color="#140b03" />
+      <stop offset="100%" stop-color="#090502" />
+    </linearGradient>
+    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <radialGradient id="amberGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect width="512" height="512" rx="120" fill="url(#zenBg)" />
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="#d97706" stroke-opacity="0.3" stroke-width="6" />
+
+  <!-- Radial Glow Behind Mala -->
+  <circle cx="256" cy="256" r="200" fill="url(#amberGlow)" />
+
+  <!-- Sacred Mala Ring Beads -->
+  <g transform="translate(256, 256)">
+    <!-- String Circle -->
+    <circle cx="0" cy="0" r="140" fill="none" stroke="#b45309" stroke-width="4" stroke-opacity="0.4" />
+
+    <!-- Top Guru Bead (Lotus Gold) -->
+    <circle cx="0" cy="-140" r="28" fill="url(#goldRing)" stroke="#fef08a" stroke-width="3" />
+
+    <!-- Beads along circumference -->
+    <circle cx="70" cy="-121" r="20" fill="#5f6f52" stroke="#a9b388" stroke-width="2" />
+    <circle cx="121" cy="-70" r="20" fill="#b4843b" stroke="#fde047" stroke-width="2" />
+    <circle cx="140" cy="0" r="24" fill="#06b6d4" stroke="#a5f3fc" stroke-width="2" />
+    <circle cx="121" cy="70" r="20" fill="#5f6f52" stroke="#a9b388" stroke-width="2" />
+    <circle cx="70" cy="121" r="20" fill="#b4843b" stroke="#fde047" stroke-width="2" />
+    <circle cx="0" cy="140" r="24" fill="#dc2626" stroke="#fca5a5" stroke-width="2" />
+    <circle cx="-70" cy="121" r="20" fill="#5f6f52" stroke="#a9b388" stroke-width="2" />
+    <circle cx="-121" cy="70" r="20" fill="#b4843b" stroke="#fde047" stroke-width="2" />
+    <circle cx="-140" cy="0" r="24" fill="#1d4ed8" stroke="#93c5fd" stroke-width="2" />
+    <circle cx="-121" cy="-70" r="20" fill="#5f6f52" stroke="#a9b388" stroke-width="2" />
+    <circle cx="-70" cy="-121" r="20" fill="#b4843b" stroke="#fde047" stroke-width="2" />
+
+    <!-- Center Calligraphy Character 禅 -->
+    <text x="0" y="32" font-family="serif" font-size="110" font-weight="900" text-anchor="middle" fill="url(#goldRing)">
+      禅
+    </text>
+  </g>
+</svg>

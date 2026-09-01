@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --background: #090a0f;
+  --foreground: #f8fafc;
+  --primary: #d97706;
+  --primary-foreground: #ffffff;
+  --card: #11141d;
+  --card-foreground: #f8fafc;
+  --border: #1e2433;
+}
+
+@theme {
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Zen subtle woodgrain radial glow */
+.zen-radial-glow {
+  background: radial-gradient(circle at 50% 30%, rgba(217, 119, 6, 0.08) 0%, rgba(15, 23, 42, 0) 70%);
+}
+
+.zen-wood-card {
+  background: linear-gradient(145deg, rgba(26, 32, 46, 0.7) 0%, rgba(15, 20, 30, 0.85) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.zen-wood-card:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 15px 35px -10px rgba(217, 119, 6, 0.15);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #28334a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
