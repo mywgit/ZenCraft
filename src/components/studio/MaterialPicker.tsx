@@ -37,12 +37,6 @@ export function MaterialPicker() {
     addBead(materialId, selectedSizeMm);
   };
 
-  const photoThumbnails: Record<string, string> = {
-    "green-sandalwood": "/beads/green-sandalwood.jpg",
-    "gold-phoebe": "/beads/gold-phoebe.jpg",
-    "ebony-wood": "/beads/ebony-wood.jpg",
-  };
-
   return (
     <div className="w-full zen-wood-card rounded-2xl p-5 space-y-5">
       {/* Top Presets Row (经典开运配方) */}
@@ -143,7 +137,6 @@ export function MaterialPicker() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[340px] overflow-y-auto pr-1">
         {currentList.map((item) => {
           const itemPrice = (item.basePrice * currentSizeObj.multiplier).toFixed(2);
-          const hasPhoto = photoThumbnails[item.id];
 
           return (
             <div
@@ -153,24 +146,17 @@ export function MaterialPicker() {
             >
               {/* Top Bead Preview & Origin Badge */}
               <div className="flex items-start justify-between gap-2 mb-2">
-                {hasPhoto ? (
-                  <div className="w-10 h-10 rounded-full overflow-hidden shadow-xl border border-amber-500/30 flex-shrink-0 group-hover:scale-110 transition-transform bg-black">
-                    <img
-                      src={hasPhoto}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className="w-10 h-10 rounded-full shadow-xl border border-amber-500/30 flex-shrink-0 group-hover:scale-110 transition-transform relative overflow-hidden"
-                    style={{
-                      background: `radial-gradient(circle at 32% 32%, ${item.colors.highlight} 0%, ${item.colors.base} 60%, ${item.colors.shadow} 100%)`,
-                    }}
-                  >
-                    <div className="absolute top-1 left-1.5 w-3.5 h-2 rounded-full bg-white/40 rotate-[-30deg]" />
-                  </div>
-                )}
+                <div
+                  className="w-10 h-10 rounded-full shadow-2xl border border-amber-500/30 flex-shrink-0 group-hover:scale-110 transition-transform relative overflow-hidden"
+                  style={{
+                    background: `radial-gradient(circle at 30% 30%, ${item.colors.highlight} 0%, ${item.colors.base} 55%, ${item.colors.shadow} 90%, #09090b 100%)`,
+                    boxShadow: "0 6px 14px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4)",
+                  }}
+                >
+                  {/* Gloss Curved Flare */}
+                  <div className="absolute top-1 left-1.5 w-3.5 h-2 rounded-full bg-white/40 rotate-[-30deg]" />
+                </div>
+
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-900/60 font-serif line-clamp-1">
                   {item.origin}
                 </span>

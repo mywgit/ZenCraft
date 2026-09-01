@@ -1,29 +1,8 @@
 import { BeadMaterial, getMaterialById } from "./materialsData";
 
-// Image Cache for preloaded real photo textures
-const imageCache: Record<string, HTMLImageElement> = {};
-
-export function preloadBeadImages() {
-  if (typeof window === "undefined") return;
-  const imageSources: Record<string, string> = {
-    "green-sandalwood": "/beads/green-sandalwood.jpg",
-    "gold-phoebe": "/beads/gold-phoebe.jpg",
-    "ebony-wood": "/beads/ebony-wood.jpg",
-  };
-
-  Object.entries(imageSources).forEach(([id, src]) => {
-    if (!imageCache[id]) {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        imageCache[id] = img;
-      };
-    }
-  });
-}
-
 /**
- * Render an ultra-realistic 3D sphere bead with ZERO black border & authentic physical luster.
+ * Render a 100% consistent, hyper-realistic 3D sphere bead with instant zero-delay loading,
+ * authentic wood grain textures, mineral veins, and living patina luster.
  */
 export function drawRealisticBead(
   ctx: CanvasRenderingContext2D,
@@ -43,16 +22,16 @@ export function drawRealisticBead(
   // 1. Draw Bead Deep Ambient Drop Shadow (Realistic contact shadow on silk tray)
   ctx.save();
   ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
-  ctx.shadowBlur = radius * 0.8;
-  ctx.shadowOffsetX = Math.cos(angle + Math.PI / 4) * (radius * 0.3) + 2;
-  ctx.shadowOffsetY = Math.sin(angle + Math.PI / 4) * (radius * 0.3) + 3.5;
+  ctx.shadowBlur = radius * 0.75;
+  ctx.shadowOffsetX = Math.cos(angle + Math.PI / 4) * (radius * 0.25) + 2;
+  ctx.shadowOffsetY = Math.sin(angle + Math.PI / 4) * (radius * 0.25) + 3;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(18, 12, 8, 0.3)";
+  ctx.fillStyle = "rgba(18, 12, 8, 0.25)";
   ctx.fill();
   ctx.restore();
 
-  // 2. Selection Cinnabar / Amber Halo Ring
+  // 2. Selection Golden / Amber Halo Glow
   if (isSelected) {
     ctx.save();
     ctx.strokeStyle = "#eab308";
@@ -60,14 +39,14 @@ export function drawRealisticBead(
     ctx.shadowColor = "#f59e0b";
     ctx.shadowBlur = 18;
     ctx.beginPath();
-    ctx.arc(x, y, radius + 5, 0, Math.PI * 2);
+    ctx.arc(x, y, radius + 4.5, 0, Math.PI * 2);
     ctx.stroke();
 
     // Outer subtle pulse ring
     ctx.strokeStyle = "rgba(245, 158, 11, 0.4)";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(x, y, radius + 8, 0, Math.PI * 2);
+    ctx.arc(x, y, radius + 7.5, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
   }
@@ -78,58 +57,8 @@ export function drawRealisticBead(
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.clip();
 
-  // Check if we have a real high-res photograph texture loaded
-  const cachedImg = imageCache[bead.materialId];
-  if (cachedImg && cachedImg.complete && cachedImg.naturalWidth > 0) {
-    // Zoom into the center 72% of the photo to completely eliminate any black background!
-    const nw = cachedImg.naturalWidth;
-    const nh = cachedImg.naturalHeight;
-    const cropRatio = 0.72; // Zoom in to sphere core
-    const sw = nw * cropRatio;
-    const sh = nh * cropRatio;
-    const sx = (nw - sw) / 2;
-    const sy = (nh - sh) / 2;
-
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.drawImage(cachedImg, sx, sy, sw, sh, -radius, -radius, radius * 2, radius * 2);
-    ctx.restore();
-
-    // Apply Patina Color Grading Filter & 3D Lighting
-    const sphereShade = ctx.createRadialGradient(
-      x - radius * 0.38,
-      y - radius * 0.38,
-      radius * 0.05,
-      x,
-      y,
-      radius
-    );
-    if (patinaLevel === 0) {
-      sphereShade.addColorStop(0, "rgba(255, 255, 255, 0.2)");
-      sphereShade.addColorStop(0.5, "rgba(0, 0, 0, 0)");
-      sphereShade.addColorStop(1, "rgba(0, 0, 0, 0.6)");
-    } else if (patinaLevel === 1) {
-      sphereShade.addColorStop(0, "rgba(254, 240, 138, 0.25)");
-      sphereShade.addColorStop(0.5, "rgba(0, 0, 0, 0)");
-      sphereShade.addColorStop(1, "rgba(0, 0, 0, 0.7)");
-    } else if (patinaLevel === 2) {
-      // 5-year glass patina (深沉高亮)
-      sphereShade.addColorStop(0, "rgba(255, 255, 255, 0.4)");
-      sphereShade.addColorStop(0.4, "rgba(0, 0, 0, 0.1)");
-      sphereShade.addColorStop(1, "rgba(0, 0, 0, 0.8)");
-    } else {
-      // 10-year jade amber patina
-      sphereShade.addColorStop(0, "rgba(254, 215, 170, 0.45)");
-      sphereShade.addColorStop(0.4, "rgba(120, 53, 15, 0.2)");
-      sphereShade.addColorStop(1, "rgba(15, 5, 0, 0.85)");
-    }
-    ctx.fillStyle = sphereShade;
-    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-  } else {
-    // Render Ultra-Realistic Procedural Mineral/Timber Texture
-    renderProceduralBead(ctx, mat, x, y, radius, patinaLevel, angle);
-  }
+  // Render Master-Crafted Procedural 3D Texture (100% stable, zero texture pop-in)
+  renderMasterProceduralBead(ctx, mat, x, y, radius, patinaLevel, angle);
 
   ctx.restore(); // End clipping
 
@@ -148,26 +77,26 @@ export function drawRealisticBead(
 
   // 5. Multi-layered Specular Highlights & Living Patina Gloss (水磨高光与包浆镜面反射)
   ctx.save();
-  const highlightAlpha = patinaLevel >= 2 ? 0.8 : patinaLevel === 1 ? 0.6 : 0.4;
+  const highlightAlpha = patinaLevel >= 2 ? 0.75 : patinaLevel === 1 ? 0.55 : 0.35;
 
   // Primary Softbox Curved Highlight
   const primGrad = ctx.createRadialGradient(
-    x - radius * 0.38,
-    y - radius * 0.38,
+    x - radius * 0.36,
+    y - radius * 0.36,
     0,
-    x - radius * 0.38,
-    y - radius * 0.38,
+    x - radius * 0.36,
+    y - radius * 0.36,
     radius * 0.45
   );
   primGrad.addColorStop(0, `rgba(255, 255, 255, ${highlightAlpha})`);
-  primGrad.addColorStop(0.35, `rgba(255, 255, 255, ${highlightAlpha * 0.4})`);
+  primGrad.addColorStop(0.35, `rgba(255, 255, 255, ${highlightAlpha * 0.35})`);
   primGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
   ctx.fillStyle = primGrad;
   ctx.beginPath();
-  ctx.arc(x - radius * 0.38, y - radius * 0.38, radius * 0.45, 0, Math.PI * 2);
+  ctx.arc(x - radius * 0.36, y - radius * 0.36, radius * 0.45, 0, Math.PI * 2);
   ctx.fill();
 
-  // Secondary Bottom-Right Amber Ambient Bounce Light (托盘环境反光)
+  // Secondary Bottom-Right Ambient Bounce Light (托盘丝绸环境反光)
   const bounceGrad = ctx.createRadialGradient(
     x + radius * 0.45,
     y + radius * 0.45,
@@ -176,8 +105,8 @@ export function drawRealisticBead(
     y + radius * 0.45,
     radius * 0.45
   );
-  bounceGrad.addColorStop(0, "rgba(254, 240, 138, 0.3)");
-  bounceGrad.addColorStop(0.6, "rgba(254, 240, 138, 0.1)");
+  bounceGrad.addColorStop(0, "rgba(254, 240, 138, 0.25)");
+  bounceGrad.addColorStop(0.6, "rgba(254, 240, 138, 0.08)");
   bounceGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = bounceGrad;
   ctx.beginPath();
@@ -190,9 +119,9 @@ export function drawRealisticBead(
 }
 
 /**
- * Procedurally render authentic micro-textures (Turquoise spiderweb, Lapis pyrite flecks, Thuja bird-eyes, etc.)
+ * Master-crafted procedural 3D shader for authentic woods, crystals, and silver charms.
  */
-function renderProceduralBead(
+function renderMasterProceduralBead(
   ctx: CanvasRenderingContext2D,
   mat: BeadMaterial,
   x: number,
@@ -201,13 +130,20 @@ function renderProceduralBead(
   patinaLevel: number,
   angle: number
 ) {
-  // Base Color Selection based on Patina
+  // 1. Dynamic Patina Base Color Selection
   let baseColor = mat.colors.base;
-  if (patinaLevel === 1) baseColor = mat.colors.patina1y;
-  else if (patinaLevel === 2) baseColor = mat.colors.patina5y;
-  else if (patinaLevel === 3) baseColor = mat.colors.patina10y;
+  let highlightColor = mat.colors.highlight;
+  let shadowColor = mat.colors.shadow;
 
-  // 1. Base 3D Sphere Radial Gradient
+  if (patinaLevel === 1) {
+    baseColor = mat.colors.patina1y;
+  } else if (patinaLevel === 2) {
+    baseColor = mat.colors.patina5y;
+  } else if (patinaLevel === 3) {
+    baseColor = mat.colors.patina10y;
+  }
+
+  // 2. Base 3D Sphere Radial Shading
   const grad = ctx.createRadialGradient(
     x - radius * 0.35,
     y - radius * 0.35,
@@ -216,19 +152,83 @@ function renderProceduralBead(
     y,
     radius
   );
-  grad.addColorStop(0, mat.colors.highlight);
+  grad.addColorStop(0, highlightColor);
   grad.addColorStop(0.35, baseColor);
-  grad.addColorStop(0.8, mat.colors.shadow);
+  grad.addColorStop(0.8, shadowColor);
   grad.addColorStop(1, "#09090b");
   ctx.fillStyle = grad;
   ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
 
-  // 2. Specific Micro-Textures by Material Type
+  // 3. Unique Authentic Material Textures
 
-  // --- A. Natural Turquoise: High Porcelain with Golden/Brown Spiderweb Veins (绿松石铁线) ---
-  if (mat.id === "natural-turquoise") {
+  // --- A. Green Sandalwood (天然野生绿檀): Organic Jade-Green Wood Grain & Growth Rings ---
+  if (mat.id === "green-sandalwood") {
     ctx.save();
-    ctx.strokeStyle = "rgba(68, 36, 17, 0.85)";
+    ctx.translate(x, y);
+    ctx.rotate(angle + 0.3);
+
+    // Multi-layer growth rings & organic pores
+    ctx.strokeStyle = "rgba(40, 54, 24, 0.45)";
+    ctx.lineWidth = 1.3;
+    for (let r = radius * 0.2; r < radius * 1.2; r += radius * 0.22) {
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Subtle golden wood grain fibers
+    ctx.strokeStyle = "rgba(169, 179, 136, 0.35)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(-radius * 0.8, -radius * 0.3);
+    ctx.bezierCurveTo(-radius * 0.2, radius * 0.4, radius * 0.2, -radius * 0.4, radius * 0.8, radius * 0.2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // --- B. Gold Phoebe (百年金丝楠): Dynamic 3D Shimmering Golden Water Waves (水波纹) ---
+  else if (mat.id === "gold-phoebe") {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+
+    // Glowing golden wave ripples (流动水波纹)
+    const waveCount = 5;
+    for (let i = 0; i < waveCount; i++) {
+      const offset = (i - 2) * (radius * 0.35);
+      const waveGrad = ctx.createLinearGradient(-radius, offset, radius, offset);
+      waveGrad.addColorStop(0, "rgba(253, 224, 71, 0.1)");
+      waveGrad.addColorStop(0.5, "rgba(254, 240, 138, 0.55)");
+      waveGrad.addColorStop(1, "rgba(253, 224, 71, 0.1)");
+
+      ctx.strokeStyle = waveGrad;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(-radius * 0.85, offset - 3);
+      ctx.bezierCurveTo(-radius * 0.3, offset + 6, radius * 0.3, offset - 6, radius * 0.85, offset + 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // --- C. Dense Black Ebony (高密黑檀): Piano Lacquer Reflection & Dark Chocolate Fibers ---
+  else if (mat.id === "ebony-wood") {
+    ctx.save();
+    ctx.strokeStyle = "rgba(41, 37, 36, 0.5)";
+    ctx.lineWidth = 1.2;
+    for (let i = -radius * 0.6; i <= radius * 0.6; i += radius * 0.3) {
+      ctx.beginPath();
+      ctx.moveTo(x - radius, y + i);
+      ctx.lineTo(x + radius, y + i + 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // --- D. Natural Turquoise (天然原矿绿松石): High Porcelain Glaze with Golden-Brown Spiderweb Veins (铁线) ---
+  else if (mat.id === "natural-turquoise") {
+    ctx.save();
+    ctx.strokeStyle = "rgba(58, 30, 15, 0.85)";
     ctx.lineWidth = 1.4;
     ctx.beginPath();
     ctx.moveTo(x - radius * 0.7, y - radius * 0.3);
@@ -239,7 +239,7 @@ function renderProceduralBead(
     ctx.lineTo(x + radius * 0.1, y + radius * 0.6);
     ctx.stroke();
 
-    // Fine spiderweb branches
+    // Secondary fine spiderweb veins
     ctx.lineWidth = 0.8;
     ctx.strokeStyle = "rgba(41, 20, 8, 0.7)";
     ctx.beginPath();
@@ -250,7 +250,7 @@ function renderProceduralBead(
     ctx.restore();
   }
 
-  // --- B. Lapis Lazuli: Ultramarine Blue with Sparkling Pyrite Gold Flecks (青金石天然金星) ---
+  // --- E. Lapis Lazuli (帝王青金石): Ultramarine Blue with Natural Pyrite Gold Stars (金星) ---
   else if (mat.id === "lapis-lazuli") {
     ctx.save();
     const goldPoints = [
@@ -262,17 +262,17 @@ function renderProceduralBead(
       const py = y + dy * radius;
       ctx.fillStyle = "#fef08a";
       ctx.beginPath();
-      ctx.arc(px, py, 1.4, 0, Math.PI * 2);
+      ctx.arc(px, py, 1.3, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "rgba(253, 224, 71, 0.6)";
+      ctx.fillStyle = "rgba(253, 224, 71, 0.55)";
       ctx.beginPath();
-      ctx.arc(px, py, 2.4, 0, Math.PI * 2);
+      ctx.arc(px, py, 2.2, 0, Math.PI * 2);
       ctx.fill();
     });
     ctx.restore();
   }
 
-  // --- C. Red Agate: Translucent Persimmon Jelly & Concentric Flame (保山南红玛瑙胶质感) ---
+  // --- F. Red Agate (保山南红玛瑙): Translucent Persimmon Jelly Core (胶质感) ---
   else if (mat.id === "red-agate") {
     ctx.save();
     const flameGrad = ctx.createRadialGradient(x + radius * 0.1, y + radius * 0.1, 0, x, y, radius * 0.85);
@@ -285,7 +285,7 @@ function renderProceduralBead(
     ctx.restore();
   }
 
-  // --- D. Tiger's Eye: Dynamic Chatoyant Silk Cat-Eye Light Band (虎眼石猫眼光带) ---
+  // --- G. Tiger's Eye (天然金虎眼石): Dynamic Silk Chatoyant Light Band (猫眼光带) ---
   else if (mat.id === "tigers-eye") {
     ctx.save();
     ctx.translate(x, y);
@@ -301,7 +301,7 @@ function renderProceduralBead(
     ctx.restore();
   }
 
-  // --- E. Thuja Cypress: Swirling Tiger Flames & Bird-Eye Dots (太行崖柏雀眼舍利料) ---
+  // --- H. Thuja Cypress (太行崖柏): Bird-Eye Flame Knots & Swirling Grain (雀眼舍利料) ---
   else if (mat.id === "thuja-cypress") {
     ctx.save();
     ctx.strokeStyle = "rgba(124, 45, 18, 0.8)";
@@ -327,7 +327,7 @@ function renderProceduralBead(
     ctx.restore();
   }
 
-  // --- F. Red Rosewood & Peach Wood: Oily Timber Grains & End-Grain Rays (大红酸枝与桃木) ---
+  // --- I. Red Rosewood & Peach Wood: Oily Timber Grains & End-Grain Rays (大红酸枝与桃木) ---
   else if (mat.id === "rosewood" || mat.id === "peach-wood") {
     ctx.save();
     ctx.strokeStyle = mat.id === "rosewood" ? "rgba(80, 7, 36, 0.85)" : "rgba(146, 64, 14, 0.7)";
@@ -341,7 +341,7 @@ function renderProceduralBead(
     ctx.restore();
   }
 
-  // --- G. Silver Lotus Guru / Pixiu / Spacers: 3D Embossed Metallic Carvings (纯银与藏银浮雕) ---
+  // --- J. Silver Lotus Guru / Pixiu / Spacers: 3D Embossed Metallic Carvings (纯银与藏银浮雕) ---
   else if (mat.category === "spacer") {
     ctx.save();
     ctx.strokeStyle = "rgba(71, 85, 105, 0.9)";

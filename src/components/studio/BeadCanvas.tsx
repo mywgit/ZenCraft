@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { getMaterialById } from "@/lib/materialsData";
-import { drawRealisticBead, preloadBeadImages } from "@/lib/beadTextureRenderer";
+import { drawRealisticBead } from "@/lib/beadTextureRenderer";
 import { Trash2, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -19,11 +19,6 @@ export function BeadCanvas() {
   } = useStudio();
   const { lang, t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Preload real photos on mount
-  useEffect(() => {
-    preloadBeadImages();
-  }, []);
 
   // Render Bracelet on 360 degree circle
   useEffect(() => {
