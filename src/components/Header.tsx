@@ -71,6 +71,16 @@ export function Header() {
             🏛️ {lang === "zh" ? "现成集市" : "Market"}
           </Link>
           <Link
+            href="/admin/orders"
+            className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
+              pathname === "/admin/orders"
+                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow"
+                : "text-amber-200/70 hover:text-amber-100 hover:bg-amber-950/50"
+            }`}
+          >
+            📦 {lang === "zh" ? "工单发货" : "Fulfillment"}
+          </Link>
+          <Link
             href="/about"
             className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
               pathname === "/about"
