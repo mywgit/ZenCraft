@@ -12,6 +12,25 @@ export interface ShippingAddress {
 
 export type PaymentMethod = "stripe-card" | "paypal" | "apple-pay";
 
+export interface BeadSequenceItem {
+  index: number;
+  materialId: string;
+  nameZh: string;
+  nameEn: string;
+  sizeMm: number;
+  color: string;
+  image: string;
+}
+
+export interface MaterialCountItem {
+  materialId: string;
+  nameZh: string;
+  nameEn: string;
+  count: number;
+  sizeMm: number;
+  image: string;
+}
+
 export interface OrderItem {
   id: string;
   title: string;
@@ -26,6 +45,9 @@ export interface OrderItem {
     dominantElement?: string;
     materialsSummary?: string;
     materialsSummaryZh?: string;
+    beadsSequence?: BeadSequenceItem[];
+    materialCounts?: MaterialCountItem[];
+    blueprintSnapshotUrl?: string;
   };
 }
 

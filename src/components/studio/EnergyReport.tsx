@@ -17,9 +17,10 @@ import {
 
 import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 import { OrderItem } from "@/types/order";
+import { getMaterialById } from "@/lib/materialsData";
 
 export function EnergyReport() {
-  const { energyResult, setIsCertificateOpen, customerName, setCustomerName } = useStudio();
+  const { beads, energyResult, setIsCertificateOpen, customerName, setCustomerName } = useStudio();
   const { lang, t } = useLanguage();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
@@ -33,6 +34,40 @@ export function EnergyReport() {
     "root",
   ];
 
+  // Compute exact bead sequence and material count breakdown for workshop fulfillment
+  const beadsSequence = beads.map((b, i) => {
+    const mat = getMaterialById(b.materialId);
+    return {
+      index: i + 1,
+      materialId: b.materialId,
+      nameZh: mat?.nameZh || "圣木",
+      nameEn: mat?.name || "Sacred Bead",
+      sizeMm: b.sizeMm,
+      color: mat?.colors.base || "#caa472",
+      image: mat?.image || "/beads/green-sandalwood.png",
+    };
+  });
+
+  const countMap: Record<string, { materialId: string; nameZh: string; nameEn: string; count: number; sizeMm: number; image: string }> = {};
+  beads.forEach((b) => {
+    const mat = getMaterialById(b.materialId);
+    const key = `${b.materialId}-${b.sizeMm}`;
+    if (!countMap[key]) {
+      countMap[key] = {
+        materialId: b.materialId,
+        nameZh: mat?.nameZh || "圣木",
+        nameEn: mat?.name || "Sacred Bead",
+        count: 0,
+        sizeMm: b.sizeMm,
+        image: mat?.image || "/beads/green-sandalwood.png",
+      };
+    }
+    countMap[key].count += 1;
+  });
+  const materialCounts = Object.values(countMap);
+  const materialsSummaryZh = materialCounts.map((m) => `${m.nameZh} ${m.sizeMm}mm (${m.count}颗)`).join(" + ");
+  const materialsSummaryEn = materialCounts.map((m) => `${m.nameEn} ${m.sizeMm}mm (${m.count} pcs)`).join(" + ");
+
   const customOrderItem: OrderItem = {
     id: `custom-mala-${Date.now()}`,
     title: `Bespoke Dacheng Zen Mala (${energyResult.totalBeads} Beads)`,
@@ -45,8 +80,10 @@ export function EnergyReport() {
       wearerName: customerName || (lang === "zh" ? "有缘善信" : "Mindful Seeker"),
       beadCount: energyResult.totalBeads,
       dominantElement: energyResult.dominantElement,
-      materialsSummary: energyResult.blessingTitle,
-      materialsSummaryZh: energyResult.blessingTitleZh,
+      materialsSummary: materialsSummaryEn || energyResult.blessingTitle,
+      materialsSummaryZh: materialsSummaryZh || energyResult.blessingTitleZh,
+      beadsSequence,
+      materialCounts,
     },
   };
 

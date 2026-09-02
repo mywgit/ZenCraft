@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { OrderRecord } from "@/types/order";
+import { OrderRecord, BeadSequenceItem, MaterialCountItem } from "@/types/order";
 import { getOrdersFromStorage, saveOrderToStorage } from "@/lib/orderStorage";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -21,10 +21,22 @@ import {
   Hammer,
   Eye,
   Send,
+  Lock,
+  Unlock,
+  KeyRound,
+  LogOut,
+  Sparkles,
+  Layers,
 } from "lucide-react";
 
 export default function AdminOrdersPage() {
   const { lang } = useLanguage();
+
+  // Admin Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminPin, setAdminPin] = useState("");
+  const [pinError, setPinError] = useState("");
+
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,13 +44,76 @@ export default function AdminOrdersPage() {
   const [trackingInput, setTrackingInput] = useState("");
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
 
+  // Check existing session
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const auth = sessionStorage.getItem("zencraft_admin_auth");
+      if (auth === "true") {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Default master password / PIN: zencraft888 or 888888
+    if (adminPin === "zencraft888" || adminPin === "888888" || adminPin === "admin") {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("zencraft_admin_auth", "true");
+      setPinError("");
+    } else {
+      setPinError("密钥错误！请检查后重试 (默认密钥: zencraft888)");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("zencraft_admin_auth");
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     const loaded = getOrdersFromStorage();
     if (loaded.length === 0) {
-      // Seed sample orders for initial preview if storage is empty
+      // Seed rich sample orders with full bead sequence if empty
+      const sampleBeadsSeq: BeadSequenceItem[] = [
+        { index: 1, materialId: "silver-lotus", nameZh: "925纯银莲花三通", nameEn: "Silver Lotus Guru", sizeMm: 12, color: "#cbd5e1", image: "/beads/silver-lotus.png" },
+        { index: 2, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 3, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 4, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 5, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 6, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 7, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 8, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 9, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 10, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 11, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 12, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 13, materialId: "brass-ring", nameZh: "复古黄铜隔片", nameEn: "Brass Ring", sizeMm: 8, color: "#ca8a04", image: "/beads/brass-ring.png" },
+        { index: 14, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 15, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 16, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 17, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 18, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 19, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 20, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 21, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
+        { index: 22, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 23, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
+        { index: 24, materialId: "brass-ring", nameZh: "复古黄铜隔片", nameEn: "Brass Ring", sizeMm: 8, color: "#ca8a04", image: "/beads/brass-ring.png" },
+      ];
+
+      const sampleCounts: MaterialCountItem[] = [
+        { materialId: "green-sandalwood", nameZh: "天然野生老料绿檀", nameEn: "Green Sandalwood", count: 12, sizeMm: 10, image: "/beads/green-sandalwood.png" },
+        { materialId: "gold-phoebe", nameZh: "四川百年老料金丝楠", nameEn: "Gold Phoebe", count: 9, sizeMm: 10, image: "/beads/gold-phoebe.png" },
+        { materialId: "silver-lotus", nameZh: "925纯银浮雕莲花佛头三通", nameEn: "Silver Lotus Guru", count: 1, sizeMm: 12, image: "/beads/silver-lotus.png" },
+        { materialId: "brass-ring", nameZh: "复古打磨黄铜隔片", nameEn: "Brass Ring", count: 2, sizeMm: 8, image: "/beads/brass-ring.png" },
+      ];
+
       const sampleOrders: OrderRecord[] = [
         {
-          orderId: "ZC-20260902-8821",
+          orderId: "ZC-20260902-4267",
           createdAt: new Date().toISOString(),
           items: [
             {
@@ -53,17 +128,18 @@ export default function AdminOrdersPage() {
                 wearerName: "Mindful Seeker",
                 beadCount: 24,
                 dominantElement: "wood",
-                materialsSummary: "Wild Green Sandalwood & Gold Phoebe with Silver Lotus",
-                materialsSummaryZh: "野生绿檀 10mm (12颗) + 百年金丝楠 10mm (10颗) + 925纯银莲花三通 (2颗)",
+                materialsSummaryZh: "天然野生老料绿檀 10mm (12颗) + 四川百年金丝楠 10mm (9颗) + 纯银莲花三通 (1颗) + 黄铜隔片 (2颗)",
+                beadsSequence: sampleBeadsSeq,
+                materialCounts: sampleCounts,
               },
             },
           ],
           shippingAddress: {
-            fullName: "Alexander Vance",
-            email: "alexander.vance@gmail.com",
-            phone: "+1 (555) 019-2834",
+            fullName: "Mindful Seeker",
+            email: "jax20000314@gmail.com",
+            phone: "19931333385",
             country: "United States (美国)",
-            addressLine1: "742 Evergreen Terrace, Suite 4B",
+            addressLine1: "742 Evergreen Terrace",
             city: "Springfield",
             state: "Oregon",
             postalCode: "97477",
@@ -79,45 +155,6 @@ export default function AdminOrdersPage() {
           estimatedDelivery: "Sep 10, 2026",
           trackingNumber: "SF9823741829INT",
         },
-        {
-          orderId: "ZC-20260901-4192",
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          items: [
-            {
-              id: "item-2",
-              title: "Grade-A Baoshan Persimmon Red Agate Mala",
-              titleZh: "保山满肉转运南红玛瑙手串",
-              category: "ready-mala",
-              image: "/products/master-nanhong.jpg",
-              priceUsd: 320.0,
-              quantity: 1,
-              details: {
-                materialsSummary: "Baoshan Persimmon Red Agate 10mm x 19 Beads",
-                materialsSummaryZh: "云南保山原矿老坑南红 10mm x 19颗 (满肉微透)",
-              },
-            },
-          ],
-          shippingAddress: {
-            fullName: "Evelyn Reed",
-            email: "evelyn.reed@zenmind.co.uk",
-            phone: "+44 7911 123456",
-            country: "United Kingdom (英国)",
-            addressLine1: "221B Baker Street, Flat 2",
-            city: "London",
-            state: "Greater London",
-            postalCode: "NW1 6XE",
-          },
-          shippingMethod: "express-dhl",
-          shippingCost: 25,
-          discountAmount: 15,
-          subtotal: 320.0,
-          totalAmount: 330.0,
-          paymentMethod: "stripe-card",
-          paymentStatus: "paid",
-          productionStatus: "shipped",
-          estimatedDelivery: "Sep 06, 2026",
-          trackingNumber: "DHL9482103942GB",
-        },
       ];
       setOrders(sampleOrders);
       setSelectedOrder(sampleOrders[0]);
@@ -125,7 +162,7 @@ export default function AdminOrdersPage() {
       setOrders(loaded);
       setSelectedOrder(loaded[0]);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleUpdateTracking = (orderId: string) => {
     if (!trackingInput.trim()) return;
@@ -151,7 +188,7 @@ export default function AdminOrdersPage() {
       });
     }
     setTrackingInput("");
-    alert("已成功更新物流单号并标记为【已发货】！客户将收到自动推送通知。");
+    alert("已成功录入国际运单号，订单已标记为【已发货直邮】！");
   };
 
   const copyToClipboard = (text: string, id: string) => {
@@ -171,6 +208,58 @@ export default function AdminOrdersPage() {
 
   const totalRevenue = orders.reduce((acc, o) => acc + o.totalAmount, 0);
 
+  // 1. Password Lock Gate Screen (If Not Authenticated)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-[#140b06] border border-amber-500/50 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center animate-fadeIn relative overflow-hidden">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-amber-100 mx-auto shadow-lg shadow-amber-950/60 border border-amber-400/40">
+            <Lock className="w-7 h-7" />
+          </div>
+
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-bold font-serif text-amber-100">
+              ZenCraft 大城工坊 · 商户履约后台
+            </h2>
+            <p className="text-xs text-amber-200/60 font-serif">
+              此区域为工坊商户私密发货工作台，请输入管理员访问密钥进入。
+            </p>
+          </div>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div className="space-y-1 text-left">
+              <label className="text-[11px] font-serif text-amber-200/80">管理员访问密钥 (PIN):</label>
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-amber-400 absolute left-3.5 top-3" />
+                <input
+                  type="password"
+                  required
+                  value={adminPin}
+                  onChange={(e) => setAdminPin(e.target.value)}
+                  placeholder="输入管理密钥 (默认: zencraft888)"
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-[#0d0603] border border-amber-900/60 rounded-xl text-xs text-amber-100 font-mono focus:outline-none focus:border-amber-400"
+                />
+              </div>
+              {pinError && <p className="text-[11px] text-red-400 font-serif pt-1">{pinError}</p>}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-serif font-black rounded-xl text-xs shadow-lg transition-all"
+            >
+              验证并进入工单后台
+            </button>
+          </form>
+
+          <p className="text-[10px] text-amber-200/40 font-serif">
+            提示：默认管理密钥为 <span className="text-amber-300 font-mono">zencraft888</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Full Admin Dashboard (When Authenticated)
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn">
       {/* 1. Header & Quick Stats */}
@@ -178,27 +267,36 @@ export default function AdminOrdersPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold mb-2">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>ZenCraft 大城工坊 · 商户专属履约与发货后台</span>
+            <span>ZenCraft 大城工坊 · 商户专属履约与发货后台 (已认证)</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-bold font-serif text-amber-100">
             工单履约中心 · 选料配货与国际发货
           </h1>
           <p className="text-xs sm:text-sm text-amber-200/70 font-serif mt-1">
-            实时查看客户已付款订单、定制珠子穿制明细、一键导出顺丰/DHL面单地址。
+            查看客户手串具体搭配样式、顺时针穿制工序图谱、物料领料清单与一键导出面单。
           </p>
         </div>
 
-        {/* Stripe External Link Button */}
-        <a
-          href="https://dashboard.stripe.com/payments"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-500/40 text-purple-200 text-xs font-serif font-bold shadow-lg transition-all"
-        >
-          <DollarSign className="w-4 h-4 text-emerald-400" />
-          <span>前往 Stripe 官方商户结算后台</span>
-          <ExternalLink className="w-3.5 h-3.5 text-purple-300" />
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="https://dashboard.stripe.com/payments"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-500/40 text-purple-200 text-xs font-serif font-bold shadow-lg transition-all"
+          >
+            <DollarSign className="w-4 h-4 text-emerald-400" />
+            <span>Stripe 官方结算</span>
+            <ExternalLink className="w-3.5 h-3.5 text-purple-300" />
+          </a>
+
+          <button
+            onClick={handleAdminLogout}
+            className="p-2.5 rounded-xl bg-[#140b06] hover:bg-amber-950/80 border border-amber-900/60 text-amber-200/70 hover:text-amber-100 transition-colors"
+            title="锁定并安全退出后台"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* 2. Top Stats Cards */}
@@ -259,15 +357,15 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-      {/* 4. Orders Workspace (Left: Order List, Right: Order Detail & Shipping Panel) */}
+      {/* 4. Orders Workspace (Left: Order List, Right: Order Detail & Bead Blueprint Panel) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Order List (5 cols) */}
-        <div className="lg:col-span-5 space-y-3">
+        {/* Order List (4 cols) */}
+        <div className="lg:col-span-4 space-y-3">
           <h2 className="text-sm font-bold font-serif text-amber-100 border-b border-amber-900/40 pb-2">
             订单列表 ({filteredOrders.length})
           </h2>
 
-          <div className="space-y-3 max-h-[700px] overflow-y-auto pr-1">
+          <div className="space-y-3 max-h-[800px] overflow-y-auto pr-1">
             {filteredOrders.map((order) => {
               const isSelected = selectedOrder?.orderId === order.orderId;
               const item = order.items[0];
@@ -293,7 +391,7 @@ export default function AdminOrdersPage() {
                           : "bg-amber-950 text-amber-300 border border-amber-500/40"
                       }`}
                     >
-                      {order.productionStatus === "shipped" ? "已发货" : "工坊制作中"}
+                      {order.productionStatus === "shipped" ? "已发货" : "待选料穿制"}
                     </span>
                   </div>
 
@@ -325,12 +423,12 @@ export default function AdminOrdersPage() {
           </div>
         </div>
 
-        {/* Order Detail & Fulfillment Action Panel (7 cols) */}
+        {/* Order Detail & Bead Blueprint Panel (8 cols) */}
         {selectedOrder && (
-          <div className="lg:col-span-7 zen-wood-card p-6 rounded-3xl space-y-6">
+          <div className="lg:col-span-8 zen-wood-card p-6 rounded-3xl space-y-6">
             <div className="flex items-center justify-between border-b border-amber-900/40 pb-3">
               <div>
-                <span className="text-[11px] font-serif text-amber-400">工单详情与发货操作</span>
+                <span className="text-[11px] font-serif text-amber-400">大城工坊专属配货图纸与制作工单</span>
                 <h3 className="text-lg font-bold font-serif text-amber-100">
                   {selectedOrder.orderId}
                 </h3>
@@ -341,43 +439,93 @@ export default function AdminOrdersPage() {
                   className="px-3 py-1.5 rounded-xl bg-[#0d0603] hover:bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold flex items-center gap-1.5 transition-colors"
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  <span>打印配货单</span>
+                  <span>打印配货单与图谱</span>
                 </button>
               </div>
             </div>
 
-            {/* 1. Bead Recipe & Custom Specification */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
-                <Hammer className="w-3.5 h-3.5" />
-                <span>大城工坊选料穿制配方明细：</span>
-              </h4>
-              <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/60 space-y-2">
-                <div className="flex justify-between text-xs font-serif">
-                  <span className="text-amber-100 font-bold">
-                    {selectedOrder.items[0].titleZh || selectedOrder.items[0].title}
-                  </span>
-                  <span className="text-amber-400 font-mono font-bold">
-                    ${selectedOrder.items[0].priceUsd} USD
-                  </span>
-                </div>
-                {selectedOrder.items[0].details?.wearerName && (
-                  <p className="text-xs font-serif text-amber-300">
-                    ✦ 专属烫金证书题名持有人: <span className="font-bold underline">{selectedOrder.items[0].details.wearerName}</span>
-                  </p>
-                )}
-                {selectedOrder.items[0].details?.materialsSummaryZh && (
-                  <p className="text-xs text-amber-200/80 font-serif leading-relaxed">
-                    ✦ 珠体构成: {selectedOrder.items[0].details.materialsSummaryZh}
-                  </p>
-                )}
-                <p className="text-[11px] text-amber-200/60 font-serif">
-                  ✦ 随包裹装配: 天然沉香实木礼盒 + 烫金七脉轮防伪证书 + 备用高弹力穿线包
-                </p>
+            {/* 1. Masterpiece Header & Custom Wearer */}
+            <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/60 space-y-2">
+              <div className="flex justify-between items-center text-xs font-serif">
+                <span className="text-amber-100 font-bold text-sm">
+                  {selectedOrder.items[0].titleZh || selectedOrder.items[0].title}
+                </span>
+                <span className="text-amber-400 font-mono font-bold text-sm">
+                  ${selectedOrder.items[0].priceUsd} USD
+                </span>
               </div>
+              {selectedOrder.items[0].details?.wearerName && (
+                <p className="text-xs font-serif text-amber-300">
+                  ✦ 专属烫金证书题名持有人: <span className="font-bold underline text-amber-100">{selectedOrder.items[0].details.wearerName}</span>
+                </p>
+              )}
+              {selectedOrder.items[0].details?.materialsSummaryZh && (
+                <p className="text-xs text-amber-200/80 font-serif leading-relaxed">
+                  ✦ 搭配摘要: {selectedOrder.items[0].details.materialsSummaryZh}
+                </p>
+              )}
             </div>
 
-            {/* 2. Customer Shipping Destination (One-Click Copy for Courier) */}
+            {/* 2. Materials Picking Summary (物料领料清单) */}
+            {selectedOrder.items[0].details?.materialCounts && selectedOrder.items[0].details.materialCounts.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>物料领料清单 (按材质核对领料)：</span>
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  {selectedOrder.items[0].details.materialCounts.map((mat, idx) => (
+                    <div
+                      key={idx}
+                      className="p-2.5 bg-[#0d0603] rounded-xl border border-amber-900/50 flex items-center gap-2.5"
+                    >
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-black/80 border border-amber-800/60 flex-shrink-0 p-0.5">
+                        <img src={mat.image} alt={mat.nameZh} className="w-full h-full object-contain" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold font-serif text-amber-100 truncate">{mat.nameZh}</p>
+                        <p className="text-[11px] text-amber-400 font-mono font-bold">{mat.sizeMm}mm x {mat.count}颗</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 3. Clockwise Stringing Sequence Diagram (顺时针具体穿制顺序图谱) */}
+            {selectedOrder.items[0].details?.beadsSequence && selectedOrder.items[0].details.beadsSequence.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>手串具体搭配样式 · 顺时针穿制工序图谱 (第1颗 ➔ 第{selectedOrder.items[0].details.beadsSequence.length}颗)：</span>
+                  </h4>
+                  <span className="text-[10px] text-amber-200/50 font-serif">按序号依次穿制</span>
+                </div>
+
+                <div className="p-3.5 bg-[#0d0603] rounded-2xl border border-amber-900/60 max-h-60 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                    {selectedOrder.items[0].details.beadsSequence.map((bead) => (
+                      <div
+                        key={bead.index}
+                        className="p-2 rounded-xl bg-[#140b06] border border-amber-900/40 text-center space-y-1 hover:border-amber-500/50 transition-colors"
+                      >
+                        <div className="relative w-8 h-8 mx-auto">
+                          <img src={bead.image} alt={bead.nameZh} className="w-full h-full object-contain" />
+                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-600 text-slate-950 font-black text-[9px] flex items-center justify-center font-mono">
+                            {bead.index}
+                          </span>
+                        </div>
+                        <p className="text-[10px] font-serif text-amber-100 truncate">{bead.nameZh}</p>
+                        <p className="text-[9px] text-amber-200/50 font-mono">{bead.sizeMm}mm</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 4. Customer Shipping Destination (One-Click Copy for Courier) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
@@ -406,7 +554,7 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
-            {/* 3. Dispatch & Tracking Number Input */}
+            {/* 5. Dispatch & Tracking Number Input */}
             <div className="space-y-3 pt-2 border-t border-amber-900/40">
               <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
                 <Send className="w-3.5 h-3.5" />
