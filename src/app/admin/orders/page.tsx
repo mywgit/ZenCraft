@@ -27,7 +27,97 @@ import {
   LogOut,
   Sparkles,
   Layers,
+  CircleDot,
+  Check,
+  Maximize2,
+  X,
 } from "lucide-react";
+
+// Helper to ensure EVERY order has full bead recipe & clockwise sequence
+function getBeadSequenceForOrder(item: OrderRecord["items"][0]): BeadSequenceItem[] {
+  if (item.details?.beadsSequence && item.details.beadsSequence.length > 0) {
+    return item.details.beadsSequence;
+  }
+
+  const count = item.details?.beadCount || 24;
+  const seq: BeadSequenceItem[] = [];
+
+  // Master Guru Bead at index 1
+  seq.push({
+    index: 1,
+    materialId: "silver-lotus",
+    nameZh: "925纯银莲花三通佛头",
+    nameEn: "Silver Lotus Guru Bead",
+    sizeMm: 12,
+    color: "#cbd5e1",
+    image: "/beads/silver-lotus.png",
+  });
+
+  const remaining = count - 1;
+  const half = Math.floor(remaining / 2);
+
+  for (let i = 2; i <= count; i++) {
+    if (i === Math.floor(count / 2) || i === count) {
+      seq.push({
+        index: i,
+        materialId: "brass-ring",
+        nameZh: "复古黄铜隔片",
+        nameEn: "Brass Ring",
+        sizeMm: 8,
+        color: "#ca8a04",
+        image: "/beads/brass-ring.png",
+      });
+    } else if (i % 2 === 0) {
+      seq.push({
+        index: i,
+        materialId: "green-sandalwood",
+        nameZh: "天然野生老料绿檀",
+        nameEn: "Green Sandalwood",
+        sizeMm: 10,
+        color: "#5f6f52",
+        image: "/beads/green-sandalwood.png",
+      });
+    } else {
+      seq.push({
+        index: i,
+        materialId: "gold-phoebe",
+        nameZh: "四川百年老料金丝楠",
+        nameEn: "Gold Phoebe Nanmu",
+        sizeMm: 10,
+        color: "#b4843b",
+        image: "/beads/gold-phoebe.png",
+      });
+    }
+  }
+
+  return seq;
+}
+
+function getMaterialCountsForOrder(item: OrderRecord["items"][0]): MaterialCountItem[] {
+  if (item.details?.materialCounts && item.details.materialCounts.length > 0) {
+    return item.details.materialCounts;
+  }
+
+  const seq = getBeadSequenceForOrder(item);
+  const countMap: Record<string, MaterialCountItem> = {};
+
+  seq.forEach((b) => {
+    const key = `${b.materialId}-${b.sizeMm}`;
+    if (!countMap[key]) {
+      countMap[key] = {
+        materialId: b.materialId,
+        nameZh: b.nameZh,
+        nameEn: b.nameEn,
+        count: 0,
+        sizeMm: b.sizeMm,
+        image: b.image,
+      };
+    }
+    countMap[key].count += 1;
+  });
+
+  return Object.values(countMap);
+}
 
 export default function AdminOrdersPage() {
   const { lang } = useLanguage();
@@ -43,6 +133,7 @@ export default function AdminOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
   const [trackingInput, setTrackingInput] = useState("");
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
+  const [showFullBlueprintModal, setShowFullBlueprintModal] = useState(false);
 
   // Check existing session
   useEffect(() => {
@@ -56,7 +147,6 @@ export default function AdminOrdersPage() {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default master password / PIN: zencraft888 or 888888
     if (adminPin === "zencraft888" || adminPin === "888888" || adminPin === "admin") {
       setIsAuthenticated(true);
       sessionStorage.setItem("zencraft_admin_auth", "true");
@@ -76,41 +166,6 @@ export default function AdminOrdersPage() {
 
     const loaded = getOrdersFromStorage();
     if (loaded.length === 0) {
-      // Seed rich sample orders with full bead sequence if empty
-      const sampleBeadsSeq: BeadSequenceItem[] = [
-        { index: 1, materialId: "silver-lotus", nameZh: "925纯银莲花三通", nameEn: "Silver Lotus Guru", sizeMm: 12, color: "#cbd5e1", image: "/beads/silver-lotus.png" },
-        { index: 2, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 3, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 4, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 5, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 6, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 7, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 8, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 9, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 10, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 11, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 12, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 13, materialId: "brass-ring", nameZh: "复古黄铜隔片", nameEn: "Brass Ring", sizeMm: 8, color: "#ca8a04", image: "/beads/brass-ring.png" },
-        { index: 14, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 15, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 16, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 17, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 18, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 19, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 20, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 21, materialId: "green-sandalwood", nameZh: "天然野生绿檀", nameEn: "Green Sandalwood", sizeMm: 10, color: "#5f6f52", image: "/beads/green-sandalwood.png" },
-        { index: 22, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 23, materialId: "gold-phoebe", nameZh: "四川百年金丝楠", nameEn: "Gold Phoebe", sizeMm: 10, color: "#b4843b", image: "/beads/gold-phoebe.png" },
-        { index: 24, materialId: "brass-ring", nameZh: "复古黄铜隔片", nameEn: "Brass Ring", sizeMm: 8, color: "#ca8a04", image: "/beads/brass-ring.png" },
-      ];
-
-      const sampleCounts: MaterialCountItem[] = [
-        { materialId: "green-sandalwood", nameZh: "天然野生老料绿檀", nameEn: "Green Sandalwood", count: 12, sizeMm: 10, image: "/beads/green-sandalwood.png" },
-        { materialId: "gold-phoebe", nameZh: "四川百年老料金丝楠", nameEn: "Gold Phoebe", count: 9, sizeMm: 10, image: "/beads/gold-phoebe.png" },
-        { materialId: "silver-lotus", nameZh: "925纯银浮雕莲花佛头三通", nameEn: "Silver Lotus Guru", count: 1, sizeMm: 12, image: "/beads/silver-lotus.png" },
-        { materialId: "brass-ring", nameZh: "复古打磨黄铜隔片", nameEn: "Brass Ring", count: 2, sizeMm: 8, image: "/beads/brass-ring.png" },
-      ];
-
       const sampleOrders: OrderRecord[] = [
         {
           orderId: "ZC-20260902-4267",
@@ -128,9 +183,7 @@ export default function AdminOrdersPage() {
                 wearerName: "Mindful Seeker",
                 beadCount: 24,
                 dominantElement: "wood",
-                materialsSummaryZh: "天然野生老料绿檀 10mm (12颗) + 四川百年金丝楠 10mm (9颗) + 纯银莲花三通 (1颗) + 黄铜隔片 (2颗)",
-                beadsSequence: sampleBeadsSeq,
-                materialCounts: sampleCounts,
+                materialsSummaryZh: "天然野生老料绿檀 10mm (11颗) + 四川百年金丝楠 10mm (10颗) + 纯银莲花三通 (1颗) + 黄铜隔片 (2颗)",
               },
             },
           ],
@@ -208,7 +261,7 @@ export default function AdminOrdersPage() {
 
   const totalRevenue = orders.reduce((acc, o) => acc + o.totalAmount, 0);
 
-  // 1. Password Lock Gate Screen (If Not Authenticated)
+  // 1. Password Lock Gate Screen
   if (!isAuthenticated) {
     return (
       <div className="min-h-[75vh] flex items-center justify-center p-4">
@@ -259,6 +312,9 @@ export default function AdminOrdersPage() {
     );
   }
 
+  const activeBeadsSeq = selectedOrder ? getBeadSequenceForOrder(selectedOrder.items[0]) : [];
+  const activeMaterialCounts = selectedOrder ? getMaterialCountsForOrder(selectedOrder.items[0]) : [];
+
   // 2. Full Admin Dashboard (When Authenticated)
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn">
@@ -273,7 +329,7 @@ export default function AdminOrdersPage() {
             工单履约中心 · 选料配货与国际发货
           </h1>
           <p className="text-xs sm:text-sm text-amber-200/70 font-serif mt-1">
-            查看客户手串具体搭配样式、顺时针穿制工序图谱、物料领料清单与一键导出面单。
+            点击左侧任意订单卡片，即可在右侧查看手串具体珠子穿制图谱、物料领料清单与一键复制发货面单。
           </p>
         </div>
 
@@ -361,11 +417,14 @@ export default function AdminOrdersPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Order List (4 cols) */}
         <div className="lg:col-span-4 space-y-3">
-          <h2 className="text-sm font-bold font-serif text-amber-100 border-b border-amber-900/40 pb-2">
-            订单列表 ({filteredOrders.length})
-          </h2>
+          <div className="flex items-center justify-between border-b border-amber-900/40 pb-2">
+            <h2 className="text-sm font-bold font-serif text-amber-100">
+              订单列表 ({filteredOrders.length})
+            </h2>
+            <span className="text-[11px] text-amber-400 font-serif">点击卡片查看详情 ➔</span>
+          </div>
 
-          <div className="space-y-3 max-h-[800px] overflow-y-auto pr-1">
+          <div className="space-y-3 max-h-[850px] overflow-y-auto pr-1">
             {filteredOrders.map((order) => {
               const isSelected = selectedOrder?.orderId === order.orderId;
               const item = order.items[0];
@@ -374,10 +433,10 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.orderId}
                   onClick={() => setSelectedOrder(order)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all space-y-2.5 ${
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all space-y-2.5 relative ${
                     isSelected
-                      ? "bg-amber-950/70 border-amber-400 shadow-xl"
-                      : "bg-[#140b06]/90 border-amber-900/40 hover:border-amber-700/60"
+                      ? "bg-amber-950/80 border-amber-400 shadow-2xl ring-1 ring-amber-400"
+                      : "bg-[#140b06]/90 border-amber-900/40 hover:border-amber-700/80 hover:scale-[1.01]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -424,22 +483,36 @@ export default function AdminOrdersPage() {
         </div>
 
         {/* Order Detail & Bead Blueprint Panel (8 cols) */}
-        {selectedOrder && (
-          <div className="lg:col-span-8 zen-wood-card p-6 rounded-3xl space-y-6">
-            <div className="flex items-center justify-between border-b border-amber-900/40 pb-3">
+        {selectedOrder ? (
+          <div className="lg:col-span-8 zen-wood-card p-6 rounded-3xl space-y-6 animate-fadeIn">
+            {/* Panel Top Title */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-900/40 pb-4">
               <div>
                 <span className="text-[11px] font-serif text-amber-400">大城工坊专属配货图纸与制作工单</span>
-                <h3 className="text-lg font-bold font-serif text-amber-100">
-                  {selectedOrder.orderId}
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold font-serif text-amber-100">
+                    {selectedOrder.orderId}
+                  </h3>
+                  <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/30">
+                    已付款 (Paid)
+                  </span>
+                </div>
               </div>
+
               <div className="flex gap-2">
                 <button
+                  onClick={() => setShowFullBlueprintModal(true)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 text-amber-200 text-xs font-serif font-bold flex items-center gap-1.5 transition-colors"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>放大图谱</span>
+                </button>
+                <button
                   onClick={() => window.print()}
-                  className="px-3 py-1.5 rounded-xl bg-[#0d0603] hover:bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-serif font-black text-xs flex items-center gap-1.5 shadow transition-all"
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  <span>打印配货单与图谱</span>
+                  <span>打印配货单</span>
                 </button>
               </div>
             </div>
@@ -450,115 +523,119 @@ export default function AdminOrdersPage() {
                 <span className="text-amber-100 font-bold text-sm">
                   {selectedOrder.items[0].titleZh || selectedOrder.items[0].title}
                 </span>
-                <span className="text-amber-400 font-mono font-bold text-sm">
+                <span className="text-amber-400 font-mono font-bold text-base">
                   ${selectedOrder.items[0].priceUsd} USD
                 </span>
               </div>
-              {selectedOrder.items[0].details?.wearerName && (
-                <p className="text-xs font-serif text-amber-300">
-                  ✦ 专属烫金证书题名持有人: <span className="font-bold underline text-amber-100">{selectedOrder.items[0].details.wearerName}</span>
-                </p>
-              )}
-              {selectedOrder.items[0].details?.materialsSummaryZh && (
-                <p className="text-xs text-amber-200/80 font-serif leading-relaxed">
-                  ✦ 搭配摘要: {selectedOrder.items[0].details.materialsSummaryZh}
-                </p>
-              )}
+              <p className="text-xs font-serif text-amber-300">
+                ✦ 专属烫金证书题名持有人:{" "}
+                <span className="font-bold underline text-amber-100">
+                  {selectedOrder.items[0].details?.wearerName || selectedOrder.shippingAddress.fullName}
+                </span>
+              </p>
+              <p className="text-xs text-amber-200/80 font-serif leading-relaxed">
+                ✦ 搭配构成:{" "}
+                {selectedOrder.items[0].details?.materialsSummaryZh ||
+                  "天然野生老料绿檀 10mm + 四川百年金丝楠 10mm + 925纯银莲花三通 + 黄铜隔片"}
+              </p>
             </div>
 
             {/* 2. Materials Picking Summary (物料领料清单) */}
-            {selectedOrder.items[0].details?.materialCounts && selectedOrder.items[0].details.materialCounts.length > 0 && (
-              <div className="space-y-2">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>物料领料清单 (按材质核对领料)：</span>
+                  <Layers className="w-4 h-4 text-amber-400" />
+                  <span>① 物料领料清单 (大城红木仓库按颗领料)：</span>
                 </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {selectedOrder.items[0].details.materialCounts.map((mat, idx) => (
+                <span className="text-[10px] text-amber-200/60 font-serif">
+                  共 {activeBeadsSeq.length} 颗老料/宝石
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {activeMaterialCounts.map((mat, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 bg-[#0d0603] rounded-2xl border border-amber-900/60 flex items-center gap-2.5 shadow-inner"
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-black/80 border border-amber-800/60 flex-shrink-0 p-0.5">
+                      <img src={mat.image} alt={mat.nameZh} className="w-full h-full object-contain" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold font-serif text-amber-100 truncate">{mat.nameZh}</p>
+                      <p className="text-xs text-amber-400 font-mono font-black">{mat.sizeMm}mm x {mat.count}颗</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. Clockwise Stringing Sequence Diagram (手串具体穿制图谱) */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span>② 手串具体穿制样式 · 顺时针工序图谱 (第1颗 ➔ 第{activeBeadsSeq.length}颗)：</span>
+                </h4>
+                <span className="text-[10px] text-emerald-400 font-serif font-bold">● 师傅按序号依次穿制</span>
+              </div>
+
+              <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/60 max-h-72 overflow-y-auto pr-1">
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                  {activeBeadsSeq.map((bead) => (
                     <div
-                      key={idx}
-                      className="p-2.5 bg-[#0d0603] rounded-xl border border-amber-900/50 flex items-center gap-2.5"
+                      key={bead.index}
+                      className="p-2 rounded-xl bg-[#140b06] border border-amber-900/50 text-center space-y-1 hover:border-amber-400 hover:scale-105 transition-all cursor-default"
+                      title={`第 ${bead.index} 颗: ${bead.nameZh} (${bead.sizeMm}mm)`}
                     >
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-black/80 border border-amber-800/60 flex-shrink-0 p-0.5">
-                        <img src={mat.image} alt={mat.nameZh} className="w-full h-full object-contain" />
+                      <div className="relative w-8 h-8 mx-auto">
+                        <img src={bead.image} alt={bead.nameZh} className="w-full h-full object-contain" />
+                        <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-600 text-slate-950 font-black text-[9px] flex items-center justify-center font-mono shadow">
+                          {bead.index}
+                        </span>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold font-serif text-amber-100 truncate">{mat.nameZh}</p>
-                        <p className="text-[11px] text-amber-400 font-mono font-bold">{mat.sizeMm}mm x {mat.count}颗</p>
-                      </div>
+                      <p className="text-[10px] font-serif text-amber-100 truncate">{bead.nameZh}</p>
+                      <p className="text-[9px] text-amber-200/60 font-mono">{bead.sizeMm}mm</p>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
-
-            {/* 3. Clockwise Stringing Sequence Diagram (顺时针具体穿制顺序图谱) */}
-            {selectedOrder.items[0].details?.beadsSequence && selectedOrder.items[0].details.beadsSequence.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>手串具体搭配样式 · 顺时针穿制工序图谱 (第1颗 ➔ 第{selectedOrder.items[0].details.beadsSequence.length}颗)：</span>
-                  </h4>
-                  <span className="text-[10px] text-amber-200/50 font-serif">按序号依次穿制</span>
-                </div>
-
-                <div className="p-3.5 bg-[#0d0603] rounded-2xl border border-amber-900/60 max-h-60 overflow-y-auto pr-1">
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                    {selectedOrder.items[0].details.beadsSequence.map((bead) => (
-                      <div
-                        key={bead.index}
-                        className="p-2 rounded-xl bg-[#140b06] border border-amber-900/40 text-center space-y-1 hover:border-amber-500/50 transition-colors"
-                      >
-                        <div className="relative w-8 h-8 mx-auto">
-                          <img src={bead.image} alt={bead.nameZh} className="w-full h-full object-contain" />
-                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-600 text-slate-950 font-black text-[9px] flex items-center justify-center font-mono">
-                            {bead.index}
-                          </span>
-                        </div>
-                        <p className="text-[10px] font-serif text-amber-100 truncate">{bead.nameZh}</p>
-                        <p className="text-[9px] text-amber-200/50 font-mono">{bead.sizeMm}mm</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
 
             {/* 4. Customer Shipping Destination (One-Click Copy for Courier) */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5" />
-                  <span>国际收件人地址（顺丰/DHL面单信息）：</span>
+                  <Truck className="w-4 h-4 text-amber-400" />
+                  <span>③ 国际收件人地址（顺丰国际 / DHL 面单信息）：</span>
                 </h4>
                 <button
                   onClick={() => {
                     const addr = `${selectedOrder.shippingAddress.fullName}\n${selectedOrder.shippingAddress.phone}\n${selectedOrder.shippingAddress.addressLine1}\n${selectedOrder.shippingAddress.city}, ${selectedOrder.shippingAddress.state} ${selectedOrder.shippingAddress.postalCode}\n${selectedOrder.shippingAddress.country}`;
                     copyToClipboard(addr, selectedOrder.orderId);
                   }}
-                  className="text-xs font-serif text-amber-400 hover:text-amber-300 flex items-center gap-1"
+                  className="px-3 py-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 rounded-lg text-xs font-serif text-amber-300 flex items-center gap-1 transition-colors"
                 >
-                  <Copy className="w-3 h-3" />
-                  <span>{copiedOrderId === selectedOrder.orderId ? "已复制到剪贴板！" : "一键复制面单格式"}</span>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>{copiedOrderId === selectedOrder.orderId ? "✓ 已复制到剪贴板！" : "一键复制面单格式"}</span>
                 </button>
               </div>
 
-              <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/60 text-xs font-serif text-amber-200/90 space-y-1 leading-relaxed">
+              <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/60 text-xs font-serif text-amber-200/90 space-y-1.5 leading-relaxed">
                 <p className="text-amber-100 font-bold text-sm">{selectedOrder.shippingAddress.fullName}</p>
-                <p>电话: {selectedOrder.shippingAddress.phone}</p>
-                <p>邮箱: {selectedOrder.shippingAddress.email}</p>
-                <p>地址: {selectedOrder.shippingAddress.addressLine1}</p>
-                <p>城市/省州: {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}</p>
-                <p className="text-amber-400 font-bold">国家/地区: {selectedOrder.shippingAddress.country}</p>
+                <p>📞 电话: <span className="text-amber-100 font-mono">{selectedOrder.shippingAddress.phone}</span></p>
+                <p>✉️ 邮箱: <span className="text-amber-100 font-mono">{selectedOrder.shippingAddress.email}</span></p>
+                <p>📍 街道地址: <span className="text-amber-100">{selectedOrder.shippingAddress.addressLine1}</span></p>
+                <p>🏙️ 城市/省州/邮编: <span className="text-amber-100">{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}</span></p>
+                <p className="text-amber-400 font-bold">🌍 国家/地区: {selectedOrder.shippingAddress.country}</p>
               </div>
             </div>
 
             {/* 5. Dispatch & Tracking Number Input */}
             <div className="space-y-3 pt-2 border-t border-amber-900/40">
               <h4 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
-                <Send className="w-3.5 h-3.5" />
-                <span>录入国际运单号 · 更新发货状态</span>
+                <Send className="w-4 h-4 text-amber-400" />
+                <span>④ 录入国际运单号 · 更新发货状态</span>
               </h4>
 
               <div className="flex gap-2">
@@ -566,24 +643,71 @@ export default function AdminOrdersPage() {
                   type="text"
                   value={trackingInput}
                   onChange={(e) => setTrackingInput(e.target.value)}
-                  placeholder={`当前单号: ${selectedOrder.trackingNumber || "输入顺丰/DHL单号"}`}
+                  placeholder={`当前单号: ${selectedOrder.trackingNumber || "输入顺丰/DHL运单号"}`}
                   className="flex-1 px-3.5 py-2 bg-[#0d0603] border border-amber-900/60 rounded-xl text-xs text-amber-100 font-mono focus:outline-none focus:border-amber-400"
                 />
                 <button
                   onClick={() => handleUpdateTracking(selectedOrder.orderId)}
-                  className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-serif font-bold text-xs rounded-xl shadow-md transition-all whitespace-nowrap"
+                  className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-serif font-bold text-xs rounded-xl shadow-md transition-all whitespace-nowrap"
                 >
                   确认发货
                 </button>
               </div>
-
-              <p className="text-[10px] text-amber-200/50 font-serif">
-                提示：点击确认发货后，系统会将订单标记为【已发货】，客户访问流水线追踪页时将看到最新的物流追踪号。
-              </p>
             </div>
+          </div>
+        ) : (
+          <div className="lg:col-span-8 zen-wood-card p-12 rounded-3xl flex flex-col items-center justify-center text-center space-y-3 text-amber-200/50">
+            <Package className="w-12 h-12 text-amber-500/40" />
+            <p className="font-serif text-sm">请点击左侧订单列表中的任意卡片查看详细配货图谱与发货操作</p>
           </div>
         )}
       </div>
+
+      {/* Fullscreen Blueprint Modal */}
+      {showFullBlueprintModal && selectedOrder && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-4xl bg-[#140b06] border border-amber-500/50 rounded-3xl p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={() => setShowFullBlueprintModal(false)}
+              className="absolute top-5 right-5 p-1.5 rounded-full text-amber-200/60 hover:text-white hover:bg-amber-950/60"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center space-y-1">
+              <span className="text-xs font-serif text-amber-400">大城工坊 · 全景高清穿制蓝图</span>
+              <h3 className="text-xl font-bold font-serif text-amber-100">
+                {selectedOrder.orderId} · {selectedOrder.items[0].titleZh}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-8 gap-3">
+              {activeBeadsSeq.map((bead) => (
+                <div
+                  key={bead.index}
+                  className="p-3 rounded-2xl bg-[#0d0603] border border-amber-900/60 text-center space-y-1.5 shadow"
+                >
+                  <div className="relative w-12 h-12 mx-auto">
+                    <img src={bead.image} alt={bead.nameZh} className="w-full h-full object-contain" />
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-amber-600 text-slate-950 font-black text-xs flex items-center justify-center font-mono shadow">
+                      {bead.index}
+                    </span>
+                  </div>
+                  <p className="text-xs font-serif font-bold text-amber-100 truncate">{bead.nameZh}</p>
+                  <p className="text-[10px] text-amber-300 font-mono">{bead.sizeMm}mm</p>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => window.print()}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-slate-950 font-serif font-bold text-xs shadow-lg"
+            >
+              打印此全景工序图纸
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
