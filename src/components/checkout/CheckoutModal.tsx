@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { OrderItem, ShippingAddress, PaymentMethod, OrderRecord } from "@/types/order";
 import { generateOrderId, generateTrackingNumber, saveOrderToStorage } from "@/lib/orderStorage";
+import { STRIPE_CONFIG } from "@/lib/stripeConfig";
 import {
   X,
   ShieldCheck,
@@ -17,6 +18,7 @@ import {
   ArrowRight,
   Gift,
   Award,
+  ExternalLink,
 } from "lucide-react";
 
 interface CheckoutModalProps {
@@ -27,17 +29,20 @@ interface CheckoutModalProps {
 
 const COUNTRIES = [
   { code: "US", name: "United States (美国)" },
-  { code: "CA", name: "Canada (加拿大)" },
   { code: "GB", name: "United Kingdom (英国)" },
+  { code: "CA", name: "Canada (加拿大)" },
   { code: "AU", name: "Australia (澳大利亚)" },
-  { code: "SG", name: "Singapore (新加坡)" },
   { code: "DE", name: "Germany (德国)" },
   { code: "FR", name: "France (法国)" },
+  { code: "SG", name: "Singapore (新加坡)" },
   { code: "JP", name: "Japan (日本)" },
-  { code: "CN", name: "China (中国大陆/港澳台)" },
   { code: "MY", name: "Malaysia (马来西亚)" },
   { code: "NZ", name: "New Zealand (新西兰)" },
   { code: "NL", name: "Netherlands (荷兰)" },
+  { code: "IT", name: "Italy (意大利)" },
+  { code: "ES", name: "Spain (西班牙)" },
+  { code: "SE", name: "Sweden (瑞典)" },
+  { code: "CH", name: "Switzerland (瑞士)" },
 ];
 
 export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps) {
@@ -58,16 +63,11 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
   });
 
   const [shippingMethod, setShippingMethod] = useState<"standard-free" | "express-dhl">("standard-free");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("credit-card");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe-card");
   const [couponCode, setCouponCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState("");
-
-  // Card details state
-  const [cardNumber, setCardNumber] = useState("4242 •••• •••• 4242");
-  const [cardExpiry, setCardExpiry] = useState("12/28");
-  const [cardCvc, setCardCvc] = useState("888");
 
   // Processing state
   const [isProcessing, setIsProcessing] = useState(false);
@@ -94,11 +94,6 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       setCouponError(lang === "zh" ? "无效的优惠码 (试用: ZEN10 或 DACHENG)" : "Invalid coupon (Try: ZEN10 or DACHENG)");
     }
   };
-
-  // QR & 3DS Modal States
-  const [showQrModal, setShowQrModal] = useState(false);
-  const [qrType, setQrType] = useState<"wechat" | "alipay">("wechat");
-  const [pendingOrderId, setPendingOrderId] = useState("");
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,17 +132,10 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       trackingNumber,
     };
 
-    // If WeChat / Alipay selected, open interactive QR code scanner modal
-    if (paymentMethod === "wechat-alipay") {
-      setPendingOrderId(orderId);
-      saveOrderToStorage(newOrder);
-      setIsProcessing(false);
-      setShowQrModal(true);
-      return;
-    }
+    saveOrderToStorage(newOrder);
 
+    // 1. Try Calling Backend Stripe Session (Official Checkout)
     try {
-      // 1. Attempt live Stripe session call
       const res = await fetch("/api/checkout/stripe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -162,22 +150,32 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       const data = await res.json();
 
       if (data.isLive && data.url) {
-        // Save order draft and redirect to official Stripe Checkout page
-        saveOrderToStorage(newOrder);
+        // Direct redirect to Stripe Official Hosted Checkout (Apple Pay, Google Pay, Cards)
         window.location.href = data.url;
         return;
       }
     } catch (err) {
-      console.warn("Stripe live session unavailable, falling back to instant atelier gateway:", err);
+      console.warn("Direct Stripe session call:", err);
     }
 
-    // 2. Direct Atelier Gateway fallback (with 3DS bank simulation)
+    // 2. Direct Stripe Payment Link Gateway (Matching previous Tool/Bio projects)
+    if (STRIPE_CONFIG.defaultStripeLink && STRIPE_CONFIG.defaultStripeLink.includes("buy.stripe.com")) {
+      setTimeout(() => {
+        setIsProcessing(false);
+        onClose();
+        // Open Stripe Official Hosted Link in new tab & route parent to order success tracking
+        window.open(STRIPE_CONFIG.defaultStripeLink, "_blank");
+        router.push(`/order-success?orderId=${orderId}`);
+      }, 800);
+      return;
+    }
+
+    // 3. Instant Atelier Gateway
     setTimeout(() => {
-      saveOrderToStorage(newOrder);
       setIsProcessing(false);
       onClose();
       router.push(`/order-success?orderId=${orderId}`);
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -194,7 +192,7 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
                 {lang === "zh" ? "ZenCraft 东方手作结缘结算" : "ZenCraft Atelier Secure Checkout"}
               </h2>
               <p className="text-[11px] text-amber-300/60 font-serif">
-                {lang === "zh" ? "官方工坊直邮 · 附带保真证书与实木礼盒" : "Certified Direct Atelier Dispatch · Global Delivery"}
+                {lang === "zh" ? "Stripe 全球官方加密支付 · 附带保真证书与实木礼盒" : "Powered by Stripe & PayPal · Global Delivery"}
               </p>
             </div>
           </div>
@@ -401,114 +399,60 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
               </div>
             </div>
 
-            {/* 3. Payment Methods */}
+            {/* 3. Global Payment Methods (Stripe / Apple Pay / PayPal) */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-xs font-serif font-bold text-amber-300 border-b border-amber-900/40 pb-1.5">
                 <CreditCard className="w-4 h-4 text-amber-400" />
-                <span>{lang === "zh" ? "3. 支付渠道选择" : "3. Payment Method"}</span>
+                <span>{lang === "zh" ? "3. 国际安全支付渠道" : "3. Global Payment Method"}</span>
               </div>
 
-              {/* Payment Tabs */}
-              <div className="grid grid-cols-3 gap-2">
+              {/* International Payment Tabs */}
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod("credit-card")}
-                  className={`py-2 px-3 rounded-xl border text-xs font-serif font-bold flex items-center justify-center gap-1.5 transition-all ${
-                    paymentMethod === "credit-card"
-                      ? "bg-amber-600 text-slate-950 border-amber-400 shadow-md"
+                  onClick={() => setPaymentMethod("stripe-card")}
+                  className={`py-3 px-4 rounded-2xl border text-xs font-serif font-bold flex items-center justify-center gap-2 transition-all ${
+                    paymentMethod === "stripe-card"
+                      ? "bg-amber-600 text-slate-950 border-amber-400 shadow-md scale-[1.02]"
                       : "bg-[#0d0603] text-amber-200/70 border-amber-900/40 hover:text-amber-100"
                   }`}
                 >
-                  <CreditCard className="w-3.5 h-3.5" />
-                  <span>Card / Stripe</span>
+                  <CreditCard className="w-4 h-4" />
+                  <span>Stripe · 信用卡 / Apple Pay</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("paypal")}
-                  className={`py-2 px-3 rounded-xl border text-xs font-serif font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  className={`py-3 px-4 rounded-2xl border text-xs font-serif font-bold flex items-center justify-center gap-2 transition-all ${
                     paymentMethod === "paypal"
-                      ? "bg-amber-600 text-slate-950 border-amber-400 shadow-md"
+                      ? "bg-amber-600 text-slate-950 border-amber-400 shadow-md scale-[1.02]"
                       : "bg-[#0d0603] text-amber-200/70 border-amber-900/40 hover:text-amber-100"
                   }`}
                 >
-                  <span>🅿️ PayPal</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("wechat-alipay")}
-                  className={`py-2 px-3 rounded-xl border text-xs font-serif font-bold flex items-center justify-center gap-1.5 transition-all ${
-                    paymentMethod === "wechat-alipay"
-                      ? "bg-amber-600 text-slate-950 border-amber-400 shadow-md"
-                      : "bg-[#0d0603] text-amber-200/70 border-amber-900/40 hover:text-amber-100"
-                  }`}
-                >
-                  <span>微信 / 支付宝</span>
+                  <span>🅿️ PayPal · Pay in 4</span>
                 </button>
               </div>
 
-              {/* Card Inputs */}
-              {paymentMethod === "credit-card" && (
-                <div className="p-3.5 bg-[#0d0603] rounded-2xl border border-amber-900/50 space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-serif text-amber-200/70">Card Number (Visa / Mastercard / AMEX)</label>
-                    <input
-                      type="text"
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full px-3 py-1.5 bg-[#140b06] border border-amber-900/60 rounded-lg text-xs font-mono text-amber-100 focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-serif text-amber-200/70">Expires (MM/YY)</label>
-                      <input
-                        type="text"
-                        value={cardExpiry}
-                        onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full px-3 py-1.5 bg-[#140b06] border border-amber-900/60 rounded-lg text-xs font-mono text-amber-100 focus:outline-none focus:border-amber-400"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-serif text-amber-200/70">Security CVC</label>
-                      <input
-                        type="text"
-                        value={cardCvc}
-                        onChange={(e) => setCardCvc(e.target.value)}
-                        className="w-full px-3 py-1.5 bg-[#140b06] border border-amber-900/60 rounded-lg text-xs font-mono text-amber-100 focus:outline-none focus:border-amber-400"
-                      />
-                    </div>
-                  </div>
+              {/* Payment Details Info Card */}
+              <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/50 space-y-2">
+                <div className="flex items-center justify-between text-xs font-serif text-amber-200/90">
+                  <span className="font-bold">
+                    {paymentMethod === "stripe-card"
+                      ? "Stripe 官方托管收银台 (Official Gateway)"
+                      : "PayPal 国际快速结账 (Fast Checkout)"}
+                  </span>
+                  <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>SSL 256-bit Encrypted</span>
+                  </span>
                 </div>
-              )}
-
-              {paymentMethod === "paypal" && (
-                <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/50 text-center space-y-2">
-                  <p className="text-xs text-amber-200/80 font-serif">
-                    {lang === "zh" ? "点击下方按钮将前往 PayPal 官方安全通道完成支付。" : "You will be redirected to PayPal to complete your purchase securely."}
-                  </p>
-                  <div className="inline-block px-4 py-1.5 bg-[#003087] text-white rounded-lg font-bold text-xs font-serif">
-                    PayPal · Pay in 4 Available
-                  </div>
-                </div>
-              )}
-
-              {paymentMethod === "wechat-alipay" && (
-                <div className="p-4 bg-[#0d0603] rounded-2xl border border-amber-900/50 text-center space-y-2">
-                  <p className="text-xs text-amber-200/80 font-serif">
-                    {lang === "zh" ? "支持微信支付与支付宝扫码结算，实时折算人民币汇率。" : "WeChat Pay & Alipay QR direct checkout supported with live FX."}
-                  </p>
-                  <div className="flex justify-center gap-3 text-xs font-serif">
-                    <span className="px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-500/30 rounded-lg">
-                      🟢 微信支付
-                    </span>
-                    <span className="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-500/30 rounded-lg">
-                      🔵 支付宝
-                    </span>
-                  </div>
-                </div>
-              )}
+                <p className="text-[11px] text-amber-200/60 font-serif leading-relaxed">
+                  {paymentMethod === "stripe-card"
+                    ? "支持全球 Visa, Mastercard, American Express, Apple Pay, Google Pay 与 Link 一键结账。点击下方按钮即可安全完成支付。"
+                    : "安全跳转至 PayPal 官方完成付款，支持余额、国际信用卡与 Pay in 4 分期。"}
+                </p>
+              </div>
             </div>
           </form>
 
@@ -631,15 +575,17 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
                 {isProcessing ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                    <span>{lang === "zh" ? "正在连接大城工坊制作系统..." : "Transmitting Order to Dacheng Atelier..."}</span>
+                    <span>{lang === "zh" ? "正在连接 Stripe 安全收银台..." : "Connecting to Stripe Secure Gateway..."}</span>
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
                     <Lock className="w-4 h-4" />
                     <span>
-                      {lang === "zh" ? `确认结缘并支付 ($${totalAmount.toFixed(2)} USD)` : `Authorize Payment ($${totalAmount.toFixed(2)})`}
+                      {lang === "zh"
+                        ? `前往 Stripe 安全支付 ($${totalAmount.toFixed(2)} USD)`
+                        : `Pay with Stripe ($${totalAmount.toFixed(2)} USD)`}
                     </span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ExternalLink className="w-4 h-4" />
                   </span>
                 )}
               </button>
@@ -651,120 +597,6 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
             </div>
           </div>
         </div>
-
-        {/* Interactive WeChat / Alipay QR Code Scanner Modal */}
-        {showQrModal && (
-          <div className="absolute inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
-            <div className="max-w-sm w-full bg-[#140b06] border border-amber-500/50 rounded-3xl p-6 space-y-4 shadow-2xl relative">
-              <button
-                onClick={() => setShowQrModal(false)}
-                className="absolute top-4 right-4 text-amber-200/50 hover:text-amber-100 p-1"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-1">
-                <span className="text-xs font-serif font-bold text-amber-400">
-                  {lang === "zh" ? "扫码安全支付" : "Scan to Pay Securely"}
-                </span>
-                <h3 className="text-base font-bold font-serif text-amber-100">
-                  {qrType === "wechat" ? "微信支付 · 实时结算" : "支付宝 · 快捷支付"}
-                </h3>
-                <p className="text-xs font-mono text-emerald-400 font-bold">
-                  ¥{(totalAmount * 7.25).toFixed(2)} RMB (${totalAmount.toFixed(2)} USD)
-                </p>
-              </div>
-
-              {/* QR Code Graphic with Laser Scan Line Animation */}
-              <div className="relative w-48 h-48 mx-auto bg-white p-3 rounded-2xl shadow-inner overflow-hidden flex items-center justify-center border-2 border-amber-500/60">
-                <svg className="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="currentColor">
-                  {/* Stylized QR Matrix */}
-                  <rect x="5" y="5" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="6" />
-                  <rect x="11" y="11" width="13" height="13" />
-                  <rect x="70" y="5" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="6" />
-                  <rect x="76" y="11" width="13" height="13" />
-                  <rect x="5" y="70" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="6" />
-                  <rect x="11" y="76" width="13" height="13" />
-                  {/* Data Points */}
-                  <rect x="36" y="8" width="6" height="6" />
-                  <rect x="46" y="8" width="6" height="6" />
-                  <rect x="56" y="8" width="6" height="6" />
-                  <rect x="36" y="20" width="6" height="6" />
-                  <rect x="48" y="24" width="6" height="6" />
-                  <rect x="36" y="36" width="6" height="6" />
-                  <rect x="48" y="36" width="6" height="6" />
-                  <rect x="60" y="36" width="6" height="6" />
-                  <rect x="72" y="36" width="6" height="6" />
-                  <rect x="84" y="36" width="6" height="6" />
-                  <rect x="8" y="48" width="6" height="6" />
-                  <rect x="20" y="48" width="6" height="6" />
-                  <rect x="36" y="48" width="6" height="6" />
-                  <rect x="60" y="48" width="6" height="6" />
-                  <rect x="76" y="48" width="6" height="6" />
-                  <rect x="8" y="60" width="6" height="6" />
-                  <rect x="24" y="60" width="6" height="6" />
-                  <rect x="36" y="60" width="6" height="6" />
-                  <rect x="48" y="60" width="6" height="6" />
-                  <rect x="68" y="60" width="6" height="6" />
-                  <rect x="84" y="60" width="6" height="6" />
-                  <rect x="36" y="72" width="6" height="6" />
-                  <rect x="52" y="72" width="6" height="6" />
-                  <rect x="68" y="72" width="6" height="6" />
-                  <rect x="80" y="72" width="6" height="6" />
-                  <rect x="36" y="84" width="6" height="6" />
-                  <rect x="48" y="84" width="6" height="6" />
-                  <rect x="64" y="84" width="6" height="6" />
-                  <rect x="76" y="84" width="6" height="6" />
-                </svg>
-                {/* Laser animation bar */}
-                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-bounce shadow-md shadow-emerald-400" />
-              </div>
-
-              {/* QR Toggle Buttons */}
-              <div className="flex justify-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setQrType("wechat")}
-                  className={`px-3 py-1 rounded-lg text-xs font-serif ${
-                    qrType === "wechat"
-                      ? "bg-emerald-600 text-white font-bold"
-                      : "bg-[#0d0603] text-amber-200/60"
-                  }`}
-                >
-                  🟢 微信支付
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setQrType("alipay")}
-                  className={`px-3 py-1 rounded-lg text-xs font-serif ${
-                    qrType === "alipay"
-                      ? "bg-sky-600 text-white font-bold"
-                      : "bg-[#0d0603] text-amber-200/60"
-                  }`}
-                >
-                  🔵 支付宝
-                </button>
-              </div>
-
-              {/* Complete Payment Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  setShowQrModal(false);
-                  onClose();
-                  router.push(`/order-success?orderId=${pendingOrderId}`);
-                }}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-serif font-bold rounded-xl text-xs shadow-lg transition-all"
-              >
-                {lang === "zh" ? "我已完成手机扫码支付 (确认入单)" : "I Have Completed Scan & Pay"}
-              </button>
-
-              <p className="text-[10px] text-amber-200/50 font-serif">
-                支付完成后工单将自动同步至大城红木工坊制作系统
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

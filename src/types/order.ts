@@ -10,7 +10,7 @@ export interface ShippingAddress {
   postalCode: string;
 }
 
-export type PaymentMethod = "credit-card" | "paypal" | "apple-pay" | "wechat-alipay";
+export type PaymentMethod = "stripe-card" | "paypal" | "apple-pay";
 
 export interface OrderItem {
   id: string;
