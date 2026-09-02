@@ -19,9 +19,13 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { OrderItem } from "@/types/order";
+
 export default function HomePage() {
   const { lang, t } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [checkoutItem, setCheckoutItem] = useState<OrderItem | null>(null);
 
   const masterpieceProducts = [
     {
@@ -274,12 +278,27 @@ export default function HomePage() {
                     ${p.origPrice}
                   </span>
                 </div>
-                <Link
-                  href="/market"
-                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-amber-100 font-serif font-bold text-xs shadow-md border border-amber-400/30 transition-all"
+                <button
+                  onClick={() => {
+                    const item: OrderItem = {
+                      id: p.id,
+                      title: p.nameEn,
+                      titleZh: p.nameZh,
+                      category: "ready-mala",
+                      image: p.image,
+                      priceUsd: p.price,
+                      quantity: 1,
+                      details: {
+                        materialsSummary: p.nameEn,
+                        materialsSummaryZh: p.nameZh,
+                      },
+                    };
+                    setCheckoutItem(item);
+                  }}
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-amber-100 font-serif font-bold text-xs shadow-md border border-amber-400/30 transition-all hover:scale-105"
                 >
                   {lang === "zh" ? "结缘下单" : "Order"}
-                </Link>
+                </button>
               </div>
             </div>
           ))}
@@ -443,6 +462,15 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      {/* Real Full-Featured Checkout Modal */}
+      {checkoutItem && (
+        <CheckoutModal
+          isOpen={!!checkoutItem}
+          onClose={() => setCheckoutItem(null)}
+          orderItem={checkoutItem}
+        />
+      )}
     </div>
   );
 }

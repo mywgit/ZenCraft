@@ -6,9 +6,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Sparkles, ShieldCheck, TreePine, Star, Truck, ArrowRight, MessageCircle, Heart, Tag } from "lucide-react";
 import Link from "next/link";
 
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { OrderItem } from "@/types/order";
+
 export default function MarketPage() {
   const { lang, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<"all" | ProductCategory>("all");
+  const [checkoutItem, setCheckoutItem] = useState<OrderItem | null>(null);
 
   const filteredProducts =
     selectedCategory === "all"
@@ -25,11 +29,20 @@ export default function MarketPage() {
   ];
 
   const handleOrder = (product: ReadyProduct) => {
-    alert(
-      lang === "zh"
-        ? `【模拟结账】已锁定现货【${product.nameZh}】！\n结缘金额: $${product.priceUsd} USD\n大城工坊将随单附赠实木礼盒与手作证书直邮发货！`
-        : `[Simulated Checkout] Secured order for: ${product.name}!\nTotal: $${product.priceUsd} USD\nSolid wooden gift box & certificate included!`
-    );
+    const item: OrderItem = {
+      id: product.id,
+      title: product.name,
+      titleZh: product.nameZh,
+      category: product.category === "mala" ? "ready-mala" : product.category,
+      image: product.image,
+      priceUsd: product.priceUsd,
+      quantity: 1,
+      details: {
+        materialsSummary: product.woodMaterial,
+        materialsSummaryZh: product.woodMaterialZh,
+      },
+    };
+    setCheckoutItem(item);
   };
 
   return (
@@ -173,6 +186,15 @@ export default function MarketPage() {
           <span>{lang === "zh" ? "前往 DIY 串珠设计台" : "Launch Customizer Studio"}</span>
         </Link>
       </div>
+
+      {/* Real Full-Featured Checkout Modal for Market Products */}
+      {checkoutItem && (
+        <CheckoutModal
+          isOpen={!!checkoutItem}
+          onClose={() => setCheckoutItem(null)}
+          orderItem={checkoutItem}
+        />
+      )}
     </div>
   );
 }

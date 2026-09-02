@@ -15,10 +15,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { OrderItem } from "@/types/order";
+
 export function EnergyReport() {
   const { energyResult, setIsCertificateOpen, customerName, setCustomerName } = useStudio();
   const { lang, t } = useLanguage();
-  const [isOrdering, setIsOrdering] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const chakrasList: ChakraType[] = [
     "crown",
@@ -30,16 +33,25 @@ export function EnergyReport() {
     "root",
   ];
 
+  const customOrderItem: OrderItem = {
+    id: `custom-mala-${Date.now()}`,
+    title: `Bespoke Dacheng Zen Mala (${energyResult.totalBeads} Beads)`,
+    titleZh: `大城正统老料高定手串 (${energyResult.totalBeads} 颗精选)`,
+    category: "custom-mala",
+    image: "/products/master-zitan.jpg",
+    priceUsd: energyResult.totalPriceUsd,
+    quantity: 1,
+    details: {
+      wearerName: customerName || (lang === "zh" ? "有缘善信" : "Mindful Seeker"),
+      beadCount: energyResult.totalBeads,
+      dominantElement: energyResult.dominantElement,
+      materialsSummary: energyResult.blessingTitle,
+      materialsSummaryZh: energyResult.blessingTitleZh,
+    },
+  };
+
   const handleDirectOrder = () => {
-    setIsOrdering(true);
-    setTimeout(() => {
-      alert(
-        lang === "zh"
-          ? `【模拟支付成功】已生成专属制作工单！\n客户姓名: ${customerName}\n珠数: ${energyResult.totalBeads} 颗\n实付金额: $${energyResult.totalPriceUsd} USD\n手串设计图纸与收件信息已同步发送至工坊！`
-          : `[Stripe Checkout Simulated]\nCustom Order Created!\nCustomer: ${customerName}\nTotal Beads: ${energyResult.totalBeads}\nAmount: $${energyResult.totalPriceUsd} USD\nCrafting worksheet sent to Dacheng Atelier!`
-      );
-      setIsOrdering(false);
-    }, 800);
+    setIsCheckoutOpen(true);
   };
 
   const whatsappMessage = encodeURIComponent(
@@ -175,16 +187,10 @@ export function EnergyReport() {
         {/* Direct Order Button */}
         <button
           onClick={handleDirectOrder}
-          disabled={energyResult.totalBeads === 0 || isOrdering}
+          disabled={energyResult.totalBeads === 0}
           className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-serif font-black rounded-xl shadow-xl shadow-amber-950/60 flex items-center justify-center gap-2 text-sm transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed border border-amber-400/40"
         >
-          <span>
-            {isOrdering
-              ? lang === "zh"
-                ? "正在连接工坊..."
-                : "Securing Order..."
-              : `${t("orderCustomCraft")} ($${energyResult.totalPriceUsd})`}
-          </span>
+          <span>{`${t("orderCustomCraft")} ($${energyResult.totalPriceUsd})`}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
 
@@ -221,6 +227,13 @@ export function EnergyReport() {
           <span>{t("authenticityGuarantee")}</span>
         </div>
       </div>
+
+      {/* Real Full-Featured Checkout Modal */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        orderItem={customOrderItem}
+      />
     </div>
   );
 }
