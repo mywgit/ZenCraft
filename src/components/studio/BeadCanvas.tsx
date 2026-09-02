@@ -103,16 +103,8 @@ export function BeadCanvas() {
       return;
     }
 
-    // 2. Physics of Snug Strung Beads (无缝紧密穿串物理几何)
-    // Desired loop radius on screen:
-    const loopRadius = 138;
-    // Each bead subtends an arc angle proportional to its diameter
-    // Total circumference = 2 * PI * loopRadius
-    const totalCircumference = 2 * Math.PI * loopRadius;
-    const totalUnits = beads.reduce((acc, b) => acc + (b.sizeMm || 10), 0);
-    
-    // Scale factor to make beads touch each other seamlessly
-    const unitScale = totalCircumference / totalUnits;
+    // 2. Natural Physical Bead Sizing & Even Distribution
+    const loopRadius = 135;
 
     // Calculate 3D coordinates for all beads
     const pitchRad = (tiltAngle * Math.PI) / 180;
@@ -131,16 +123,14 @@ export function BeadCanvas() {
       isSelected: boolean;
     }
 
-    let runningAngle = -Math.PI / 2 + rotationAngle; // Start with Guru bead at 12 o'clock
     const projectedBeads: ProjectedBead[] = [];
 
     beads.forEach((bead, i) => {
-      const beadDiameterPx = (bead.sizeMm || 10) * unitScale;
-      const beadRadiusPx = beadDiameterPx / 2;
-      const halfArc = beadRadiusPx / loopRadius;
-
-      // Center angle of this bead
-      const beadCenterAngle = runningAngle + halfArc;
+      // Authentic mm-based radius on canvas (10mm = 14.5px radius / 29px diameter)
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 14.5;
+      
+      // Evenly distributed angle along the wire loop
+      const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
 
       // 3D flat circle coordinates (before tilt)
       const x3d = Math.cos(beadCenterAngle) * loopRadius;
@@ -157,7 +147,7 @@ export function BeadCanvas() {
 
       const x2d = centerX + x3d * perspectiveScale;
       const y2d = centerY + rotatedY * perspectiveScale;
-      const drawRadius = beadRadiusPx * perspectiveScale;
+      const drawRadius = baseRadius * perspectiveScale;
 
       projectedBeads.push({
         index: i,
@@ -170,8 +160,6 @@ export function BeadCanvas() {
         depthScale: perspectiveScale,
         isSelected: activeBeadIndex === i,
       });
-
-      runningAngle += halfArc * 2;
     });
 
     // 3. Draw Braided Silk String under beads (真丝串线)
@@ -262,24 +250,18 @@ export function BeadCanvas() {
     const count = beads.length;
     if (count === 0) return;
 
-    const loopRadius = 138;
-    const totalCircumference = 2 * Math.PI * loopRadius;
-    const totalUnits = beads.reduce((acc, b) => acc + (b.sizeMm || 10), 0);
-    const unitScale = totalCircumference / totalUnits;
+    const loopRadius = 135;
 
     const pitchRad = (tiltAngle * Math.PI) / 180;
     const cosPitch = Math.cos(pitchRad);
     const sinPitch = Math.sin(pitchRad);
 
-    let runningAngle = -Math.PI / 2 + rotationAngle;
     let closestIndex = -1;
     let minDistance = 9999;
 
     beads.forEach((bead, i) => {
-      const beadDiameterPx = (bead.sizeMm || 10) * unitScale;
-      const beadRadiusPx = beadDiameterPx / 2;
-      const halfArc = beadRadiusPx / loopRadius;
-      const beadCenterAngle = runningAngle + halfArc;
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 14.5;
+      const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
 
       const x3d = Math.cos(beadCenterAngle) * loopRadius;
       const y3d = Math.sin(beadCenterAngle) * loopRadius;
@@ -293,12 +275,10 @@ export function BeadCanvas() {
       const y2d = centerY + rotatedY * perspectiveScale;
       const dist = Math.hypot(clickX - x2d, clickY - y2d);
 
-      if (dist < beadRadiusPx * 1.5 * perspectiveScale && dist < minDistance) {
+      if (dist < baseRadius * 1.5 * perspectiveScale && dist < minDistance) {
         minDistance = dist;
         closestIndex = i;
       }
-
-      runningAngle += halfArc * 2;
     });
 
     if (closestIndex !== -1) {
