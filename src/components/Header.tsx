@@ -80,6 +80,16 @@ export function Header() {
           >
             🪵 {t("navHeritage")}
           </Link>
+          <Link
+            href="/my-orders"
+            className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
+              pathname === "/my-orders"
+                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow"
+                : "text-amber-200/70 hover:text-amber-100 hover:bg-amber-950/50"
+            }`}
+          >
+            📦 {lang === "zh" ? "查单追踪" : "Track Order"}
+          </Link>
         </nav>
 
         {/* Right Actions */}
