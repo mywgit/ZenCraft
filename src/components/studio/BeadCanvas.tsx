@@ -52,8 +52,8 @@ export function BeadCanvas() {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 2;
-    const width = 480;
-    const height = 480;
+    const width = 500;
+    const height = 500;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = `${width}px`;
@@ -69,13 +69,13 @@ export function BeadCanvas() {
     // 1. Draw Luxurious Atelier Silk Tray Base & Gold Lotus Geometry
     ctx.save();
     // Ambient radial lighting gradient on tray
-    const trayLight = ctx.createRadialGradient(centerX, centerY - 20, 20, centerX, centerY, 230);
-    trayLight.addColorStop(0, "rgba(217, 119, 6, 0.07)");
+    const trayLight = ctx.createRadialGradient(centerX, centerY - 20, 20, centerX, centerY, 240);
+    trayLight.addColorStop(0, "rgba(217, 119, 6, 0.08)");
     trayLight.addColorStop(0.5, "rgba(20, 11, 6, 0.6)");
     trayLight.addColorStop(1, "rgba(10, 5, 2, 0.95)");
     ctx.fillStyle = trayLight;
     ctx.beginPath();
-    ctx.arc(centerX, centerY + 10, 215, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY + 10, 230, 0, Math.PI * 2);
     ctx.fill();
 
     // Concentric sacred gold mandalas (禅意经纬同心金圈)
@@ -87,7 +87,7 @@ export function BeadCanvas() {
 
     ctx.strokeStyle = "rgba(245, 158, 11, 0.05)";
     ctx.beginPath();
-    ctx.arc(centerX, centerY + 10, 160, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY + 10, 175, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
@@ -97,14 +97,14 @@ export function BeadCanvas() {
       ctx.lineWidth = 2;
       ctx.setLineDash([8, 8]);
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 130, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, 145, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
       return;
     }
 
-    // 2. Natural Physical Bead Sizing & Even Distribution
-    const loopRadius = 135;
+    // 2. Natural Physical Bead Sizing (Enhanced Size for Macro Detail)
+    const loopRadius = 148;
 
     // Calculate 3D coordinates for all beads
     const pitchRad = (tiltAngle * Math.PI) / 180;
@@ -126,8 +126,8 @@ export function BeadCanvas() {
     const projectedBeads: ProjectedBead[] = [];
 
     beads.forEach((bead, i) => {
-      // Authentic mm-based radius on canvas (10mm = 14.5px radius / 29px diameter)
-      const baseRadius = ((bead.sizeMm || 10) / 10) * 14.5;
+      // Large macro-detailed radius on canvas (10mm = 21px radius / 42px diameter)
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0;
       
       // Evenly distributed angle along the wire loop
       const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
@@ -243,14 +243,14 @@ export function BeadCanvas() {
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    const width = 480;
-    const height = 480;
+    const width = 500;
+    const height = 500;
     const centerX = width / 2;
     const centerY = height / 2 - 10;
     const count = beads.length;
     if (count === 0) return;
 
-    const loopRadius = 135;
+    const loopRadius = 148;
 
     const pitchRad = (tiltAngle * Math.PI) / 180;
     const cosPitch = Math.cos(pitchRad);
@@ -260,7 +260,7 @@ export function BeadCanvas() {
     let minDistance = 9999;
 
     beads.forEach((bead, i) => {
-      const baseRadius = ((bead.sizeMm || 10) / 10) * 14.5;
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0;
       const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
 
       const x3d = Math.cos(beadCenterAngle) * loopRadius;
@@ -275,7 +275,7 @@ export function BeadCanvas() {
       const y2d = centerY + rotatedY * perspectiveScale;
       const dist = Math.hypot(clickX - x2d, clickY - y2d);
 
-      if (dist < baseRadius * 1.5 * perspectiveScale && dist < minDistance) {
+      if (dist < baseRadius * 1.35 * perspectiveScale && dist < minDistance) {
         minDistance = dist;
         closestIndex = i;
       }
