@@ -4,7 +4,7 @@ import { BeadMaterial, getMaterialById } from "./materialsData";
 const beadImageCache: Record<string, HTMLImageElement> = {};
 
 if (typeof window !== "undefined") {
-  // Eagerly preload all bead assets
+  // Eagerly preload all 30 bead assets
   const beadAssetMap: Record<string, string> = {
     "green-sandalwood": "/beads/green-sandalwood.png",
     "gold-phoebe": "/beads/gold-phoebe.png",
@@ -12,13 +12,26 @@ if (typeof window !== "undefined") {
     "rosewood": "/beads/rosewood.png",
     "thuja-cypress": "/beads/thuja-cypress.png",
     "peach-wood": "/beads/peach-wood.png",
-    "natural-turquoise": "/beads/natural-turquoise.png",
+    "red-sandalwood": "/beads/red-sandalwood.png",
+    "hainan-huanghuali": "/beads/hainan-huanghuali.png",
+    "indian-sandalwood": "/beads/indian-sandalwood.png",
+    "star-moon-bodhi": "/beads/star-moon-bodhi.png",
+    "white-bodhi": "/beads/white-bodhi.png",
+    "golden-camphor": "/beads/golden-camphor.png",
+    "blood-dragon": "/beads/blood-dragon.png",
+    "boxwood": "/beads/boxwood.png",
+    "natural-turquoise": "/beads/turquoise.png",
     "lapis-lazuli": "/beads/lapis-lazuli.png",
-    "red-agate": "/beads/red-agate.png",
+    "red-agate": "/beads/nanhong-agate.png",
+    "amethyst": "/beads/amethyst.png",
+    "citrine": "/beads/citrine.png",
+    "rose-quartz": "/beads/rose-quartz.png",
+    "rutilated-quartz": "/beads/rutilated-quartz.png",
+    "strawberry-quartz": "/beads/strawberry-quartz.png",
+    "clear-quartz": "/beads/clear-quartz.png",
+    "hetian-jade": "/beads/hetian-jade.png",
     "tigers-eye": "/beads/tigers-eye.png",
     "black-obsidian": "/beads/black-obsidian.png",
-    "amethyst": "/beads/amethyst.png",
-    "hetian-jade": "/beads/hetian-jade.png",
     "silver-lotus": "/beads/silver-lotus.png",
     "pixiu-charm": "/beads/pixiu-charm.png",
     "om-mantra": "/beads/om-mantra.png",
