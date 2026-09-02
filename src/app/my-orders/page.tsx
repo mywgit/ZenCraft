@@ -206,29 +206,50 @@ export default function MyOrdersPage() {
                 <h2 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
                   {selectedOrder.orderId}
                 </h2>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40">
-                  {lang === "zh" ? "已结缘付款 (Paid)" : "Paid"}
-                </span>
+                {selectedOrder.paymentStatus === "paid" ? (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40">
+                    {lang === "zh" ? "已结缘付款 (Paid)" : "Paid"}
+                  </span>
+                ) : (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-400 border border-amber-500/40 animate-pulse">
+                    {lang === "zh" ? "待完成付款 (Pending Payment)" : "Pending Payment"}
+                  </span>
+                )}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleSendMagicLink}
-                disabled={magicLinkSent}
-                className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 text-amber-200 text-xs font-serif font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
-              >
-                <Mail className="w-3.5 h-3.5 text-amber-400" />
-                <span>{magicLinkSent ? (lang === "zh" ? "✓ 邮件已发送！" : "✓ Email Dispatched!") : (lang === "zh" ? "重发凭证到邮箱" : "Resend to Email")}</span>
-              </button>
+              {selectedOrder.paymentStatus === "pending" && selectedOrder.stripeCheckoutUrl && (
+                <a
+                  href={selectedOrder.stripeCheckoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 text-slate-950 font-serif font-black text-xs flex items-center gap-1.5 shadow"
+                >
+                  <span>{lang === "zh" ? "前往 Stripe 完成付款 ➔" : "Complete Payment on Stripe ➔"}</span>
+                </a>
+              )}
 
-              <Link
-                href={`/order-success?orderId=${selectedOrder.orderId}`}
-                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 text-slate-950 font-serif font-black text-xs flex items-center gap-1.5 shadow"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{lang === "zh" ? "查看烫金防伪证书" : "View Certificate"}</span>
-              </Link>
+              {selectedOrder.paymentStatus === "paid" && (
+                <>
+                  <button
+                    onClick={handleSendMagicLink}
+                    disabled={magicLinkSent}
+                    className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 text-amber-200 text-xs font-serif font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{magicLinkSent ? (lang === "zh" ? "✓ 邮件已发送！" : "✓ Email Dispatched!") : (lang === "zh" ? "重发凭证到邮箱" : "Resend to Email")}</span>
+                  </button>
+
+                  <Link
+                    href={`/order-success?orderId=${selectedOrder.orderId}`}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 text-slate-950 font-serif font-black text-xs flex items-center gap-1.5 shadow"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{lang === "zh" ? "查看烫金防伪证书" : "View Certificate"}</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 

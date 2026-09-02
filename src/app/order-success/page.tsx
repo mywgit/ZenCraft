@@ -27,19 +27,50 @@ function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const orderId = searchParams.get("orderId");
+  const sessionId = searchParams.get("session_id");
 
   const [order, setOrder] = useState<OrderRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  const [verifiedPaid, setVerifiedPaid] = useState(false);
 
   useEffect(() => {
-    if (orderId) {
-      const found = getOrderById(orderId);
-      if (found) {
-        setOrder(found);
+    async function initOrder() {
+      if (orderId) {
+        let found = getOrderById(orderId);
+
+        // If redirected from Stripe with a session_id, verify actual payment status
+        if (sessionId) {
+          try {
+            const res = await fetch(`/api/checkout/verify-session?session_id=${sessionId}`);
+            const data = await res.json();
+            if (data.isPaid && found) {
+              found = { ...found, paymentStatus: "paid" };
+              const allOrders = JSON.parse(localStorage.getItem("zencraft_orders_db") || "[]");
+              const updated = allOrders.map((o: OrderRecord) => (o.orderId === orderId ? { ...o, paymentStatus: "paid" } : o));
+              localStorage.setItem("zencraft_orders_db", JSON.stringify(updated));
+              setVerifiedPaid(true);
+
+              // Auto-trigger confirmation email
+              fetch("/api/email/order-confirmation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: "order-confirmation", order: found }),
+              }).catch(() => {});
+            }
+          } catch (err) {
+            console.warn("Session verification error:", err);
+          }
+        }
+
+        if (found) {
+          setOrder(found);
+        }
       }
+      setLoading(false);
     }
-    setLoading(false);
-  }, [orderId]);
+
+    initOrder();
+  }, [orderId, sessionId]);
 
   const handlePrint = () => {
     window.print();

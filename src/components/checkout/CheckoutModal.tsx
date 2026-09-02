@@ -122,7 +122,7 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       subtotal,
       totalAmount,
       paymentMethod,
-      paymentStatus: "paid",
+      paymentStatus: "pending", // Initial state is Pending Payment until confirmed by Stripe
       productionStatus: "confirmed",
       estimatedDelivery: estDate.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", {
         month: "short",
@@ -132,9 +132,7 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       trackingNumber,
     };
 
-    saveOrderToStorage(newOrder);
-
-    // 1. Try Calling Backend Stripe Session (Official Checkout)
+    // 1. Try Calling Backend Stripe Session (Official Dynamic Checkout)
     try {
       const res = await fetch("/api/checkout/stripe", {
         method: "POST",
@@ -150,13 +148,18 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
       const data = await res.json();
 
       if (data.isLive && data.url) {
-        // Direct redirect to Stripe Official Hosted Checkout (Apple Pay, Google Pay, Cards)
+        newOrder.stripeCheckoutUrl = data.url;
+        newOrder.stripeSessionId = data.sessionId;
+        saveOrderToStorage(newOrder);
+        // Direct redirect to Stripe Official Hosted Checkout
         window.location.href = data.url;
         return;
       }
     } catch (err) {
       console.warn("Direct Stripe session call:", err);
     }
+
+    saveOrderToStorage(newOrder);
 
     // 2. Direct Stripe Payment Link Gateway (Matching previous Tool/Bio projects)
     if (STRIPE_CONFIG.defaultStripeLink && STRIPE_CONFIG.defaultStripeLink.includes("buy.stripe.com")) {

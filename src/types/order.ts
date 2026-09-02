@@ -66,4 +66,6 @@ export interface OrderRecord {
   productionStatus: "confirmed" | "crafting" | "certificate-stamping" | "packaged" | "shipped";
   estimatedDelivery: string;
   trackingNumber: string;
+  stripeSessionId?: string;
+  stripeCheckoutUrl?: string;
 }
