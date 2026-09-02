@@ -51,7 +51,7 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Render a 100% photorealistic 3D bead directly on canvas using high-definition texture assets
+ * Render a 100% photorealistic 3D bead with dynamic 3D depth, specular sheen & contact shadows
  */
 export function drawRealisticBead(
   ctx: CanvasRenderingContext2D,
@@ -60,38 +60,40 @@ export function drawRealisticBead(
   y: number,
   radius: number,
   patinaLevel: number = 1,
-  angle: number = 0,
-  isSelected: boolean = false
+  depthScale: number = 1.0,
+  isSelected: boolean = false,
+  lightAngle: number = -Math.PI / 4 // Top-left studio keylight
 ) {
   const mat = getMaterialById(bead.materialId);
   if (!mat) return;
 
   ctx.save();
 
-  // 1. Ambient Drop Shadow on Silk Tray
+  // 1. Soft Ambient Drop Shadow onto Silk Tray / Velvet
+  const shadowDistance = radius * 0.35 * depthScale;
   ctx.save();
-  ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
-  ctx.shadowBlur = radius * 0.8;
-  ctx.shadowOffsetX = Math.cos(angle + Math.PI / 4) * (radius * 0.25) + 2;
-  ctx.shadowOffsetY = Math.sin(angle + Math.PI / 4) * (radius * 0.25) + 3;
+  ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
+  ctx.shadowBlur = radius * 0.9 * depthScale;
+  ctx.shadowOffsetX = Math.cos(Math.PI / 3) * shadowDistance;
+  ctx.shadowOffsetY = Math.sin(Math.PI / 3) * shadowDistance + 3;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(18, 12, 8, 0.4)";
+  ctx.fillStyle = "rgba(10, 6, 4, 0.35)";
   ctx.fill();
   ctx.restore();
 
-  // 2. Selection Halo Glow
+  // 2. Selection Glow Halo
   if (isSelected) {
     ctx.save();
-    ctx.strokeStyle = "#f59e0b";
+    ctx.strokeStyle = "#fbbf24";
     ctx.lineWidth = 3.5;
     ctx.shadowColor = "#f59e0b";
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = 22;
     ctx.beginPath();
-    ctx.arc(x, y, radius + 4.5, 0, Math.PI * 2);
+    ctx.arc(x, y, radius + 4, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = "rgba(245, 158, 11, 0.4)";
+    ctx.strokeStyle = "rgba(245, 158, 11, 0.5)";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(x, y, radius + 7.5, 0, Math.PI * 2);
@@ -99,7 +101,7 @@ export function drawRealisticBead(
     ctx.restore();
   }
 
-  // 3. Render High-Definition Real Bead Texture
+  // 3. Render High-Definition Bead Texture Asset
   const cachedImg = beadImageCache[bead.materialId];
 
   ctx.save();
@@ -108,56 +110,60 @@ export function drawRealisticBead(
   ctx.clip();
 
   if (cachedImg && cachedImg.complete && cachedImg.naturalWidth > 0) {
-    // Draw the actual macro photo / SVG texture directly
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.drawImage(cachedImg, -radius, -radius, radius * 2, radius * 2);
-    ctx.restore();
+    ctx.drawImage(cachedImg, x - radius, y - radius, radius * 2, radius * 2);
   } else {
-    // Fallback 3D sphere shader while image binds
     renderFallbackSphere(ctx, mat, x, y, radius);
   }
 
-  // 4. Living Patina Glass Glaze Overlay (包浆透亮保护层)
+  // 4. 3D Spherical Shading & Rim Darkening (立体球体光影重塑)
+  const sphereShade = ctx.createRadialGradient(
+    x + Math.cos(lightAngle) * radius * 0.35,
+    y + Math.sin(lightAngle) * radius * 0.35,
+    radius * 0.1,
+    x,
+    y,
+    radius
+  );
+  sphereShade.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+  sphereShade.addColorStop(0.5, "rgba(0, 0, 0, 0)");
+  sphereShade.addColorStop(0.85, "rgba(15, 8, 4, 0.35)");
+  sphereShade.addColorStop(1, "rgba(0, 0, 0, 0.65)");
+  ctx.fillStyle = sphereShade;
+  ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+
+  // 5. Living Patina Glass Glaze Overlay (包浆温润蜕变)
   if (patinaLevel > 0) {
-    ctx.save();
-    const patinaAlpha = patinaLevel === 1 ? 0.12 : patinaLevel === 2 ? 0.25 : 0.38;
+    const patinaAlpha = patinaLevel === 1 ? 0.14 : patinaLevel === 2 ? 0.28 : 0.42;
     const patinaGrad = ctx.createRadialGradient(
-      x - radius * 0.2,
-      y - radius * 0.2,
+      x - radius * 0.25,
+      y - radius * 0.25,
       0,
       x,
       y,
       radius
     );
-    patinaGrad.addColorStop(0, `rgba(245, 158, 11, ${patinaAlpha * 0.5})`);
-    patinaGrad.addColorStop(0.7, `rgba(120, 53, 15, ${patinaAlpha})`);
-    patinaGrad.addColorStop(1, `rgba(69, 26, 3, ${patinaAlpha * 1.5})`);
+    patinaGrad.addColorStop(0, `rgba(245, 158, 11, ${patinaAlpha * 0.6})`);
+    patinaGrad.addColorStop(0.65, `rgba(120, 53, 15, ${patinaAlpha})`);
+    patinaGrad.addColorStop(1, `rgba(50, 18, 4, ${patinaAlpha * 1.6})`);
     ctx.fillStyle = patinaGrad;
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-    ctx.restore();
   }
 
   ctx.restore(); // End clipping
 
-  // 5. Specular Highlights & Mirror Flare (水磨高光与镜面反射)
+  // 6. 3D Specular Keylight Reflection & Mineral Flare (珠宝级镜面水磨反光)
   ctx.save();
-  const highlightAlpha = patinaLevel >= 2 ? 0.8 : patinaLevel === 1 ? 0.6 : 0.4;
-  const primGrad = ctx.createRadialGradient(
-    x - radius * 0.35,
-    y - radius * 0.35,
-    0,
-    x - radius * 0.35,
-    y - radius * 0.35,
-    radius * 0.45
-  );
-  primGrad.addColorStop(0, `rgba(255, 255, 255, ${highlightAlpha})`);
-  primGrad.addColorStop(0.35, `rgba(255, 255, 255, ${highlightAlpha * 0.35})`);
+  const highlightIntensity = (patinaLevel >= 2 ? 0.85 : patinaLevel === 1 ? 0.65 : 0.45) * depthScale;
+  const lx = x + Math.cos(lightAngle) * radius * 0.38;
+  const ly = y + Math.sin(lightAngle) * radius * 0.38;
+  const primGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, radius * 0.45);
+  primGrad.addColorStop(0, `rgba(255, 255, 255, ${highlightIntensity})`);
+  primGrad.addColorStop(0.3, `rgba(255, 255, 255, ${highlightIntensity * 0.4})`);
   primGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
   ctx.fillStyle = primGrad;
   ctx.beginPath();
-  ctx.arc(x - radius * 0.35, y - radius * 0.35, radius * 0.45, 0, Math.PI * 2);
+  ctx.arc(lx, ly, radius * 0.45, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
