@@ -9,10 +9,9 @@ export async function POST(req: NextRequest) {
     const stripeSecret = process.env.STRIPE_SECRET_KEY;
 
     if (!stripeSecret) {
-      // If Stripe key is not configured, inform client to proceed with test mode
       return NextResponse.json({
         isLive: false,
-        message: "Stripe API key not configured. Using ZenCraft Direct Atelier Gateway.",
+        message: "Stripe API key not configured.",
         orderId,
       });
     }
@@ -23,9 +22,16 @@ export async function POST(req: NextRequest) {
 
     const origin = req.nextUrl.origin || "http://localhost:3000";
 
+    // Only pass publicly accessible HTTPS images to Stripe to avoid localhost validation errors
+    const productImages: string[] = [];
+    if (orderItem.image && orderItem.image.startsWith("https://")) {
+      productImages.push(orderItem.image);
+    } else {
+      productImages.push("https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80");
+    }
+
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      customer_email: shippingAddress.email,
+      customer_email: shippingAddress.email || undefined,
       line_items: [
         {
           price_data: {
@@ -33,11 +39,11 @@ export async function POST(req: NextRequest) {
             product_data: {
               name: orderItem.title || "ZenCraft Custom Sacred Wood Mala",
               description: orderItem.details?.wearerName
-                ? `Custom Inscription: ${orderItem.details.wearerName} | ${orderItem.details.beadCount || 18} Beads`
-                : "Handcrafted Dacheng Timber & Healing Crystal Mala",
-              images: [orderItem.image.startsWith("http") ? orderItem.image : `${origin}${orderItem.image}`],
+                ? `Custom Inscription: ${orderItem.details.wearerName} | ${orderItem.details.beadCount || 18} Beads (${orderItem.details.dominantElement || "Zen"})`
+                : "Handcrafted Dacheng Timber & Healing Crystal Heirloom",
+              images: productImages,
             },
-            unit_amount: Math.round(totalAmount * 100), // in cents
+            unit_amount: Math.round(totalAmount * 100), // in cents ($118.15 -> 11815)
           },
           quantity: 1,
         },
@@ -49,6 +55,8 @@ export async function POST(req: NextRequest) {
         orderId,
         wearerName: orderItem.details?.wearerName || "",
         beadCount: String(orderItem.details?.beadCount || 18),
+        customerPhone: shippingAddress.phone || "",
+        customerAddress: `${shippingAddress.addressLine1}, ${shippingAddress.city}, ${shippingAddress.country}`,
       },
     });
 
@@ -59,9 +67,9 @@ export async function POST(req: NextRequest) {
       orderId,
     });
   } catch (error: any) {
-    console.error("Stripe Checkout Error:", error);
+    console.error("Stripe Checkout Session Error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to create checkout session" },
+      { error: error.message || "Failed to create Stripe checkout session" },
       { status: 500 }
     );
   }
