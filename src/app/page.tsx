@@ -29,9 +29,9 @@ export default function HomePage() {
 
   const masterpieceProducts = [
     {
-      id: "master-zitan-stars",
-      nameZh: "爆满金星紫檀",
-      nameEn: "Full-Star Red Sandalwood",
+      id: "master-gold-nanmu",
+      nameZh: "四川百年老料金丝楠",
+      nameEn: "Imperial Gold Phoebe Nanmu",
       price: 268,
       origPrice: 350,
       image: "/products/master-zitan.jpg",
@@ -39,7 +39,7 @@ export default function HomePage() {
     },
     {
       id: "master-nanhong-persimmon",
-      nameZh: "极品保山南红",
+      nameZh: "极品保山满肉南红",
       nameEn: "Baoshan Persimmon Red Agate",
       price: 320,
       origPrice: 420,
@@ -47,9 +47,9 @@ export default function HomePage() {
       badge: "极品原矿",
     },
     {
-      id: "master-chenxiang-sinking",
-      nameZh: "老料沉水沉香",
-      nameEn: "Wild Sinking Agarwood",
+      id: "master-green-sandalwood",
+      nameZh: "天然野生老料绿檀",
+      nameEn: "Wild Green Sandalwood",
       price: 158,
       origPrice: 198,
       image: "/products/master-chenxiang.jpg",
@@ -75,10 +75,10 @@ export default function HomePage() {
       image: "/products/gallery-bodhi.jpg",
     },
     {
-      id: "master-zitan-macro",
-      nameZh: "金星爆满小叶紫檀",
-      nameEn: "Imperial Golden Star Zitan",
-      sceneDesc: "白丝衬底 · 满金星老矿老料",
+      id: "master-nanmu-macro",
+      nameZh: "水波金丝百年金丝楠",
+      nameEn: "Imperial Liquid Gold Phoebe",
+      sceneDesc: "白丝衬底 · 浮光跃金古树老料",
       price: 268,
       image: "/products/gallery-zitan.jpg",
     },

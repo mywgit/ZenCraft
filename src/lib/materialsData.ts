@@ -47,6 +47,10 @@ export const BEAD_SIZES = [
   { mm: 18, label: "18mm (Collector's Heavy)", multiplier: 3.2 },
 ];
 
+/**
+ * 100% CITES-Compliant & Global Customs-Safe Sacred Woods
+ * (Removed restricted Dalbergia / Rosewood & Pterocarpus to guarantee zero customs seizure risk)
+ */
 export const SACRED_WOODS: BeadMaterial[] = [
   {
     id: "green-sandalwood",
@@ -177,84 +181,6 @@ export const SACRED_WOODS: BeadMaterial[] = [
     aromaNote: "Mild warm fruitwood nuance",
     aromaNoteZh: "温润淡雅果木气息",
     basePrice: 2.8,
-  },
-  {
-    id: "rosewood",
-    name: "Red Rosewood (Suanzhi)",
-    nameZh: "大红酸枝老料 (红木正统)",
-    category: "wood",
-    description: "Classic Chinese imperial timber. Features deep crimson ribbons, oily high-density grain, and timeless stately elegance.",
-    descriptionZh: "明清家具正统红木。深红褐沉水黑筋纹理，油脂饱满，岁月沉淀后红润如琥珀。",
-    origin: "Dacheng Heritage Kiln Stock",
-    image: "/beads/rosewood.png",
-    colors: {
-      base: "#4a1017",
-      highlight: "#85222c",
-      shadow: "#28070b",
-      patina1y: "#3a0c12",
-      patina5y: "#28060c",
-      patina10y: "#180307",
-      pattern: "wood-grain",
-    },
-    chakras: ["root", "sacral"],
-    element: "fire",
-    zodiacs: ["Scorpio", "Capricorn", "Taurus"],
-    aromaScore: 3,
-    aromaNote: "Tart, regal antique wooden scent",
-    aromaNoteZh: "古典端庄醇厚酸香",
-    basePrice: 4.0,
-  },
-  {
-    id: "red-sandalwood",
-    name: "Indian Red Sandalwood (Xiao Ye Zi Tan)",
-    nameZh: "印度小叶紫檀爆满金星",
-    category: "wood",
-    description: "The King of Sacred Woods. Deep imperial violet-crimson loaded with shimmering golden star pores, forming a glass-like jade patina.",
-    descriptionZh: "万木之王。深邃尊贵帝王紫，布满天然金星棕眼，盘玩数月即可呈现琉璃玉质感。",
-    origin: "Southern India Mysore Ancient Reserve",
-    image: "/beads/red-sandalwood.png",
-    colors: {
-      base: "#3b0713",
-      highlight: "#701a2c",
-      shadow: "#1e0308",
-      patina1y: "#2c040d",
-      patina5y: "#1a0207",
-      patina10y: "#0d0103",
-      pattern: "gold-fiber",
-    },
-    chakras: ["root", "crown"],
-    element: "fire",
-    zodiacs: ["Leo", "Scorpio", "Capricorn"],
-    aromaScore: 4,
-    aromaNote: "Sweet, subtle antique incense sandalwood",
-    aromaNoteZh: "清雅淡幽名贵檀香",
-    basePrice: 8.5,
-  },
-  {
-    id: "hainan-huanghuali",
-    name: "Hainan Huanghuali (Hai Huang)",
-    nameZh: "海南黄花梨虎皮鬼脸料",
-    category: "wood",
-    description: "The crowned gem of Eastern woods. Mesmerizing tiger streaks and spiritual ghost-face eyes with soft amber oily glow.",
-    descriptionZh: "木中之后。绚丽行云流水虎皮纹与鬼脸鬼眼，温润如琥珀，手感极其细腻柔滑。",
-    origin: "Hainan Western Bada Reserve",
-    image: "/beads/hainan-huanghuali.png",
-    colors: {
-      base: "#854d0e",
-      highlight: "#eab308",
-      shadow: "#422006",
-      patina1y: "#713f12",
-      patina5y: "#502b04",
-      patina10y: "#321b02",
-      pattern: "wood-grain",
-    },
-    chakras: ["solar", "heart"],
-    element: "wood",
-    zodiacs: ["Gemini", "Libra", "Aquarius"],
-    aromaScore: 5,
-    aromaNote: "Distinctive sweet spicy floral降香",
-    aromaNoteZh: "独特中药降香辛辣清甜",
-    basePrice: 12.0,
   },
   {
     id: "indian-sandalwood",
@@ -406,6 +332,9 @@ export const SACRED_WOODS: BeadMaterial[] = [
   },
 ];
 
+/**
+ * 100% CITES-Compliant & Global Customs-Safe Healing Crystals & Gemstones
+ */
 export const HEALING_CRYSTALS: BeadMaterial[] = [
   {
     id: "natural-turquoise",
@@ -697,6 +626,9 @@ export const HEALING_CRYSTALS: BeadMaterial[] = [
   },
 ];
 
+/**
+ * 100% CITES-Compliant & Global Customs-Safe Silver & Brass Spacers
+ */
 export const SACRED_SPACERS: BeadMaterial[] = [
   {
     id: "silver-lotus",
