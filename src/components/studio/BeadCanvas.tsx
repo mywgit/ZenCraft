@@ -4,14 +4,16 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { getMaterialById } from "@/lib/materialsData";
 import { drawRealisticBead } from "@/lib/beadTextureRenderer";
-import { Trash2, RotateCw, Eye, Sparkles, RefreshCw, Compass } from "lucide-react";
+import { Trash2, RotateCw, Eye, Sparkles, RefreshCw, Compass, Ruler } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { WristSizeModal } from "./WristSizeModal";
 
 export function BeadCanvas() {
   const {
     beads,
     activeBeadIndex,
     patinaLevel,
+    wristSizeCm,
     setActiveBeadIndex,
     removeBead,
     clearBeads,
@@ -19,6 +21,9 @@ export function BeadCanvas() {
   } = useStudio();
   const { lang, t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Wrist Size Modal State
+  const [isWristModalOpen, setIsWristModalOpen] = useState(false);
 
   // 3D Orbit & Perspective States
   const [rotationAngle, setRotationAngle] = useState(0); // 0 to 2PI in radians
@@ -293,14 +298,22 @@ export function BeadCanvas() {
     <div className="zen-silk-tray zen-corner-brass rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden border border-amber-500/30 shadow-2xl">
       {/* Top Toolbar */}
       <div className="w-full flex items-center justify-between z-10 mb-2 px-1">
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-bold font-serif shadow-md">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span>{energyResult.totalBeads} {t("totalBeads")}</span>
           </span>
-          <span className="text-xs text-amber-200/80 font-serif">
-            {energyResult.totalLengthCm}cm ({energyResult.recommendedWristCm}cm {t("wristSize")})
-          </span>
+
+          {/* Interactive Wrist Size Trigger */}
+          <button
+            onClick={() => setIsWristModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 hover:bg-amber-900/80 border border-amber-900/60 hover:border-amber-500/50 text-amber-200/90 text-xs font-serif transition-all shadow-sm group"
+            title="Click to customize wrist size"
+          >
+            <Ruler className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+            <span>{lang === "zh" ? `手腕 ${wristSizeCm}cm` : `Wrist ${wristSizeCm}cm`}</span>
+            <span className="text-[10px] text-amber-400/80 font-bold">▾</span>
+          </button>
         </div>
 
         {/* 3D View Controls Toolbar */}
@@ -395,6 +408,12 @@ export function BeadCanvas() {
       <p className="text-[11px] text-amber-200/60 mt-2 text-center font-serif">
         🪵 {lang === "zh" ? "紧密贴合无缝成串 · 支持 360° 自由旋转与 3D 景深俯仰 · 拖动下方滑块预览十年包浆" : "Seamless Mala Strung Contact • 360° 3D Orbit & Tilt • Slide below for 10-Yr Patina Transformation"}
       </p>
+
+      {/* Wrist Circumference Customizer Modal */}
+      <WristSizeModal
+        isOpen={isWristModalOpen}
+        onClose={() => setIsWristModalOpen(false)}
+      />
     </div>
   );
 }

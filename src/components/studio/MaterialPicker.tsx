@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useStudio } from "@/context/StudioContext";
 import {
   SACRED_WOODS,
@@ -10,7 +10,8 @@ import {
   BeadMaterial,
 } from "@/lib/materialsData";
 import { useLanguage } from "@/context/LanguageContext";
-import { TreePine, Sparkles, Gem, Plus, Wand2 } from "lucide-react";
+import { TreePine, Sparkles, Gem, Plus, Wand2, Ruler } from "lucide-react";
+import { WristSizeModal } from "./WristSizeModal";
 
 export function MaterialPicker() {
   const {
@@ -18,11 +19,13 @@ export function MaterialPicker() {
     setSelectedCategory,
     selectedSizeMm,
     setSelectedSizeMm,
+    wristSizeCm,
     activeBeadIndex,
     addBead,
     loadPreset,
   } = useStudio();
   const { lang, t } = useLanguage();
+  const [isWristModalOpen, setIsWristModalOpen] = useState(false);
 
   const currentList: BeadMaterial[] =
     selectedCategory === "wood"
@@ -112,26 +115,45 @@ export function MaterialPicker() {
           </button>
         </div>
 
-        {/* Size Pill Picker */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          <span className="text-xs text-amber-200/60 font-serif mr-1 whitespace-nowrap">
-            {t("beadSize")}:
-          </span>
-          {BEAD_SIZES.map((s) => (
-            <button
-              key={s.mm}
-              onClick={() => setSelectedSizeMm(s.mm)}
-              className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all whitespace-nowrap ${
-                selectedSizeMm === s.mm
-                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow"
-                  : "bg-[#140b06] text-amber-200/60 hover:text-amber-200 border border-amber-900/40"
-              }`}
-            >
-              {s.mm}mm
-            </button>
-          ))}
+        {/* Size & Wrist Picker Group */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Size Pill Picker */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            <span className="text-xs text-amber-200/60 font-serif mr-1 whitespace-nowrap">
+              {t("beadSize")}:
+            </span>
+            {BEAD_SIZES.map((s) => (
+              <button
+                key={s.mm}
+                onClick={() => setSelectedSizeMm(s.mm)}
+                className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all whitespace-nowrap ${
+                  selectedSizeMm === s.mm
+                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow"
+                    : "bg-[#140b06] text-amber-200/60 hover:text-amber-200 border border-amber-900/40"
+                }`}
+              >
+                {s.mm}mm
+              </button>
+            ))}
+          </div>
+
+          {/* Wrist Size Button */}
+          <button
+            onClick={() => setIsWristModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-950/70 hover:bg-amber-900 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold shadow-sm transition-all"
+            title="Click to customize wrist circumference"
+          >
+            <Ruler className="w-3.5 h-3.5 text-amber-400" />
+            <span>{lang === "zh" ? `手腕 ${wristSizeCm}cm` : `Wrist ${wristSizeCm}cm`}</span>
+            <span className="text-[10px] text-amber-400/80 font-bold">▾</span>
+          </button>
         </div>
       </div>
+
+      <WristSizeModal
+        isOpen={isWristModalOpen}
+        onClose={() => setIsWristModalOpen(false)}
+      />
 
       {/* Materials Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[360px] overflow-y-auto pr-1">
