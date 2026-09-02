@@ -30,20 +30,21 @@ interface StudioContextType {
 
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
 
+// 18 Uniform 10mm Beads (Classic Standard Mala)
 const DEFAULT_PRESET_BEADS: SelectedBead[] = [
-  { id: "b-0", materialId: "silver-lotus", sizeMm: 12 }, // Guru Centerpiece
+  { id: "b-0", materialId: "silver-lotus", sizeMm: 10 }, // Guru Centerpiece
   { id: "b-1", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-2", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-3", materialId: "natural-turquoise", sizeMm: 10 },
   { id: "b-4", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-5", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-6", materialId: "brass-ring", sizeMm: 6 },
+  { id: "b-6", materialId: "brass-ring", sizeMm: 10 },
   { id: "b-7", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-8", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-9", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-10", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-11", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-12", materialId: "brass-ring", sizeMm: 6 },
+  { id: "b-12", materialId: "brass-ring", sizeMm: 10 },
   { id: "b-13", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-14", materialId: "green-sandalwood", sizeMm: 10 },
   { id: "b-15", materialId: "natural-turquoise", sizeMm: 10 },
@@ -56,7 +57,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   const [activeBeadIndex, setActiveBeadIndex] = useState<number | null>(0);
   const [patinaLevel, setPatinaLevel] = useState<number>(1); // Default to 1-yr touch
   const [wristSizeCm, setWristSizeCm] = useState<number>(16);
-  const [selectedSizeMm, setSelectedSizeMm] = useState<number>(10);
+  const [selectedSizeMm, setSelectedSizeMmState] = useState<number>(10);
   const [selectedCategory, setSelectedCategory] = useState<MaterialCategory>("wood");
   const [isCertificateOpen, setIsCertificateOpen] = useState<boolean>(false);
   const [customerName, setCustomerName] = useState<string>("Mindful Seeker");
@@ -68,6 +69,12 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setEnergyResult(calculateEnergyProfile(beads));
   }, [beads]);
+
+  // When user picks a new size (6/8/10/12/15/18mm), synchronize all beads uniformly
+  const setSelectedSizeMm = (size: number) => {
+    setSelectedSizeMmState(size);
+    setBeads((prev) => prev.map((b) => ({ ...b, sizeMm: size })));
+  };
 
   const addBead = (materialId: string, sizeMm?: number) => {
     const newBead: SelectedBead = {
@@ -114,60 +121,60 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
 
   const loadPreset = (presetName: "grounding" | "wealth" | "shield" | "wisdom") => {
     if (presetName === "grounding") {
-      setBeads(DEFAULT_PRESET_BEADS);
+      setBeads(DEFAULT_PRESET_BEADS.map((b) => ({ ...b, sizeMm: selectedSizeMm })));
     } else if (presetName === "wealth") {
       setBeads([
-        { id: "b-0", materialId: "pixiu-charm", sizeMm: 12 },
-        { id: "b-1", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-2", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-3", materialId: "tigers-eye", sizeMm: 10 },
-        { id: "b-4", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-5", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-6", materialId: "brass-ring", sizeMm: 6 },
-        { id: "b-7", materialId: "tigers-eye", sizeMm: 10 },
-        { id: "b-8", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-9", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-10", materialId: "brass-ring", sizeMm: 6 },
-        { id: "b-11", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-12", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-13", materialId: "tigers-eye", sizeMm: 10 },
-        { id: "b-14", materialId: "gold-phoebe", sizeMm: 10 },
-        { id: "b-15", materialId: "gold-phoebe", sizeMm: 10 },
+        { id: "b-0", materialId: "pixiu-charm", sizeMm: selectedSizeMm },
+        { id: "b-1", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-2", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-3", materialId: "tigers-eye", sizeMm: selectedSizeMm },
+        { id: "b-4", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-5", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-6", materialId: "brass-ring", sizeMm: selectedSizeMm },
+        { id: "b-7", materialId: "tigers-eye", sizeMm: selectedSizeMm },
+        { id: "b-8", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-9", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-10", materialId: "brass-ring", sizeMm: selectedSizeMm },
+        { id: "b-11", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-12", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-13", materialId: "tigers-eye", sizeMm: selectedSizeMm },
+        { id: "b-14", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
+        { id: "b-15", materialId: "gold-phoebe", sizeMm: selectedSizeMm },
       ]);
     } else if (presetName === "shield") {
       setBeads([
-        { id: "b-0", materialId: "peach-wood", sizeMm: 12 },
-        { id: "b-1", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-2", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-3", materialId: "black-obsidian", sizeMm: 10 },
-        { id: "b-4", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-5", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-6", materialId: "om-mantra", sizeMm: 8 },
-        { id: "b-7", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-8", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-9", materialId: "black-obsidian", sizeMm: 10 },
-        { id: "b-10", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-11", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-12", materialId: "om-mantra", sizeMm: 8 },
-        { id: "b-13", materialId: "ebony-wood", sizeMm: 10 },
-        { id: "b-14", materialId: "ebony-wood", sizeMm: 10 },
+        { id: "b-0", materialId: "peach-wood", sizeMm: selectedSizeMm },
+        { id: "b-1", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-2", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-3", materialId: "black-obsidian", sizeMm: selectedSizeMm },
+        { id: "b-4", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-5", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-6", materialId: "om-mantra", sizeMm: selectedSizeMm },
+        { id: "b-7", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-8", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-9", materialId: "black-obsidian", sizeMm: selectedSizeMm },
+        { id: "b-10", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-11", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-12", materialId: "om-mantra", sizeMm: selectedSizeMm },
+        { id: "b-13", materialId: "ebony-wood", sizeMm: selectedSizeMm },
+        { id: "b-14", materialId: "ebony-wood", sizeMm: selectedSizeMm },
       ]);
     } else if (presetName === "wisdom") {
       setBeads([
-        { id: "b-0", materialId: "silver-lotus", sizeMm: 12 },
-        { id: "b-1", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-2", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-3", materialId: "amethyst", sizeMm: 10 },
-        { id: "b-4", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-5", materialId: "lapis-lazuli", sizeMm: 10 },
-        { id: "b-6", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-7", materialId: "hetian-jade", sizeMm: 10 },
-        { id: "b-8", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-9", materialId: "lapis-lazuli", sizeMm: 10 },
-        { id: "b-10", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-11", materialId: "amethyst", sizeMm: 10 },
-        { id: "b-12", materialId: "thuja-cypress", sizeMm: 10 },
-        { id: "b-13", materialId: "thuja-cypress", sizeMm: 10 },
+        { id: "b-0", materialId: "silver-lotus", sizeMm: selectedSizeMm },
+        { id: "b-1", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-2", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-3", materialId: "amethyst", sizeMm: selectedSizeMm },
+        { id: "b-4", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-5", materialId: "lapis-lazuli", sizeMm: selectedSizeMm },
+        { id: "b-6", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-7", materialId: "hetian-jade", sizeMm: selectedSizeMm },
+        { id: "b-8", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-9", materialId: "lapis-lazuli", sizeMm: selectedSizeMm },
+        { id: "b-10", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-11", materialId: "amethyst", sizeMm: selectedSizeMm },
+        { id: "b-12", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
+        { id: "b-13", materialId: "thuja-cypress", sizeMm: selectedSizeMm },
       ]);
     }
     setActiveBeadIndex(0);
