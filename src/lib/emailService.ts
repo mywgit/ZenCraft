@@ -1,6 +1,9 @@
 /**
  * ZenCraft Atelier Email Notification Engine
- * Generates bespoke gold-foil HTML emails for Order Confirmation & Dispatch Tracking
+ * Generates bespoke gold-foil HTML emails for:
+ * 1. Customer Order Confirmation (结缘确认函 + 1-Click Magic Link)
+ * 2. Workshop Manufacturing Blueprint (大城工坊顺时针穿制工单 + 领料单 + 收件地址)
+ * 3. International Dispatch Notice (国际航空发货通知 + 顺丰/DHL轨迹)
  */
 
 import { OrderRecord } from "@/types/order";
@@ -59,7 +62,7 @@ export function generateOrderConfirmationEmailHtml(order: OrderRecord, origin: s
         <div style="color: #d4a373; font-size: 12px; margin-bottom: 12px;">
           ✦ 材质构成: ${item.details?.materialsSummaryZh || "天然老料精选"}
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #271206; pt-2; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #271206; padding-top: 10px; margin-top: 10px;">
           <span style="color: #a8a29e; font-size: 12px;">结缘实付总额:</span>
           <span class="price">$${order.totalAmount.toFixed(2)} USD</span>
         </div>
@@ -84,6 +87,70 @@ export function generateOrderConfirmationEmailHtml(order: OrderRecord, origin: s
     <div class="footer">
       <p>ZenCraft Atelier · Certified Dacheng Timber & Healing Gems</p>
       <p>如有任何定制咨询，请随时回复此邮件与工坊掌柜联络。</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+export function generateWorkshopWorkOrderEmailHtml(order: OrderRecord, origin: string = "http://localhost:3000"): string {
+  const item = order.items[0];
+  const adminUrl = `${origin}/admin/orders`;
+
+  const sequenceRows = (item.details?.beadsSequence || [])
+    .map((s) => `<li style="margin-bottom: 4px;"><strong>#${s.position}</strong>: ${s.nameZh} (${s.sizeMm}mm)</li>`)
+    .join("");
+
+  const materialCountRows = (item.details?.materialCounts || [])
+    .map((m) => `<li style="margin-bottom: 4px;">${m.nameZh} (${m.sizeMm}mm) x <strong>${m.count}颗</strong></li>`)
+    .join("");
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>【工单通知】大城工坊全新穿制工单 #${order.orderId}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #1a110a; color: #fdf8eb; margin: 0; padding: 20px; }
+    .container { max-width: 650px; margin: 0 auto; background: #24160e; border: 2px solid #b45309; border-radius: 16px; padding: 24px; }
+    .badge { background: #b45309; color: #000; font-weight: bold; font-size: 12px; padding: 4px 10px; border-radius: 8px; }
+    .box { background: #140b06; border: 1px solid #78350f; border-radius: 12px; padding: 16px; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🪵 大城工坊 · 新定制手串生产配货单</h2>
+    <p>工单号: <strong style="color: #fde68a; font-family: monospace;">${order.orderId}</strong> | 实付: <strong style="color: #34d399;">$${order.totalAmount} USD</strong></p>
+
+    <div class="box">
+      <h3 style="color: #f59e0b; margin-top: 0;">📦 客户收件信息 (国际面单标准)</h3>
+      <p style="margin: 4px 0;"><strong>收件人:</strong> ${order.shippingAddress.fullName}</p>
+      <p style="margin: 4px 0;"><strong>联系电话:</strong> ${order.shippingAddress.phone || "无"}</p>
+      <p style="margin: 4px 0;"><strong>邮箱:</strong> ${order.shippingAddress.email}</p>
+      <p style="margin: 4px 0;"><strong>详细地址:</strong> ${order.shippingAddress.addressLine1}, ${order.shippingAddress.city}, ${order.shippingAddress.state || ""} ${order.shippingAddress.postalCode}, ${order.shippingAddress.country}</p>
+      <p style="margin: 4px 0; color: #fbbf24;"><strong>烫金证书题名姓名:</strong> ${item.details?.wearerName || order.shippingAddress.fullName}</p>
+    </div>
+
+    <div class="box">
+      <h3 style="color: #f59e0b; margin-top: 0;">📋 物料领料汇总</h3>
+      <ul style="padding-left: 20px; color: #fde68a;">
+        ${materialCountRows || "<li>按默认 18 颗配方领料</li>"}
+      </ul>
+    </div>
+
+    <div class="box">
+      <h3 style="color: #f59e0b; margin-top: 0;">📿 顺时针穿制工序图谱 (第 1 颗至第 ${item.details?.beadCount || 18} 颗)</h3>
+      <ol style="padding-left: 20px; color: #d4a373;">
+        ${sequenceRows || "<li>第 1 颗: 纯银莲花佛头三通 ➔ 顺时针穿制</li>"}
+      </ol>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px;">
+      <a href="${adminUrl}" style="background: #f59e0b; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: bold; text-decoration: none;">
+        进入工坊管理后台录入发货单号 ➔
+      </a>
     </div>
   </div>
 </body>

@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateOrderConfirmationEmailHtml, generateShippingNotificationEmailHtml } from "@/lib/emailService";
+import {
+  generateOrderConfirmationEmailHtml,
+  generateShippingNotificationEmailHtml,
+  generateWorkshopWorkOrderEmailHtml,
+} from "@/lib/emailService";
 import { OrderRecord } from "@/types/order";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, order }: { type: "order-confirmation" | "shipping-dispatch"; order: OrderRecord } = body;
+    const {
+      type,
+      order,
+    }: {
+      type: "order-confirmation" | "shipping-dispatch" | "workshop-workorder";
+      order: OrderRecord;
+    } = body;
 
     const origin = req.nextUrl.origin || "http://localhost:3000";
-    const recipient = order.shippingAddress.email;
+    let recipient = order.shippingAddress.email;
 
     let emailHtml = "";
     let subject = "";
@@ -16,6 +26,10 @@ export async function POST(req: NextRequest) {
     if (type === "shipping-dispatch") {
       emailHtml = generateShippingNotificationEmailHtml(order, origin);
       subject = `✈️ Your ZenCraft Sacred Mala Has Dispatched! (${order.trackingNumber})`;
+    } else if (type === "workshop-workorder") {
+      recipient = process.env.WORKSHOP_NOTIFY_EMAIL || "workshop@zencraft.art";
+      emailHtml = generateWorkshopWorkOrderEmailHtml(order, origin);
+      subject = `🪵【大城工坊配货工单】新定制手串 #${order.orderId} - ${order.shippingAddress.fullName}`;
     } else {
       emailHtml = generateOrderConfirmationEmailHtml(order, origin);
       subject = `✦ Order Confirmed: ZenCraft Bespoke Mala [${order.orderId}]`;
