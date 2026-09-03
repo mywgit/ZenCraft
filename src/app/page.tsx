@@ -136,78 +136,33 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-14 py-6 sm:py-8">
-      {/* 1. Top Hero Discovery Banner (禅 · 盘个手串 - 真实实景大图) */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl overflow-hidden border border-amber-900/50 shadow-2xl bg-[#140c07] p-6 sm:p-10 space-y-7">
-          {/* Top Title */}
-          <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold tracking-wide shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span>{lang === "zh" ? "禅 · 盘个手串 · 东方生活美学" : "✦ The Zen Mala & Timber Atelier ✦"}</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl font-bold font-serif text-amber-100 tracking-tight leading-tight">
-              {t("heroTitle1")}
-              <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent italic px-2">
-                {t("heroTitleHighlight")}
-              </span>
-            </h1>
-
-            <p className="text-xs sm:text-sm text-amber-200/70 max-w-2xl mx-auto font-serif leading-relaxed">
-              {t("heroSubtitle")}
-            </p>
+    <div className="space-y-14 py-4 sm:py-6">
+      {/* 1. Main Interactive Studio Canvas Section (直接置顶：3D 串珠与能量定制工作台) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="text-center space-y-2.5 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold tracking-wide shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span>{lang === "zh" ? "禅 · 盘个手串 · 360° 3D 自由定制" : "✦ The Zen Mala 3D Customizer Atelier ✦"}</span>
           </div>
 
-          {/* Two Primary Portals (造物 · DIY 与 觅宝 · 集市 - 提升到最显眼顶部) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto pt-1">
-            {/* Portal 1: DIY Studio (造物) */}
-            <Link
-              href="/studio"
-              className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#22130b] to-[#160b06] hover:from-[#2e190f] hover:to-[#1f0f08] border border-amber-500/50 hover:border-amber-400 flex items-center justify-between group transition-all shadow-2xl hover:scale-[1.02]"
-            >
-              <div className="flex items-center gap-3.5 text-left">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-slate-950 font-serif font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
-                  造
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
-                    {lang === "zh" ? "造物 · DIY 设计台" : "DIY Customizer Studio"}
-                  </h3>
-                  <p className="text-[11px] text-amber-200/70 font-serif">
-                    {lang === "zh" ? "盘玩由心 · 360° 自由搭配" : "360° Real-time bead arrangement"}
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1.5 transition-transform" />
-            </Link>
+          <h1 className="text-3xl sm:text-5xl font-bold font-serif text-amber-100 tracking-tight leading-tight">
+            {t("heroTitle1")}
+            <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent italic px-2">
+              {t("heroTitleHighlight")}
+            </span>
+          </h1>
 
-            {/* Portal 2: Ready Market (集市) */}
-            <Link
-              href="/market"
-              className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1c0f09] to-[#120804] hover:from-[#28150d] hover:to-[#1a0c06] border border-amber-900/60 hover:border-amber-400/80 flex items-center justify-between group transition-all shadow-xl hover:scale-[1.02]"
-            >
-              <div className="flex items-center gap-3.5 text-left">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-800 to-amber-950 flex items-center justify-center text-amber-100 font-serif font-black text-xl shadow-lg group-hover:scale-110 transition-transform border border-amber-500/20">
-                  市
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
-                    {lang === "zh" ? "觅宝 · 现成集市" : "Ready-to-Ship Market"}
-                  </h3>
-                  <p className="text-[11px] text-amber-200/70 font-serif">
-                    {lang === "zh" ? "匠心佳品 · 手串与红木小件" : "Curated heirloom malas & carvings"}
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1.5 transition-transform" />
-            </Link>
-          </div>
+          <p className="text-xs sm:text-sm text-amber-200/70 max-w-2xl mx-auto font-serif leading-relaxed">
+            {t("heroSubtitle")}
+          </p>
         </div>
+
+        {/* Real-time 3D Studio Workspace */}
+        <StudioWorkspace />
       </section>
 
       {/* 2. 镇店之宝 (Masterpiece Vault - 真实商品实拍) */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-4">
         <div className="flex items-center justify-between mb-5 pb-2 border-b border-amber-900/40">
           <div className="flex items-center gap-2">
             <span className="text-red-500 font-serif text-lg">✦</span>
@@ -336,19 +291,6 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* 4. Main Interactive Studio Canvas Section (造物设计台) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4">
-        <div className="text-center space-y-2 mb-6">
-          <span className="text-xs font-serif uppercase tracking-widest text-amber-400 font-bold">
-            {lang === "zh" ? "✦ 360° 环形可视化设计 ✦" : "✦ Interactive 360° Bead Studio ✦"}
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-bold font-serif text-amber-100">
-            {lang === "zh" ? "亲手造物 · 调和身心七脉轮能量" : "Craft Your Bespoke Energy Guardian"}
-          </h2>
-        </div>
-        <StudioWorkspace />
       </section>
 
       {/* 5. Sourcing & Heritage 3 Pillars Section */}
