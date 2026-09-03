@@ -139,9 +139,9 @@ export default function HomePage() {
     <div className="space-y-14 py-6 sm:py-8">
       {/* 1. Top Hero Discovery Banner (禅 · 盘个手串 - 真实实景大图) */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl overflow-hidden border border-amber-900/50 shadow-2xl bg-[#140c07] p-6 sm:p-10 space-y-6">
+        <div className="relative rounded-3xl overflow-hidden border border-amber-900/50 shadow-2xl bg-[#140c07] p-6 sm:p-10 space-y-7">
           {/* Top Title */}
-          <div className="text-center space-y-3">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-serif font-bold tracking-wide shadow-lg">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               <span>{lang === "zh" ? "禅 · 盘个手串 · 东方生活美学" : "✦ The Zen Mala & Timber Atelier ✦"}</span>
@@ -159,66 +159,48 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Authentic Real Scenic Photo of Handcrafted Mala in Nature */}
-          <div className="relative w-full aspect-[21/9] sm:aspect-[24/9] rounded-2xl overflow-hidden border border-amber-900/60 shadow-2xl group">
-            <img
-              src="/hero/hero-zen-tray.jpg"
-              alt="Authentic Zen Mala in Nature"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-serif text-amber-100">
-              <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/30">
-                🌿 {lang === "zh" ? "大自然光影与天然红木的灵性共振" : "Living Timber & Solar Resonance"}
-              </span>
-              <span className="hidden sm:inline bg-amber-950/80 px-3 py-1 rounded-full border border-amber-500/30 text-amber-300">
-                {lang === "zh" ? "大城百年老料保真" : "100% Dacheng Old Stock"}
-              </span>
-            </div>
-          </div>
-
-          {/* Two Primary Portals (造物 · DIY 与 觅宝 · 集市) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto pt-2">
-            {/* Portal 1: DIY Studio */}
+          {/* Two Primary Portals (造物 · DIY 与 觅宝 · 集市 - 提升到最显眼顶部) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto pt-1">
+            {/* Portal 1: DIY Studio (造物) */}
             <Link
               href="/studio"
-              className="p-4 sm:p-5 rounded-2xl bg-[#1a0f09]/90 hover:bg-[#28170e] border border-amber-500/40 hover:border-amber-400 flex items-center justify-between group transition-all shadow-xl"
+              className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#22130b] to-[#160b06] hover:from-[#2e190f] hover:to-[#1f0f08] border border-amber-500/50 hover:border-amber-400 flex items-center justify-between group transition-all shadow-2xl hover:scale-[1.02]"
             >
               <div className="flex items-center gap-3.5 text-left">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-amber-100 font-serif font-black text-lg shadow-md group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-slate-950 font-serif font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
                   造
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-sm sm:text-base font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
                     {lang === "zh" ? "造物 · DIY 设计台" : "DIY Customizer Studio"}
                   </h3>
-                  <p className="text-[11px] text-amber-200/60 font-serif">
+                  <p className="text-[11px] text-amber-200/70 font-serif">
                     {lang === "zh" ? "盘玩由心 · 360° 自由搭配" : "360° Real-time bead arrangement"}
                   </p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1.5 transition-transform" />
             </Link>
 
-            {/* Portal 2: Ready Market */}
+            {/* Portal 2: Ready Market (集市) */}
             <Link
               href="/market"
-              className="p-4 sm:p-5 rounded-2xl bg-[#1a0f09]/90 hover:bg-[#28170e] border border-amber-900/50 hover:border-amber-400 flex items-center justify-between group transition-all shadow-xl"
+              className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1c0f09] to-[#120804] hover:from-[#28150d] hover:to-[#1a0c06] border border-amber-900/60 hover:border-amber-400/80 flex items-center justify-between group transition-all shadow-xl hover:scale-[1.02]"
             >
               <div className="flex items-center gap-3.5 text-left">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-700 to-amber-900 flex items-center justify-center text-amber-100 font-serif font-black text-lg shadow-md group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-800 to-amber-950 flex items-center justify-center text-amber-100 font-serif font-black text-xl shadow-lg group-hover:scale-110 transition-transform border border-amber-500/20">
                   市
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-sm sm:text-base font-bold font-serif text-amber-100 group-hover:text-amber-300 transition-colors">
                     {lang === "zh" ? "觅宝 · 现成集市" : "Ready-to-Ship Market"}
                   </h3>
-                  <p className="text-[11px] text-amber-200/60 font-serif">
+                  <p className="text-[11px] text-amber-200/70 font-serif">
                     {lang === "zh" ? "匠心佳品 · 手串与红木小件" : "Curated heirloom malas & carvings"}
                   </p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
         </div>
