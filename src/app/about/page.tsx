@@ -14,17 +14,17 @@ export default function AboutPage() {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
           <TreePine className="w-3.5 h-3.5" />
-          <span>{lang === "zh" ? "大城红木 · 古法非遗溯源" : "The Ancient Sourcing Heritage"}</span>
+          <span>{lang === "zh" ? "紫禁宫廷造办 · 京作非遗溯源" : "Imperial Court & Jingzuo Heritage"}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
           {lang === "zh"
-            ? "源自中国红木之乡 · 大城宫廷木作工坊"
-            : "Crafted from Dacheng's Sacred Timber Ateliers"}
+            ? "源自紫禁宫廷造办 · 京作非遗木作工坊"
+            : "Crafted by the Imperial Court & Jingzuo Heritage Atelier"}
         </h1>
         <p className="text-sm sm:text-base text-slate-400 font-serif max-w-2xl mx-auto leading-relaxed">
           {lang === "zh"
-            ? "传承数百年明清宫廷造办木作传统，融合当代身心正念与七脉轮五行能量平衡。"
-            : "Where centuries of imperial woodworking tradition meet contemporary mindfulness and energetic alignment."}
+            ? "传承数百年明清宫廷造办处御用木作非遗标准，融合当代身心正念与七脉轮五行能量平衡。"
+            : "Where centuries of imperial court woodworking tradition meet contemporary mindfulness and energetic alignment."}
         </p>
       </div>
 
@@ -35,19 +35,19 @@ export default function AboutPage() {
             <Sparkles className="w-5 h-5 text-amber-400" />
             <span>
               {lang === "zh"
-                ? "中国宫廷木艺发源圣地：河北大城 (Dacheng)"
-                : "The Capital of Imperial Woodcraft: Dacheng (大城)"}
+                ? "紫禁皇室御用木艺圣地：京作宫廷工坊 (Imperial Court Atelier)"
+                : "The Sacred Legacy of Imperial Woodcraft: Jingzuo Atelier"}
             </span>
           </h2>
           <p>
             {lang === "zh"
-              ? "数百年来，自明清宫廷造办处起，河北大城的木作匠人便代代为皇家精雕细琢御用硬木家具与案头文房雅件。大城地处华北腹地，至今仍是中国乃至全球名贵木材交易、数十年自然陈化老料仓储与高精密手工车旋打磨无可撼动的核心之都。"
-              : "For centuries dating back to the Ming and Qing Dynasties, the artisans of Dacheng served as master furniture-makers and carvers for royal courts. Located in northern China, Dacheng remains the undisputed global capital of precious timber curation, seasoned raw stock preservation, and precision woodturning."}
+              ? "数百年来，自明清紫禁城宫廷造办处起，京作非遗木作工坊便汇聚华夏最顶尖的木作匠师，专为帝皇与皇室宗亲精雕细琢御用沉香、小叶紫檀、金丝楠与案头文房雅件。工坊承袭皇家内府最严苛的选料与车旋标准，至今仍守护着数十年自然陈化珍稀老料仓储与高精密手工车旋打磨技艺。"
+              : "For centuries dating back to the Forbidden City's Imperial Palace Workshops (Zaobanchu), master artisans of the Jingzuo Guild crafted priceless sacred wood treasures and malas exclusively for royalty. Today, our atelier preserves this unbroken royal standard—guarding seasoned, decades-aged old stock and master-level hand-turning arts."}
           </p>
           <p>
             {lang === "zh"
-              ? "与市场上速生木材、化学染色、注入工业香精或浸泡工业蜂蜡的批量代工厂截然不同，ZenCraft 工坊直接与大城世代相传的老木匠人深入合作。每一根老料开料前均经过严格密度测试、入水沉水检验、天然油脂醇厚度勘测与纯正草本自然原香鉴定。"
-              : "Unlike mass-market factories that speed-grow wood or submerge beads in chemical dyes and synthetic waxes, our atelier works directly with historic timber masters. We inspect every log for density, organic water-sinking qualities, natural oil content, and authentic botanical aroma."}
+              ? "与市场上速生木材、化学染色、注入工业香精或浸泡工业蜂蜡的批量代工厂截然不同，ZenCraft 工坊直接与世代相传的宫廷京作老匠人深入合作。每一根老料开料前均经过严格密度测试、入水秒沉检验、天然油脂醇厚度勘测与纯正草本自然原香鉴定。"
+              : "Unlike mass-market factories that speed-grow wood or submerge beads in chemical dyes and synthetic waxes, our atelier works directly with generational imperial masters. We inspect every log for density, organic water-sinking qualities, natural oil content, and authentic botanical aroma."}
           </p>
         </div>
 

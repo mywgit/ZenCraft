@@ -85,7 +85,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-medium">
             <ShieldCheck className="w-4 h-4" />
-            <span>{lang === "zh" ? "100% 大城源头天然野生老料保真认证" : "100% Genuine Dacheng Wild Timber Certified"}</span>
+            <span>{lang === "zh" ? "100% 宫廷京作野生老料保真认证" : "100% Genuine Imperial Court Wild Timber Certified"}</span>
           </div>
         </div>
 
@@ -113,7 +113,7 @@ export function Footer() {
           </h5>
           <ul className="space-y-2 text-slate-400">
             <li>• {lang === "zh" ? "零化学浸色与保真承诺" : "Zero Chemical Dyeing Guarantee"}</li>
-            <li>• {lang === "zh" ? "大城百年老料合规溯源" : "Ethical Sustainable Timber Sourcing"}</li>
+            <li>• {lang === "zh" ? "京作百年老料合规溯源" : "Ethical Sustainable Timber Sourcing"}</li>
             <li>• {lang === "zh" ? "赠实木礼盒与专属手作证书" : "Free Worldwide Express with Silk Pouch"}</li>
             <li>• {lang === "zh" ? "终身包浆养护指导支持" : "Lifetime Patina Craft Support"}</li>
           </ul>

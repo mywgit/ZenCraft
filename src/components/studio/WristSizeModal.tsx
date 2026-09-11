@@ -99,7 +99,7 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
           </h2>
           <p className="text-xs text-amber-200/60 leading-relaxed">
             {lang === "zh"
-              ? "点击下方卡片自动填入，大城工坊将依据您的净手围预留 0.8cm 舒适内径穿制。"
+              ? "点击下方卡片自动填入，京作工坊将依据您的净手围预留 0.8cm 舒适内径穿制。"
               : "Tap any card to auto-apply. Our atelier will tailor a 0.8cm inner comfort clearance based on your net wrist size."}
           </p>
         </div>

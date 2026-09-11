@@ -90,7 +90,7 @@ export default function MyOrdersPage() {
       case "confirmed":
         return lang === "zh" ? "工坊已接单" : "Order Confirmed";
       case "crafting":
-        return lang === "zh" ? "大城老师傅选料穿制中" : "Hand-stringing in Atelier";
+        return lang === "zh" ? "宫廷京作老师傅选料穿制中" : "Hand-stringing in Atelier";
       case "certificate-stamping":
         return lang === "zh" ? "烫金能量证书题名盖印中" : "Gold-foil Inscription & Blessing";
       case "packaged":
@@ -134,7 +134,7 @@ export default function MyOrdersPage() {
 
         <p className="text-xs sm:text-sm text-amber-200/70 font-serif max-w-xl mx-auto leading-relaxed">
           {lang === "zh"
-            ? "无需繁琐注册与记忆密码！只需输入您的【结缘邮箱】或【工单号】，即可一键调取名下所有手串的大城工坊制作动态与顺丰/DHL运单。"
+            ? "无需繁琐注册与记忆密码！只需输入您的【结缘邮箱】或【工单号】，即可一键调取名下所有手串的京作工坊制作动态与顺丰/DHL运单。"
             : "No registration or password needed. Simply enter your checkout email or Order ID to view real-time atelier craftsmanship and global tracking."}
         </p>
       </div>
@@ -258,7 +258,7 @@ export default function MyOrdersPage() {
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold font-serif text-amber-300 flex items-center gap-1.5">
                 <Hammer className="w-4 h-4 text-amber-400" />
-                <span>{lang === "zh" ? "大城红木工坊制作流水线实时动态" : "Atelier Production & Courier Dispatch Progress"}</span>
+                <span>{lang === "zh" ? "京作宫廷工坊制作流水线实时动态" : "Atelier Production & Courier Dispatch Progress"}</span>
               </h3>
               <span className="text-xs font-bold text-amber-400 font-serif">
                 {getStatusText(selectedOrder.productionStatus)}
@@ -321,7 +321,7 @@ export default function MyOrdersPage() {
                   </span>
                 </p>
                 <p className="text-[11px] text-amber-200/70 font-serif truncate mt-0.5">
-                  ✦ {lang === "zh" ? "珠体搭配" : "Materials"}: {selectedOrder.items[0].details?.materialsSummaryZh || "大城正统老料与纯银三通"}
+                  ✦ {lang === "zh" ? "珠体搭配" : "Materials"}: {selectedOrder.items[0].details?.materialsSummaryZh || "宫廷京作正统老料与纯银三通"}
                 </p>
               </div>
             </div>

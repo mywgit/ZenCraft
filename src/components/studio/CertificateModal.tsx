@@ -67,7 +67,7 @@ export function CertificateModal() {
       ctx.font = lang === "zh" ? "bold 13px 'Noto Serif SC', serif" : "bold 13px serif";
       ctx.letterSpacing = "3px";
       ctx.fillText(
-        lang === "zh" ? "✦ 大城宫廷木作 · 东方能量认证文疏 ✦" : "✦ ZEN CRAFT ATELIER ✦",
+        lang === "zh" ? "✦ 紫禁宫廷造办 · 京作非遗能量文疏 ✦" : "✦ IMPERIAL PALACE ATELIER ✦",
         width / 2,
         55
       );
@@ -280,8 +280,8 @@ export function CertificateModal() {
       ctx.font = "9px sans-serif";
       ctx.fillText(
         lang === "zh"
-          ? "中国河北大城红木工坊 • 100% 天然野生老料保真"
-          : "DACHENG TIMBER ATELIER • 100% BOTANICAL VERIFIED",
+          ? "紫禁宫廷造办京作工坊 • 100% 天然野生老料保真"
+          : "IMPERIAL JINGZUO ATELIER • 100% BOTANICAL VERIFIED",
         width / 2,
         615
       );

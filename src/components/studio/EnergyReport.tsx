@@ -75,8 +75,8 @@ export function EnergyReport() {
 
   const customOrderItem: OrderItem = {
     id: `custom-mala-${Date.now()}`,
-    title: `Bespoke Dacheng Zen Mala (${energyResult.totalBeads} Beads)`,
-    titleZh: `大城正统老料高定手串 (${energyResult.totalBeads} 颗精选)`,
+    title: `Bespoke Imperial Zen Mala (${energyResult.totalBeads} Beads)`,
+    titleZh: `紫禁宫廷造办正统老料高定手串 (${energyResult.totalBeads} 颗精选)`,
     category: "custom-mala",
     image: "/products/master-zitan.jpg",
     priceUsd: energyResult.totalPriceUsd,
@@ -293,14 +293,14 @@ export function EnergyReport() {
             <div className="space-y-1.5 pt-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{lang === "zh" ? "大城大师生辰八字高定 · 微信/邮件预约" : "VIP Master Sourcing & Reading"}</span>
+                <span>{lang === "zh" ? "京作宫廷大师生辰八字高定 · 微信/邮件预约" : "VIP Imperial Master Sourcing & Reading"}</span>
               </div>
               <h3 className="text-lg font-serif font-bold text-amber-100">
                 {lang === "zh" ? "扫码添加大师/顾问微信" : "Scan to Connect on WeChat"}
               </h3>
               <p className="text-xs text-amber-200/70 font-serif leading-relaxed">
                 {lang === "zh" 
-                  ? "发送您的生辰八字与定制诉求，由大城老工艺师亲自推演五行喜忌、指导定制选木配珠"
+                  ? "发送您的生辰八字与定制诉求，由宫廷京作老工艺师亲自推演五行喜忌、指导定制选木配珠"
                   : "Send your birth date & time. Our master artisan analyzes your elemental balance & customizes sacred beads recommendation."}
               </p>
             </div>
@@ -324,7 +324,7 @@ export function EnergyReport() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                <span>{lang === "zh" ? "大城源头野生老料（紫檀/金丝楠/沉香）一对一专属定制" : "1-on-1 bespoke crafting with genuine wild-sourced timbers"}</span>
+                <span>{lang === "zh" ? "宫廷京作野生老料（紫檀/金丝楠/沉香）一对一专属定制" : "1-on-1 bespoke crafting with imperial wild-sourced timbers"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />

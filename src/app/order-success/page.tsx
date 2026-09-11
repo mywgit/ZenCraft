@@ -91,8 +91,8 @@ function OrderSuccessContent() {
     items: [
       {
         id: "demo-custom-mala",
-        title: "Bespoke Dacheng Sacred Wood Mala (18 Beads)",
-        titleZh: "大城正统老料高定手串 (18 颗)",
+        title: "Bespoke Imperial Sacred Wood Mala (18 Beads)",
+        titleZh: "紫禁宫廷造办正统老料高定手串 (18 颗)",
         category: "custom-mala",
         image: "/products/master-zitan.jpg",
         priceUsd: 118.0,
@@ -141,14 +141,14 @@ function OrderSuccessContent() {
             {lang === "zh" ? "✦ 结缘成功 · 工坊已接单 ✦" : "✦ Payment Confirmed & Transmitted ✦"}
           </span>
           <h1 className="text-2xl sm:text-4xl font-bold font-serif text-amber-100">
-            {lang === "zh" ? "感谢您的结缘！工单已下达大城工坊" : "Thank You for Your Sacred Order!"}
+            {lang === "zh" ? "感谢您的结缘！工单已下达京作宫廷工坊" : "Thank You for Your Sacred Order!"}
           </h1>
         </div>
 
         <p className="text-xs sm:text-sm text-amber-200/70 font-serif max-w-xl mx-auto">
           {lang === "zh"
-            ? "您的手串设计图纸、能量题名与收件信息已安全加密同步至河北大城红木制作工坊，资深工艺师正在为您精选老料并亲手穿制。"
-            : "Your bespoke design blueprint, astrological inscription, and shipping details have been securely synchronized to our Dacheng Atelier."}
+            ? "您的手串设计图纸、能量题名与收件信息已安全加密同步至京作宫廷非遗木作工坊，资深工艺师正在为您精选老料并亲手穿制。"
+            : "Your bespoke design blueprint, astrological inscription, and shipping details have been securely synchronized to our Imperial Court Atelier."}
         </p>
 
         {/* Order Meta Pills */}
@@ -174,7 +174,7 @@ function OrderSuccessContent() {
           <div className="flex items-center gap-2">
             <Hammer className="w-4 h-4 text-amber-400" />
             <h2 className="text-base sm:text-lg font-bold font-serif text-amber-100">
-              {lang === "zh" ? "大城工坊制作流水线实时追踪" : "Live Atelier Craftsmanship Progress"}
+              {lang === "zh" ? "京作宫廷工坊制作流水线实时追踪" : "Live Atelier Craftsmanship Progress"}
             </h2>
           </div>
           <span className="text-xs font-serif text-amber-400 flex items-center gap-1">
@@ -280,7 +280,7 @@ function OrderSuccessContent() {
               )}
               {currentItem.details?.beadCount && (
                 <p className="text-xs text-amber-200/70 font-serif">
-                  {currentItem.details.beadCount} {lang === "zh" ? "颗大城正统老料" : "Beads Dacheng Old Stock"}
+                  {currentItem.details.beadCount} {lang === "zh" ? "颗宫廷京作正统老料" : "Beads Imperial Old Stock"}
                 </p>
               )}
               <div className="text-xs font-mono font-bold text-amber-300 pt-1">

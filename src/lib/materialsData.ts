@@ -59,7 +59,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     category: "wood",
     description: "Known as the Holy Wood. Naturally fragrant, develops an enchanting jade-green patina with sunlight and wear.",
     descriptionZh: "被誉为圣木。自带天然清幽檀香，随日照与佩戴逐渐蜕变为碧玉般的青翠包浆，安神定气。",
-    origin: "Dacheng Certified Wild Stock",
+    origin: "Imperial Court Certified Old Stock",
     image: "/beads/green-sandalwood.png",
     colors: {
       base: "#5f6f52",
@@ -111,7 +111,7 @@ export const SACRED_WOODS: BeadMaterial[] = [
     category: "wood",
     description: "High-density sinking timber. Polishes to a piano-black obsidian sheen, grounding intense spiritual focus and shielding energy.",
     descriptionZh: "密度极高秒沉水，抛光后呈现如钢琴烤漆般的深邃镜面光泽。提供强大的定力与避煞气场。",
-    origin: "Dacheng Premium Selection",
+    origin: "Imperial Court Master Selection",
     image: "/beads/ebony-wood.png",
     colors: {
       base: "#1c1917",
@@ -709,7 +709,7 @@ export const SACRED_SPACERS: BeadMaterial[] = [
     category: "spacer",
     description: "Slim antique brass ring used between beads to protect timber, improve flex, and add warm vintage character.",
     descriptionZh: "手工复古做旧黄铜薄片，保护木质不磨损，增加手串流线韵律感。",
-    origin: "Dacheng Handcraft Lab",
+    origin: "Imperial Jingzuo Handcraft Lab",
     image: "/beads/brass-ring.png",
     colors: {
       base: "#ca8a04",

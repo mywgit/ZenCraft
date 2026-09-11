@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: "ZenCraft - Interactive Zen Mala & Energy Bead Bracelet Atelier (2026)",
   },
   description:
-    "Design custom handcrafted Zen energy bracelets and mala beads in real-time 360° canvas. Powered by authentic Dacheng sacred wild timber, healing crystals, and 7-Chakras balance.",
+    "Design custom handcrafted Zen energy bracelets and mala beads in real-time 360° canvas. Powered by authentic imperial court sacred wild timber, healing crystals, and 7-Chakras balance.",
   keywords: [
     "mala beads",
     "custom wood bracelet",

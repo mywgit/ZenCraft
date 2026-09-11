@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     } else if (type === "workshop-workorder") {
       recipient = process.env.WORKSHOP_NOTIFY_EMAIL || "workshop@zencraft.art";
       emailHtml = generateWorkshopWorkOrderEmailHtml(order, origin);
-      subject = `🪵【大城工坊配货工单】新定制手串 #${order.orderId} - ${order.shippingAddress.fullName}`;
+      subject = `🪵【京作宫廷工坊配货工单】新定制手串 #${order.orderId} - ${order.shippingAddress.fullName}`;
     } else {
       emailHtml = generateOrderConfirmationEmailHtml(order, origin);
       subject = `✦ Order Confirmed: ZenCraft Bespoke Mala [${order.orderId}]`;

@@ -562,7 +562,7 @@ export function CheckoutModal({ isOpen, onClose, orderItem }: CheckoutModalProps
                   <span>随单附赠以下专属结缘礼遇：</span>
                 </div>
                 <p>• 天然沉香实木珍藏礼盒 (价值 $28)</p>
-                <p>• 大城工坊烫金七脉轮手作能量证书 (唯一防伪编号)</p>
+                <p>• 京作宫廷工坊烫金七脉轮手作能量证书 (唯一防伪编号)</p>
                 <p>• 进口高弹力水晶穿绳与备用引线配件包</p>
               </div>
             </div>

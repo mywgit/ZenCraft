@@ -110,8 +110,8 @@ export default function HomePage() {
           : "Where are your sacred woods sourced, and how do you guarantee 100% authenticity?",
       a:
         lang === "zh"
-          ? "我们的所有圣木均源自中国北方最大的明清宫廷红木集散中心——河北大城红木工坊。由资深工艺师严格甄选天然野生老料，拒绝任何化学浸色、人工香精或塑料压铸，随包裹附带工坊官方英文保真证书。"
-          : "All our sacred woods are ethically sourced from historic timber artisans in Dacheng, the world's premier imperial woodworking heritage hub. Every bead is cut from authentic wild old stock with zero chemical dyes, zero artificial fragrances, and verified botanical purity.",
+          ? "我们的所有圣木均源自紫禁宫廷造办标准与京作非遗木作工坊。由资深工艺师严格甄选天然野生老料，拒绝任何化学浸色、人工香精或塑料压铸，随包裹附带工坊官方英文保真证书。"
+          : "All our sacred woods are ethically sourced according to historic Imperial Court Atelier standards. Every bead is cut from authentic wild, century-seasoned old stock with zero chemical dyes, zero artificial fragrances, and verified botanical purity.",
     },
     {
       q:
@@ -301,10 +301,10 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
         <div className="text-center space-y-2 mb-8">
           <span className="text-xs font-serif uppercase tracking-widest text-amber-400 font-bold">
-            {lang === "zh" ? "✦ 东方匠心 · 大城老料 ✦" : "✦ Sacred Provenance & Craft ✦"}
+            {lang === "zh" ? "✦ 紫禁宫廷造办 · 京作老料 ✦" : "✦ Imperial Provenance & Craft ✦"}
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold font-serif text-amber-100">
-            {lang === "zh" ? "为什么选择 ZenCraft 大城源头工坊？" : "Why Choose ZenCraft Sacred Ateliers?"}
+            {lang === "zh" ? "为什么选择 ZenCraft 京作宫廷工坊？" : "Why Choose ZenCraft Imperial Court Atelier?"}
           </h2>
         </div>
 
@@ -314,12 +314,12 @@ export default function HomePage() {
               <TreePine className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold font-serif text-amber-100">
-              {lang === "zh" ? "100% 大城源头野生老料" : "100% Wild Sourced Old Stock"}
+              {lang === "zh" ? "100% 宫廷京作野生老料" : "100% Imperial Aged Old Stock"}
             </h3>
             <p className="text-xs text-amber-200/70 leading-relaxed font-serif">
               {lang === "zh"
-                ? "直采自中国红木之乡大城，严选陈化百年老木。高油密、高光泽、入水秒沉，绝不采用廉价速生木或化学药泡。"
-                : "Sourced directly from Dacheng's ancient imperial timber hub. Hand-selected century-aged timber with high oil density and zero chemical dyes."}
+                ? "承袭紫禁内府严格选料标准，严选陈化百年老木。高油密、高光泽、入水秒沉，绝不采用廉价速生木或化学药泡。"
+                : "Sourced directly adhering to Forbidden City Imperial Court standards. Hand-selected century-aged timber with high oil density and zero chemical dyes."}
             </p>
           </div>
 

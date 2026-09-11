@@ -173,8 +173,8 @@ export default function AdminOrdersPage() {
           items: [
             {
               id: "item-1",
-              title: "Bespoke Dacheng Zen Mala (24 Beads)",
-              titleZh: "大城正统老料高定手串 (24 颗精选)",
+              title: "Bespoke Imperial Zen Mala (24 Beads)",
+              titleZh: "紫禁宫廷造办正统老料高定手串 (24 颗精选)",
               category: "custom-mala",
               image: "/products/master-zitan.jpg",
               priceUsd: 146.23,

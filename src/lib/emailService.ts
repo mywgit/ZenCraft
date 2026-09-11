@@ -45,7 +45,7 @@ export function generateOrderConfirmationEmailHtml(order: OrderRecord, origin: s
     <div class="content">
       <p>Dear <strong>${order.shippingAddress.fullName}</strong>,</p>
       <p style="color: #d4a373; font-size: 13px; line-height: 1.6;">
-        感谢您的结缘！您的工单已正式下达中国红木之乡·河北大城制作工坊。资深木作与珠宝工艺师正在为您精选一手保真老料并手工穿制。
+        感谢您的结缘！您的工单已正式下达紫禁宫廷造办·京作非遗木作工坊。资深木作与珠宝工艺师正在为您精选一手保真老料并手工穿制。
       </p>
 
       <div class="card">
@@ -78,14 +78,14 @@ export function generateOrderConfirmationEmailHtml(order: OrderRecord, origin: s
         <p><strong>随包裹专属礼遇包含：</strong></p>
         <ul style="padding-left: 20px; margin-top: 4px;">
           <li>天然沉香实木珍藏礼盒 (Bespoke Wooden Gift Box)</li>
-          <li>大城工坊烫金七脉轮能量防伪证书 (Gold-Foil Certificate)</li>
+          <li>京作宫廷工坊烫金七脉轮能量防伪证书 (Gold-Foil Certificate)</li>
           <li>进口高弹力水晶穿绳与备用引线配件包</li>
         </ul>
       </div>
     </div>
 
     <div class="footer">
-      <p>ZenCraft Atelier · Certified Dacheng Timber & Healing Gems</p>
+      <p>ZenCraft Atelier · Imperial Court Timber & Healing Gems</p>
       <p>如有任何定制咨询，请随时回复此邮件与工坊掌柜联络。</p>
     </div>
   </div>
@@ -111,7 +111,7 @@ export function generateWorkshopWorkOrderEmailHtml(order: OrderRecord, origin: s
 <html>
 <head>
   <meta charset="utf-8">
-  <title>【工单通知】大城工坊全新穿制工单 #${order.orderId}</title>
+  <title>【工单通知】京作宫廷工坊全新穿制工单 #${order.orderId}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #1a110a; color: #fdf8eb; margin: 0; padding: 20px; }
     .container { max-width: 650px; margin: 0 auto; background: #24160e; border: 2px solid #b45309; border-radius: 16px; padding: 24px; }
@@ -121,7 +121,7 @@ export function generateWorkshopWorkOrderEmailHtml(order: OrderRecord, origin: s
 </head>
 <body>
   <div class="container">
-    <h2>🪵 大城工坊 · 新定制手串生产配货单</h2>
+    <h2>🪵 京作宫廷工坊 · 新定制手串生产配货单</h2>
     <p>工单号: <strong style="color: #fde68a; font-family: monospace;">${order.orderId}</strong> | 实付: <strong style="color: #34d399;">$${order.totalAmount} USD</strong></p>
 
     <div class="box">
@@ -194,7 +194,7 @@ export function generateShippingNotificationEmailHtml(order: OrderRecord, origin
     <div class="content">
       <p>Dear <strong>${order.shippingAddress.fullName}</strong>,</p>
       <p style="color: #d4a373; font-size: 13px; line-height: 1.6;">
-        大城工坊已完成选料穿制、烫金证书题名与实木礼盒封装！您的手串现已交付国际航空快递寄出。
+        京作宫廷工坊已完成选料穿制、烫金证书题名与实木礼盒封装！您的手串现已交付国际航空快递寄出。
       </p>
 
       <div class="card">

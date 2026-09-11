@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
               name: orderItem.title || "ZenCraft Custom Sacred Wood Mala",
               description: orderItem.details?.wearerName
                 ? `Custom Inscription: ${orderItem.details.wearerName} | ${orderItem.details.beadCount || 18} Beads (${orderItem.details.dominantElement || "Zen"})`
-                : "Handcrafted Dacheng Timber & Healing Crystal Heirloom",
+                : "Handcrafted Imperial Timber & Healing Crystal Heirloom",
               images: productImages,
             },
             unit_amount: Math.round(totalAmount * 100), // in cents ($118.15 -> 11815)
