@@ -13,6 +13,9 @@ import {
   MessageCircle,
   Truck,
   ArrowRight,
+  Mail,
+  X,
+  CheckCircle2,
 } from "lucide-react";
 
 import { CheckoutModal } from "@/components/checkout/CheckoutModal";
@@ -23,6 +26,7 @@ export function EnergyReport() {
   const { beads, energyResult, setIsCertificateOpen, customerName, setCustomerName } = useStudio();
   const { lang, t } = useLanguage();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isVipModalOpen, setIsVipModalOpen] = useState(false);
 
   const chakrasList: ChakraType[] = [
     "crown",
@@ -91,9 +95,6 @@ export function EnergyReport() {
     setIsCheckoutOpen(true);
   };
 
-  const whatsappMessage = encodeURIComponent(
-    `Hello Master! I designed a custom ZenCraft Mala with ${energyResult.totalBeads} beads (Dominant: ${energyResult.dominantElement}, Top Chakra: ${CHAKRA_METADATA[energyResult.topChakra].name}). I would like a personalized VIP birth-chart blessing & consultation!`
-  );
 
   return (
     <div className="w-full zen-wood-card rounded-2xl p-5 sm:p-6 space-y-6 relative">
@@ -241,16 +242,14 @@ export function EnergyReport() {
           <span>{t("generateCertificate")}</span>
         </button>
 
-        {/* WhatsApp VIP Reading High-Ticket Channel */}
-        <a
-          href={`https://wa.me/?text=${whatsappMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full py-2 px-3 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-500/30 text-emerald-300 font-serif font-medium rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors"
+        {/* VIP Master Bespoke & WeChat Consultation Channel */}
+        <button
+          onClick={() => setIsVipModalOpen(true)}
+          className="w-full py-2 px-3 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 text-emerald-300 font-serif font-medium rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm hover:scale-[1.01]"
         >
-          <MessageCircle className="w-3.5 h-3.5" />
+          <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
           <span>{lang === "zh" ? "预约大师生辰八字高定 ($199 VIP)" : "Book VIP Master Astrological Reading ($199)"}</span>
-        </a>
+        </button>
       </div>
 
       {/* Trust Badges */}
@@ -271,6 +270,82 @@ export function EnergyReport() {
         onClose={() => setIsCheckoutOpen(false)}
         orderItem={customOrderItem}
       />
+
+      {/* VIP 八字高定与微信/邮箱咨询弹窗 */}
+      {isVipModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in"
+          onClick={() => setIsVipModalOpen(false)}
+        >
+          <div 
+            className="relative bg-[#120a06] border border-amber-500/40 rounded-3xl p-6 sm:p-7 max-w-md w-full text-center space-y-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsVipModalOpen(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-full bg-amber-950/80 border border-amber-500/30 text-amber-300 hover:text-white hover:bg-amber-900 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-1.5 pt-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{lang === "zh" ? "大城大师生辰八字高定 · 微信/邮件预约" : "VIP Master Sourcing & Reading"}</span>
+              </div>
+              <h3 className="text-lg font-serif font-bold text-amber-100">
+                {lang === "zh" ? "扫码添加大师/顾问微信" : "Scan to Connect on WeChat"}
+              </h3>
+              <p className="text-xs text-amber-200/70 font-serif leading-relaxed">
+                {lang === "zh" 
+                  ? "发送您的生辰八字与定制诉求，由大城老工艺师亲自推演五行喜忌、视频选木配珠"
+                  : "Send your birth date & time. Our master artisan analyzes your elemental balance & recommends sacred beads."}
+              </p>
+            </div>
+
+            {/* 微信二维码卡片 */}
+            <div className="flex justify-center py-1">
+              <div className="p-3 bg-white rounded-2xl shadow-xl border border-amber-400/40">
+                <img
+                  src="/wechat-qr.jpg"
+                  alt="微信顾问二维码"
+                  className="w-52 h-auto rounded-xl object-contain mx-auto"
+                />
+                <p className="text-[11px] text-slate-800 font-bold mt-1.5">
+                  {lang === "zh" ? "扫二维码，添加我为朋友" : "Scan QR code to add friend"}
+                </p>
+              </div>
+            </div>
+
+            {/* 专属高定服务权益 */}
+            <div className="text-left bg-amber-950/40 border border-amber-900/50 rounded-xl p-3 space-y-1.5 text-[11px] font-serif text-amber-200/80">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                <span>{lang === "zh" ? "深度生辰八字五行测算与喜用神平衡方案" : "In-depth Five Elements & Chakra resonance analysis"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                <span>{lang === "zh" ? "大城源头野生老料（紫檀/金丝楠/沉香）一对一视频挑珠" : "1-on-1 video inspection of genuine aged wild timbers"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                <span>{lang === "zh" ? "附赠朱砂烫金大师加持文疏与专属实木礼盒" : "Certified Cinnabar blessing talisman & luxury gift box"}</span>
+              </div>
+            </div>
+
+            {/* 官方邮箱备选 */}
+            <div className="pt-1 text-xs text-slate-400 border-t border-amber-950/60">
+              <span>{lang === "zh" ? "亦可通过官方邮箱联系咨询：" : "Or reach us directly via email: "}</span>
+              <a 
+                href="mailto:support@puretoolhub.com"
+                className="text-amber-400 hover:text-amber-300 font-mono font-medium underline underline-offset-2 ml-1"
+              >
+                support@puretoolhub.com
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
