@@ -60,7 +60,8 @@ export function Header() {
           >
             ✨ {t("navStudio")}
           </Link>
-          <Link
+          {/* 现成集市 (已根据需求暂时隐藏) */}
+          {/* <Link
             href="/market"
             className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
               pathname === "/market"
@@ -69,7 +70,7 @@ export function Header() {
             }`}
           >
             🏛️ {lang === "zh" ? "现成集市" : "Market"}
-          </Link>
+          </Link> */}
           <Link
             href="/about"
             className={`px-4 py-1.5 rounded-xl text-xs font-serif font-bold transition-all ${
@@ -164,13 +165,14 @@ export function Header() {
           >
             ✨ {t("navStudio")}
           </Link>
-          <Link
+          {/* 现成集市 (已根据需求暂时隐藏) */}
+          {/* <Link
             href="/market"
             onClick={() => setIsMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-xl text-xs font-serif font-bold text-amber-200 hover:bg-amber-950/60"
           >
             🏛️ {lang === "zh" ? "现成集市" : "Market"}
-          </Link>
+          </Link> */}
           <Link
             href="/about"
             onClick={() => setIsMobileMenuOpen(false)}

@@ -133,6 +133,16 @@ export default function HomePage() {
           ? "下单后工坊将在 24 小时内由工艺师亲手穿制完成。我们提供全球专线包邮（直达欧美约 7-10 天）。每个包裹均包含：定制手串实物、高级天然实木礼盒、丝绸储珠袋、专属烫金手作能量证书及备用弹力绳。"
           : "Every bracelet is custom strung by hand in our atelier within 24 hours. We offer Free Worldwide Express (7-10 business days to US/EU/UK). Each parcel includes your custom mala, a wooden presentation gift box, silk preservation pouch, and a gold-foil stamped Certificate of Authenticity.",
     },
+    {
+      q:
+        lang === "zh"
+          ? "需要产品咨询、选料建议或提交意见反馈，如何联系？"
+          : "How can I inquire about materials, custom crafts, or share feedback?",
+      a:
+        lang === "zh"
+          ? "您可以随时发送邮件至 support@puretoolhub.com，或在页面底部扫描微信二维码添加专属顾问微信，我们支持一对一选料视频验货、搭配设计与售后服务。"
+          : "Reach our studio concierge anytime via support@puretoolhub.com or scan the WeChat QR code in the footer for personalized 1-on-1 advice.",
+    },
   ];
 
   return (
@@ -161,7 +171,8 @@ export default function HomePage() {
         <StudioWorkspace />
       </section>
 
-      {/* 2. 镇店之宝 (Masterpiece Vault - 真实商品实拍) */}
+      {/* 2. 镇店之宝 & 3. 藏家雅赏 (已根据需求暂时隐藏) */}
+      {/*
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-4">
         <div className="flex items-center justify-between mb-5 pb-2 border-b border-amber-900/40">
           <div className="flex items-center gap-2">
@@ -170,13 +181,6 @@ export default function HomePage() {
               {lang === "zh" ? "镇店之宝 · 孤品现货" : "Masterpiece Vault · Curated Heirlooms"}
             </h2>
           </div>
-          <Link
-            href="/market"
-            className="text-xs font-serif text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
-          >
-            <span>{lang === "zh" ? "进入现成集市" : "View All Market"}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -242,7 +246,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. 藏家雅赏 (Collector's Lifestyle Gallery - 4 大经典场景实拍) */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between mb-5 pb-2 border-b border-amber-900/40">
           <div className="flex items-center gap-2">
@@ -292,6 +295,7 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+      */}
 
       {/* 5. Sourcing & Heritage 3 Pillars Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">

@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { ShieldCheck, TreePine, Sparkles, Heart, FileText, Calculator, Layers } from "lucide-react";
+import { ShieldCheck, TreePine, Sparkles, Heart, FileText, Calculator, Layers, Mail, MessageCircle, X } from "lucide-react";
 
 export function Footer() {
   const { lang, t } = useLanguage();
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   return (
     <footer className="w-full bg-slate-950 border-t border-amber-500/20 text-slate-400 text-xs mt-16">
@@ -59,7 +60,7 @@ export function Footer() {
                 <span>SnapBio (Bio)</span>
               </a>
               <a
-                href="https://tool.lehuoliaoyu.com"
+                href="https://tool.puretoolhub.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-2 transition-all"
@@ -118,21 +119,104 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h5 className="font-bold text-slate-200 mb-3 uppercase tracking-wider text-[11px]">
-            {lang === "zh" ? "专属高定支持" : "VIP Concierge"}
+        <div className="space-y-3">
+          <h5 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">
+            {lang === "zh" ? "产品咨询与意见反馈" : "Product Inquiries & Feedback"}
           </h5>
-          <p className="text-xs text-slate-400 mb-2">
-            Questions on your custom formula or birth chart reading?
+          <p className="text-xs text-slate-400 leading-relaxed">
+            {lang === "zh"
+              ? "需要产品咨询、选料建议或意见反馈，欢迎随时联系我们："
+              : "For product inquiries, custom sourcing, or feedback, feel free to contact us:"}
           </p>
-          <a
-            href="mailto:support@puretoolhub.com"
-            className="inline-block px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-semibold transition-colors"
-          >
-            support@puretoolhub.com
-          </a>
+          <div>
+            <a
+              href="mailto:support@puretoolhub.com"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-amber-300 text-xs font-semibold transition-all group"
+            >
+              <Mail className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              <span>support@puretoolhub.com</span>
+            </a>
+          </div>
+
+          {/* 微信二维码卡片 */}
+          <div className="pt-1">
+            <div 
+              onClick={() => setIsQrModalOpen(true)}
+              className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/40 cursor-pointer transition-all group"
+            >
+              <div className="relative shrink-0">
+                <img
+                  src="/wechat-qr.jpg"
+                  alt="微信顾问二维码"
+                  className="w-16 h-16 rounded-xl object-contain bg-white p-1 border border-slate-700 shadow group-hover:scale-105 transition-transform"
+                />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-xs">
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>{lang === "zh" ? "微信客服 / 顾问" : "WeChat Concierge"}</span>
+                </div>
+                <p className="text-[11px] text-slate-300 font-medium">
+                  {lang === "zh" ? "扫码添加好友" : "Scan to Add"}
+                </p>
+                <p className="text-[10px] text-amber-400/80">
+                  {lang === "zh" ? "点击查看大图 🔍" : "Click to enlarge 🔍"}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* 微信二维码放大弹窗 */}
+      {isQrModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in"
+          onClick={() => setIsQrModalOpen(false)}
+        >
+          <div 
+            className="relative bg-[#120a06] border border-amber-500/40 rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsQrModalOpen(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-full bg-amber-950/80 border border-amber-500/30 text-amber-300 hover:text-white hover:bg-amber-900 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-1 pt-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>{lang === "zh" ? "微信顾问 · 一对一专属服务" : "WeChat Concierge Service"}</span>
+              </div>
+              <h3 className="text-base font-serif font-bold text-amber-100">
+                {lang === "zh" ? "扫一扫添加微信" : "Scan QR Code"}
+              </h3>
+              <p className="text-xs text-slate-400 font-serif">
+                {lang === "zh" ? "产品咨询 · 选料建议 · 意见反馈" : "Product inquiries, material advice & feedback"}
+              </p>
+            </div>
+
+            <div className="flex justify-center p-2">
+              <div className="p-2 bg-white rounded-2xl shadow-xl border border-amber-400/30">
+                <img
+                  src="/wechat-qr.jpg"
+                  alt="微信二维码大图"
+                  className="w-56 h-auto rounded-xl object-contain"
+                />
+              </div>
+            </div>
+
+            <div className="text-[11px] text-slate-400 space-y-1">
+              <p>{lang === "zh" ? "支持选料视频验货、定制搭配方案与专属售后" : "Personalized sizing, timber verification & aftercare support"}</p>
+              <p className="text-amber-300/80 font-mono text-[10px]">
+                Email: support@puretoolhub.com
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Copyright */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
