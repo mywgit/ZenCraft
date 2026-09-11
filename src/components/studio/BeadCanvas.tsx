@@ -27,14 +27,14 @@ export function BeadCanvas() {
 
   // 3D Orbit & Perspective States
   const [rotationAngle, setRotationAngle] = useState(0); // 0 to 2PI in radians
-  const [tiltAngle, setTiltAngle] = useState(25); // Pitch in degrees (0 = top-down, 45 = deep 3D perspective)
-  const [isAutoSpin, setIsAutoSpin] = useState(false);
+  const [tiltAngle, setTiltAngle] = useState(0); // Pitch in degrees (0 = flat/top-down, 45 = deep 3D perspective)
+  const [isAutoSpin, setIsAutoSpin] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ x: number; y: number; startRot: number; startTilt: number }>({
     x: 0,
     y: 0,
     startRot: 0,
-    startTilt: 25,
+    startTilt: 0,
   });
 
   // Auto spin animation loop
