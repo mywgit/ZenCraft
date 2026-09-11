@@ -51,6 +51,37 @@ if (typeof window !== "undefined") {
 }
 
 /**
+ * Ensure all required bead images are loaded before high-res canvas rendering
+ */
+export function ensureBeadImagesLoaded(materialIds: string[], callback: () => void) {
+  if (typeof window === "undefined") return;
+  let pending = 0;
+  materialIds.forEach((id) => {
+    let img = beadImageCache[id];
+    if (!img) {
+      const mat = getMaterialById(id);
+      if (mat) {
+        img = new Image();
+        img.src = mat.image;
+        beadImageCache[id] = img;
+      }
+    }
+    if (img && (!img.complete || img.naturalWidth === 0)) {
+      pending++;
+      const onDone = () => {
+        pending--;
+        if (pending === 0) callback();
+      };
+      img.onload = onDone;
+      img.onerror = onDone;
+    }
+  });
+  if (pending === 0) {
+    callback();
+  }
+}
+
+/**
  * Render a 100% photorealistic 3D bead with dynamic 3D depth, specular sheen & contact shadows
  */
 export function drawRealisticBead(
