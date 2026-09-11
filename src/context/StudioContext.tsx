@@ -17,6 +17,7 @@ interface StudioContextType {
   setActiveBeadIndex: (index: number | null) => void;
   setPatinaLevel: (level: number) => void;
   setWristSizeCm: (size: number) => void;
+  setWristSizeAndBeads: (size: number, autoAdjust?: boolean) => void;
   setSelectedSizeMm: (size: number) => void;
   setSelectedCategory: (cat: MaterialCategory) => void;
   setIsCertificateOpen: (open: boolean) => void;
@@ -74,6 +75,55 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   const setSelectedSizeMm = (size: number) => {
     setSelectedSizeMmState(size);
     setBeads((prev) => prev.map((b) => ({ ...b, sizeMm: size })));
+  };
+
+  // Dynamically calculate and adapt bracelet beads to match target wrist size
+  const setWristSizeAndBeads = (targetCm: number, autoAdjust: boolean = true) => {
+    setWristSizeCm(targetCm);
+    if (!autoAdjust) return;
+
+    setBeads((prev) => {
+      if (prev.length === 0) return prev;
+
+      let targetCount: number;
+      if (targetCm === 60) {
+        targetCount = 108; // 108 Classic Meditation Mala
+      } else if (targetCm === 45) {
+        targetCount = 54;
+      } else if (targetCm === 30) {
+        targetCount = 36;
+      } else {
+        // Single loop standard formula: (targetCm + 0.8cm clearance) * 10 / beadSizeMm
+        const beadSize = selectedSizeMm || 10;
+        const targetLengthMm = (targetCm + 0.8) * 10;
+        targetCount = Math.max(10, Math.min(32, Math.round(targetLengthMm / beadSize)));
+      }
+
+      if (prev.length === targetCount) return prev;
+
+      if (targetCount > prev.length) {
+        // Pick primary body wood/stone material
+        const primaryMaterial =
+          prev.find((b) => b.materialId !== "silver-lotus" && b.materialId !== "pixiu-charm" && b.materialId !== "brass-ring")?.materialId ||
+          prev[1]?.materialId ||
+          prev[0]?.materialId ||
+          "green-sandalwood";
+
+        const needed = targetCount - prev.length;
+        const toAppend: SelectedBead[] = [];
+        for (let i = 0; i < needed; i++) {
+          toAppend.push({
+            id: `b-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 4)}`,
+            materialId: primaryMaterial,
+            sizeMm: selectedSizeMm,
+          });
+        }
+        return [...prev, ...toAppend];
+      } else {
+        // Decrease beads while keeping centerpiece guru bead (index 0)
+        return prev.slice(0, targetCount);
+      }
+    });
   };
 
   const addBead = (materialId: string, sizeMm?: number) => {
@@ -195,6 +245,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
         setActiveBeadIndex,
         setPatinaLevel,
         setWristSizeCm,
+        setWristSizeAndBeads,
         setSelectedSizeMm,
         setSelectedCategory,
         setIsCertificateOpen,

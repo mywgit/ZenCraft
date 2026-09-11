@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { X, Ruler, Check, Sparkles, HelpCircle } from "lucide-react";
@@ -19,11 +19,16 @@ interface WristOption {
 }
 
 export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
-  const { wristSizeCm, setWristSizeCm, beads, addBead, removeBead, selectedSizeMm } = useStudio();
+  const { wristSizeCm, setWristSizeAndBeads } = useStudio();
   const { lang, t } = useLanguage();
 
   const [selectedCm, setSelectedCm] = useState<number>(wristSizeCm);
   const [autoAdjustBeads, setAutoAdjustBeads] = useState<boolean>(true);
+
+  // Sync selected size with context whenever opened or wristSizeCm changes
+  useEffect(() => {
+    setSelectedCm(wristSizeCm);
+  }, [wristSizeCm, isOpen]);
 
   if (!isOpen) return null;
 
@@ -47,33 +52,21 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
     { cm: 60, labelZh: "60cm", labelEn: "60cm", descZh: "四圈 (108颗)", descEn: "Quad (108 Mala)" },
   ];
 
-  const handleConfirm = () => {
-    setWristSizeCm(selectedCm);
+  const handleSelectSize = (cm: number) => {
+    setSelectedCm(cm);
+    // Live update bracelet beads & circle immediately
+    setWristSizeAndBeads(cm, autoAdjustBeads);
+  };
 
-    // If autoAdjustBeads is true, adjust the bead count to match this wrist size with standard inner clearance
-    if (autoAdjustBeads && beads.length > 0) {
-      // Calculate ideal bead count: (wristSizeCm + 0.8cm clearance) * 10 / beadSizeMm
-      const beadSize = selectedSizeMm || 10;
-      const targetLengthMm = (selectedCm + 0.8) * 10;
-      const targetCount = Math.max(8, Math.min(108, Math.round(targetLengthMm / beadSize)));
-
-      const diff = targetCount - beads.length;
-      if (diff > 0) {
-        // Add more of the primary bead
-        const primaryMaterial = beads[1]?.materialId || beads[0]?.materialId || "green-sandalwood";
-        for (let i = 0; i < diff; i++) {
-          addBead(primaryMaterial, beadSize);
-        }
-      } else if (diff < 0) {
-        // Remove excess from end
-        for (let i = 0; i < Math.abs(diff); i++) {
-          if (beads.length > 1) {
-            removeBead(beads.length - 1);
-          }
-        }
-      }
+  const handleToggleAutoAdjust = (checked: boolean) => {
+    setAutoAdjustBeads(checked);
+    if (checked) {
+      setWristSizeAndBeads(selectedCm, true);
     }
+  };
 
+  const handleConfirm = () => {
+    setWristSizeAndBeads(selectedCm, autoAdjustBeads);
     onClose();
   };
 
@@ -115,7 +108,7 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
               return (
                 <button
                   key={opt.cm}
-                  onClick={() => setSelectedCm(opt.cm)}
+                  onClick={() => handleSelectSize(opt.cm)}
                   className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
                     isSelected
                       ? "bg-gradient-to-b from-amber-600 to-amber-700 text-slate-950 border-amber-300 shadow-lg scale-[1.02] font-black"
@@ -147,7 +140,7 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
               return (
                 <button
                   key={opt.cm}
-                  onClick={() => setSelectedCm(opt.cm)}
+                  onClick={() => handleSelectSize(opt.cm)}
                   className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
                     isSelected
                       ? "bg-gradient-to-b from-amber-600 to-amber-700 text-slate-950 border-amber-300 shadow-lg scale-[1.02] font-black"
@@ -173,7 +166,7 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
           <input
             type="checkbox"
             checked={autoAdjustBeads}
-            onChange={(e) => setAutoAdjustBeads(e.target.checked)}
+            onChange={(e) => handleToggleAutoAdjust(e.target.checked)}
             className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 bg-amber-950 border-amber-800"
           />
           <div className="space-y-0.5">

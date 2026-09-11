@@ -108,8 +108,10 @@ export function BeadCanvas() {
       return;
     }
 
-    // 2. Natural Physical Bead Sizing (Enhanced Size for Macro Detail)
-    const loopRadius = 148;
+    // 2. Dynamic Physical Bead Sizing & Wrist Loop Scale
+    const wristFactor = Math.max(0.85, Math.min(1.25, (wristSizeCm || 16) / 16));
+    const loopRadius = count > 50 ? 168 : Math.round(148 * Math.sqrt(wristFactor));
+    const countScale = count > 36 ? Math.min(1, 28 / count) : 1;
 
     // Calculate 3D coordinates for all beads
     const pitchRad = (tiltAngle * Math.PI) / 180;
@@ -132,7 +134,7 @@ export function BeadCanvas() {
 
     beads.forEach((bead, i) => {
       // Large macro-detailed radius on canvas (10mm = 21px radius / 42px diameter)
-      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0;
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0 * countScale;
       
       // Evenly distributed angle along the wire loop
       const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
@@ -203,7 +205,7 @@ export function BeadCanvas() {
         -Math.PI / 4 // Consistent top-left studio keylight
       );
     });
-  }, [beads, activeBeadIndex, patinaLevel, rotationAngle, tiltAngle]);
+  }, [beads, activeBeadIndex, patinaLevel, rotationAngle, tiltAngle, wristSizeCm]);
 
   useEffect(() => {
     render3DBracelet();
@@ -255,7 +257,9 @@ export function BeadCanvas() {
     const count = beads.length;
     if (count === 0) return;
 
-    const loopRadius = 148;
+    const wristFactor = Math.max(0.85, Math.min(1.25, (wristSizeCm || 16) / 16));
+    const loopRadius = count > 50 ? 168 : Math.round(148 * Math.sqrt(wristFactor));
+    const countScale = count > 36 ? Math.min(1, 28 / count) : 1;
 
     const pitchRad = (tiltAngle * Math.PI) / 180;
     const cosPitch = Math.cos(pitchRad);
@@ -265,7 +269,7 @@ export function BeadCanvas() {
     let minDistance = 9999;
 
     beads.forEach((bead, i) => {
-      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0;
+      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0 * countScale;
       const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
 
       const x3d = Math.cos(beadCenterAngle) * loopRadius;
