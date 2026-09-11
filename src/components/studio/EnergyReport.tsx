@@ -298,8 +298,8 @@ export function EnergyReport() {
               </h3>
               <p className="text-xs text-amber-200/70 font-serif leading-relaxed">
                 {lang === "zh" 
-                  ? "发送您的生辰八字与定制诉求，由大城老工艺师亲自推演五行喜忌、视频选木配珠"
-                  : "Send your birth date & time. Our master artisan analyzes your elemental balance & recommends sacred beads."}
+                  ? "发送您的生辰八字与定制诉求，由大城老工艺师亲自推演五行喜忌、指导定制选木配珠"
+                  : "Send your birth date & time. Our master artisan analyzes your elemental balance & customizes sacred beads recommendation."}
               </p>
             </div>
 
@@ -311,9 +311,6 @@ export function EnergyReport() {
                   alt="微信顾问二维码"
                   className="w-52 h-auto rounded-xl object-contain mx-auto"
                 />
-                <p className="text-[11px] text-slate-800 font-bold mt-1.5">
-                  {lang === "zh" ? "扫二维码，添加我为朋友" : "Scan QR code to add friend"}
-                </p>
               </div>
             </div>
 
@@ -325,7 +322,7 @@ export function EnergyReport() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                <span>{lang === "zh" ? "大城源头野生老料（紫檀/金丝楠/沉香）一对一视频挑珠" : "1-on-1 video inspection of genuine aged wild timbers"}</span>
+                <span>{lang === "zh" ? "大城源头野生老料（紫檀/金丝楠/沉香）一对一专属定制" : "1-on-1 bespoke crafting with genuine wild-sourced timbers"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />

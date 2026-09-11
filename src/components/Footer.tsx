@@ -209,7 +209,7 @@ export function Footer() {
             </div>
 
             <div className="text-[11px] text-slate-400 space-y-1">
-              <p>{lang === "zh" ? "支持选料视频验货、定制搭配方案与专属售后" : "Personalized sizing, timber verification & aftercare support"}</p>
+              <p>{lang === "zh" ? "支持专属定制搭配方案、选料咨询与售后保障" : "Personalized sizing, timber guidance & aftercare support"}</p>
               <p className="text-amber-300/80 font-mono text-[10px]">
                 Email: support@puretoolhub.com
               </p>

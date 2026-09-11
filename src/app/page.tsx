@@ -140,7 +140,7 @@ export default function HomePage() {
           : "How can I inquire about materials, custom crafts, or share feedback?",
       a:
         lang === "zh"
-          ? "您可以随时发送邮件至 support@puretoolhub.com，或在页面底部扫描微信二维码添加专属顾问微信，我们支持一对一选料视频验货、搭配设计与售后服务。"
+          ? "您可以随时发送邮件至 support@puretoolhub.com，或在页面底部扫描微信二维码添加专属顾问微信，支持一对一选料咨询、搭配设计与售后服务。"
           : "Reach our studio concierge anytime via support@puretoolhub.com or scan the WeChat QR code in the footer for personalized 1-on-1 advice.",
     },
   ];
