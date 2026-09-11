@@ -19,11 +19,10 @@ interface WristOption {
 }
 
 export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
-  const { wristSizeCm, setWristSizeAndBeads } = useStudio();
+  const { wristSizeCm, setWristSizeCm } = useStudio();
   const { lang, t } = useLanguage();
 
   const [selectedCm, setSelectedCm] = useState<number>(wristSizeCm);
-  const [autoAdjustBeads, setAutoAdjustBeads] = useState<boolean>(true);
 
   // Sync selected size with context whenever opened or wristSizeCm changes
   useEffect(() => {
@@ -54,19 +53,12 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
 
   const handleSelectSize = (cm: number) => {
     setSelectedCm(cm);
-    // Live update bracelet beads & circle immediately
-    setWristSizeAndBeads(cm, autoAdjustBeads);
-  };
-
-  const handleToggleAutoAdjust = (checked: boolean) => {
-    setAutoAdjustBeads(checked);
-    if (checked) {
-      setWristSizeAndBeads(selectedCm, true);
-    }
+    // Live update bracelet loop size & spacing immediately
+    setWristSizeCm(cm);
   };
 
   const handleConfirm = () => {
-    setWristSizeAndBeads(selectedCm, autoAdjustBeads);
+    setWristSizeCm(selectedCm);
     onClose();
   };
 
@@ -161,23 +153,20 @@ export function WristSizeModal({ isOpen, onClose }: WristSizeModalProps) {
           </div>
         </div>
 
-        {/* Auto-Fit Toggle Checkbox */}
-        <label className="flex items-center gap-2.5 p-3 rounded-xl bg-[#0d0603] border border-amber-900/40 cursor-pointer text-xs text-amber-200/80">
-          <input
-            type="checkbox"
-            checked={autoAdjustBeads}
-            onChange={(e) => handleToggleAutoAdjust(e.target.checked)}
-            className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 bg-amber-950 border-amber-800"
-          />
+        {/* Physical Spacing Tip Card */}
+        <div className="p-3 rounded-xl bg-[#0d0603] border border-amber-900/40 flex items-start gap-2.5 text-xs text-amber-200/80">
+          <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <span className="font-bold text-amber-300">
-              {lang === "zh" ? "自动根据选定手围补齐/调整最佳珠数" : "Auto-adjust bead count to fit this wrist size"}
+              {lang === "zh" ? "手围尺寸与珠子间隙物理联动" : "Physical Wrist Size & Bead Spacing"}
             </span>
-            <p className="text-[10px] text-amber-200/50">
-              {lang === "zh" ? "智能计算手串佩戴舒适度，避免过紧或过松。" : "Calculates comfortable wearing tension automatically."}
+            <p className="text-[11px] text-amber-200/60 leading-relaxed font-serif">
+              {lang === "zh"
+                ? "手围调大后（如 20cm），手串绳圈变大，所选珠子间隙会自然变宽并显露编织串线；您可以根据佩戴喜好，在下方素材库继续自主挑选心仪的珠子放入手串直至填满。"
+                : "When wrist size increases, the loop expands and bead spacing widens naturally to reveal the silk cord. You can freely select more beads from the material palette below to fill the mala."}
             </p>
           </div>
-        </label>
+        </div>
 
         {/* Confirm Button */}
         <button

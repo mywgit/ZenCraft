@@ -108,9 +108,9 @@ export function BeadCanvas() {
       return;
     }
 
-    // 2. Dynamic Physical Bead Sizing & Wrist Loop Scale
-    const wristFactor = Math.max(0.85, Math.min(1.25, (wristSizeCm || 16) / 16));
-    const loopRadius = count > 50 ? 168 : Math.round(148 * Math.sqrt(wristFactor));
+    // 2. Physical Wrist Loop Scale & Dynamic Spacing
+    const wristCm = wristSizeCm || 16;
+    const loopRadius = wristCm <= 24 ? Math.round(145 * (wristCm / 16)) : 180;
     const countScale = count > 36 ? Math.min(1, 28 / count) : 1;
 
     // Calculate 3D coordinates for all beads
@@ -169,16 +169,22 @@ export function BeadCanvas() {
       });
     });
 
-    // 3. Draw Braided Silk String under beads (真丝串线)
+    // 3. Draw Braided Silk String under beads (真丝编织串线，当珠子间隙拉宽时显露)
     ctx.save();
-    ctx.strokeStyle = "rgba(180, 83, 9, 0.7)";
-    ctx.lineWidth = 4 * cosPitch;
+    ctx.strokeStyle = "rgba(78, 35, 12, 0.85)";
+    ctx.lineWidth = Math.max(3, 4.5 * (cosPitch || 1));
     ctx.beginPath();
     projectedBeads.forEach((pb, idx) => {
       if (idx === 0) ctx.moveTo(pb.x2d, pb.y2d);
       else ctx.lineTo(pb.x2d, pb.y2d);
     });
     ctx.closePath();
+    ctx.stroke();
+
+    // Braided gold-amber twist texture
+    ctx.strokeStyle = "rgba(245, 158, 11, 0.85)";
+    ctx.lineWidth = Math.max(1.5, 2.2 * (cosPitch || 1));
+    ctx.setLineDash([4, 2]);
     ctx.stroke();
     ctx.restore();
 
@@ -257,8 +263,8 @@ export function BeadCanvas() {
     const count = beads.length;
     if (count === 0) return;
 
-    const wristFactor = Math.max(0.85, Math.min(1.25, (wristSizeCm || 16) / 16));
-    const loopRadius = count > 50 ? 168 : Math.round(148 * Math.sqrt(wristFactor));
+    const wristCm = wristSizeCm || 16;
+    const loopRadius = wristCm <= 24 ? Math.round(145 * (wristCm / 16)) : 180;
     const countScale = count > 36 ? Math.min(1, 28 / count) : 1;
 
     const pitchRad = (tiltAngle * Math.PI) / 180;
