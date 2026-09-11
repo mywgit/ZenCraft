@@ -133,7 +133,8 @@ export function EnergyReport() {
         <div className="flex items-center justify-between text-xs font-serif">
           <span className="font-bold text-amber-100">{t("chakraBalance")}</span>
           <span className="text-[11px] text-amber-400 font-bold">
-            主修: {lang === "zh" ? CHAKRA_METADATA[energyResult.topChakra].nameZh : CHAKRA_METADATA[energyResult.topChakra].name}
+            {lang === "zh" ? "主修: " : "Primary: "}
+            {lang === "zh" ? CHAKRA_METADATA[energyResult.topChakra].nameZh : CHAKRA_METADATA[energyResult.topChakra].name}
           </span>
         </div>
 
@@ -215,7 +216,7 @@ export function EnergyReport() {
           type="text"
           value={customerName}
           onChange={(e) => setCustomerName(e.target.value)}
-          placeholder="e.g. Sarah Jenkins"
+          placeholder={lang === "zh" ? "例如：张清和 / Sarah" : "e.g. Sarah Jenkins"}
           className="w-full px-3.5 py-2.5 bg-[#120a06] border border-amber-900/50 rounded-xl text-xs text-amber-100 font-serif focus:outline-none focus:border-amber-500/60"
         />
       </div>

@@ -63,19 +63,31 @@ export function CertificateModal() {
       // 3. Header Text
       ctx.textAlign = "center";
       ctx.fillStyle = "#f59e0b";
-      ctx.font = "bold 13px serif";
+      ctx.font = lang === "zh" ? "bold 13px 'Noto Serif SC', serif" : "bold 13px serif";
       ctx.letterSpacing = "3px";
-      ctx.fillText("✦ ZEN CRAFT ATELIER ✦", width / 2, 55);
+      ctx.fillText(
+        lang === "zh" ? "✦ 大城宫廷木作 · 东方能量认证文疏 ✦" : "✦ ZEN CRAFT ATELIER ✦",
+        width / 2,
+        55
+      );
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 18px serif";
+      ctx.font = lang === "zh" ? "bold 16px 'Noto Serif SC', serif" : "bold 18px serif";
       ctx.letterSpacing = "1px";
-      ctx.fillText("CERTIFICATE OF AUTHENTICITY", width / 2, 82);
+      ctx.fillText(
+        lang === "zh" ? "天然正统老料与手作保真证书" : "CERTIFICATE OF AUTHENTICITY",
+        width / 2,
+        82
+      );
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "11px sans-serif";
       ctx.letterSpacing = "0px";
-      ctx.fillText("& ENERGY BLESSING", width / 2, 98);
+      ctx.fillText(
+        lang === "zh" ? "& 专属身心能量加持" : "& ENERGY BLESSING",
+        width / 2,
+        98
+      );
 
       // Serial & Date
       ctx.textAlign = "left";
@@ -97,11 +109,15 @@ export function CertificateModal() {
       ctx.textAlign = "center";
       ctx.fillStyle = "#94a3b8";
       ctx.font = "italic 11px serif";
-      ctx.fillText("Specially Handcrafted For", width / 2, 158);
+      ctx.fillText(
+        lang === "zh" ? "专属手作恭造题名持有人" : "Specially Handcrafted For",
+        width / 2,
+        158
+      );
 
       ctx.fillStyle = "#fef08a";
       ctx.font = "bold 17px serif";
-      ctx.fillText(customerName || "Mindful Seeker", width / 2, 180);
+      ctx.fillText(customerName || (lang === "zh" ? "有缘善信" : "Mindful Seeker"), width / 2, 180);
 
       // 5. Authentic Realistic 3D Beaded Bracelet
       const circleCenterX = width / 2;
@@ -186,24 +202,62 @@ export function CertificateModal() {
       ctx.strokeStyle = "rgba(245, 158, 11, 0.2)";
       ctx.strokeRect(40, 360, width - 80, 130);
 
+      const elementNamesZh: Record<string, string> = {
+        wood: "木 (滋养生发)",
+        fire: "火 (热情洞见)",
+        earth: "土 (稳重厚德)",
+        metal: "金 (果决清明)",
+        water: "水 (灵动通达)",
+      };
+
       ctx.textAlign = "left";
       ctx.fillStyle = "#f59e0b";
       ctx.font = "bold 11px sans-serif";
-      ctx.fillText("✦ METAPHYSICAL ENERGY ALIGNMENT", 55, 382);
+      ctx.fillText(
+        lang === "zh" ? "✦ 五行与七脉轮共振能量测评" : "✦ METAPHYSICAL ENERGY ALIGNMENT",
+        55,
+        382
+      );
 
       ctx.fillStyle = "#e2e8f0";
       ctx.font = "11px sans-serif";
-      ctx.fillText(`• Dominant Element: ${energyResult.dominantElement.toUpperCase()}`, 55, 404);
-      ctx.fillText(`• Top Chakra: ${CHAKRA_METADATA[energyResult.topChakra].name}`, 55, 424);
-      ctx.fillText(`• Zodiac Synergy: ${energyResult.topZodiacs.join(", ")}`, 55, 444);
-      ctx.fillText(`• Total Beads: ${energyResult.totalBeads} (${energyResult.totalLengthCm}cm)`, 55, 464);
+      ctx.fillText(
+        lang === "zh"
+          ? `• 主导五行能量: ${elementNamesZh[energyResult.dominantElement] || energyResult.dominantElement}`
+          : `• Dominant Element: ${energyResult.dominantElement.toUpperCase()}`,
+        55,
+        404
+      );
+      ctx.fillText(
+        lang === "zh"
+          ? `• 核心共振脉轮: ${CHAKRA_METADATA[energyResult.topChakra].nameZh}`
+          : `• Top Chakra: ${CHAKRA_METADATA[energyResult.topChakra].name}`,
+        55,
+        424
+      );
+      ctx.fillText(
+        lang === "zh"
+          ? `• 生肖星座共振: ${energyResult.topZodiacs.join("、")}`
+          : `• Zodiac Synergy: ${energyResult.topZodiacs.join(", ")}`,
+        55,
+        444
+      );
+      ctx.fillText(
+        lang === "zh"
+          ? `• 手串总珠数: ${energyResult.totalBeads} 颗 (${energyResult.totalLengthCm}cm)`
+          : `• Total Beads: ${energyResult.totalBeads} (${energyResult.totalLengthCm}cm)`,
+        55,
+        464
+      );
 
       // 7. Master Blessing & Oriental Seal
       ctx.textAlign = "center";
       ctx.fillStyle = "#cbd5e1";
       ctx.font = "italic 11px serif";
       ctx.fillText(
-        '"May these sacred beads bring clarity, grounding, and inner peace."',
+        lang === "zh"
+          ? "“愿此方寸灵珠，为您拂拭尘劳，带来内心澄明笃定与安宁喜乐。”"
+          : '"May these sacred beads bring clarity, grounding, and inner peace."',
         width / 2,
         525
       );
@@ -223,7 +277,13 @@ export function CertificateModal() {
 
       ctx.fillStyle = "#64748b";
       ctx.font = "9px sans-serif";
-      ctx.fillText("DACHENG TIMBER ATELIER • 100% BOTANICAL VERIFIED", width / 2, 615);
+      ctx.fillText(
+        lang === "zh"
+          ? "中国河北大城红木工坊 • 100% 天然野生老料保真"
+          : "DACHENG TIMBER ATELIER • 100% BOTANICAL VERIFIED",
+        width / 2,
+        615
+      );
     };
 
     // Ensure all bead texture images are loaded in cache before drawing
