@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { getZodiacName } from "@/lib/i18n";
 import { CHAKRA_METADATA } from "@/lib/energyCalculator";
 import { getMaterialById } from "@/lib/materialsData";
 import { drawRealisticBead, ensureBeadImagesLoaded } from "@/lib/beadTextureRenderer";
@@ -237,8 +238,8 @@ export function CertificateModal() {
       );
       ctx.fillText(
         lang === "zh"
-          ? `• 生肖星座共振: ${energyResult.topZodiacs.join("、")}`
-          : `• Zodiac Synergy: ${energyResult.topZodiacs.join(", ")}`,
+          ? `• 生肖星座共振: ${energyResult.topZodiacs.map((z) => getZodiacName(z, lang)).join("、")}`
+          : `• Zodiac Synergy: ${energyResult.topZodiacs.map((z) => getZodiacName(z, lang)).join(", ")}`,
         55,
         444
       );

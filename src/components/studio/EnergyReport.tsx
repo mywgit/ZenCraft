@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useStudio } from "@/context/StudioContext";
 import { CHAKRA_METADATA, ChakraType } from "@/lib/energyCalculator";
 import { useLanguage } from "@/context/LanguageContext";
+import { getZodiacName } from "@/lib/i18n";
 import {
   Sparkles,
   ShieldCheck,
@@ -180,7 +181,7 @@ export function EnergyReport() {
                 key={z}
                 className="text-[10px] px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-900/60 font-serif font-medium"
               >
-                {z}
+                {getZodiacName(z, lang)}
               </span>
             ))}
           </div>
