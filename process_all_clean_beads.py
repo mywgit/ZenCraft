@@ -80,23 +80,17 @@ def clean_black_bg_bead(src_path, dest_path, target_size=256, inset_ratio=0.015)
     final.save(dest_path, "PNG")
     print(f"[Black-BG Cleaned] {os.path.basename(dest_path)}")
 
-def clean_crystal_jpg(src_path, dest_path, target_size=256):
-    """Extracts a circular sphere from mutou crystal JPG files."""
+def clean_crystal_jpg(src_path, dest_path, cx, cy, r, target_size=256, inset_px=2.0):
+    """Extracts a circular sphere from mutou crystal JPG files with exact center and radius."""
     im = Image.open(src_path).convert("RGB")
-    arr = np.array(im)
-    # Background in mutou crystal JPGs is light/shadowed
-    # Look for center circle
-    w, h = im.size
-    cx, cy = w // 2, h // 2
-    r = int(min(w, h) * 0.38) # radius of bead in crystal jpg
-    
-    cropped = im.crop((cx - r, cy - r, cx + r, cy + r))
-    cw, ch = cropped.size
+    cw, ch = int(r * 2), int(r * 2)
+    cx_i, cy_i, r_i = int(cx), int(cy), int(r)
+    cropped = im.crop((cx_i - r_i, cy_i - r_i, cx_i + r_i, cy_i + r_i))
     
     scale = 4
     mask = Image.new("L", (cw * scale, ch * scale), 0)
     draw = ImageDraw.Draw(mask)
-    inset = 2.0 * scale
+    inset = inset_px * scale
     draw.ellipse([inset, inset, cw * scale - inset, ch * scale - inset], fill=255)
     smooth_mask = mask.resize((cw, ch), Image.Resampling.LANCZOS)
     
@@ -138,7 +132,6 @@ for src_name, dest_name in wood_mappings.items():
 gem_sources = {
     "gem_turquoise_bead*.jpg": "turquoise.png",
     "gem_nanhong_bead*.jpg": "nanhong-agate.png",
-    "gem_lapis_bead*.jpg": "lapis-lazuli.png",
 }
 
 for pattern, dest_name in gem_sources.items():
@@ -148,21 +141,27 @@ for pattern, dest_name in gem_sources.items():
         dest_fp = os.path.join(DEST_DIR, dest_name)
         clean_black_bg_bead(latest, dest_fp)
 
-# 3. Process Crystal Gem JPGs from mutou/
+# Lapis lazuli with exact circle (avoid bottom shadow)
+lapis_matches = glob.glob(os.path.join(BRAIN_DIR, "gem_lapis_bead*.jpg"))
+if lapis_matches:
+    latest_lapis = sorted(lapis_matches, key=os.path.getmtime)[-1]
+    clean_crystal_jpg(latest_lapis, os.path.join(DEST_DIR, "lapis-lazuli.png"), cx=510, cy=499, r=337, inset_px=2.5)
+
+# 3. Process Crystal Gem JPGs from mutou/ with exact coordinates
 crystal_mappings = {
-    "crystal_amethyst.jpg": "amethyst.png",
-    "crystal_citrine.jpg": "citrine.png",
-    "crystal_rose.jpg": "rose-quartz.png",
-    "crystal_rutilated.jpg": "rutilated-quartz.png",
-    "crystal_strawberry.jpg": "strawberry-quartz.png",
-    "crystal_clear.jpg": "clear-quartz.png",
+    "crystal_amethyst.jpg": ("amethyst.png", 511, 509, 232),
+    "crystal_citrine.jpg": ("citrine.png", 509, 505, 230),
+    "crystal_rose.jpg": ("rose-quartz.png", 514, 500, 257),
+    "crystal_rutilated.jpg": ("rutilated-quartz.png", 513, 508, 310),
+    "crystal_strawberry.jpg": ("strawberry-quartz.png", 509, 504, 274),
+    "crystal_clear.jpg": ("clear-quartz.png", 511, 512, 262),
 }
 
-for src_name, dest_name in crystal_mappings.items():
+for src_name, (dest_name, cx, cy, r) in crystal_mappings.items():
     src_fp = os.path.join(MUTOU_DIR, src_name)
     dest_fp = os.path.join(DEST_DIR, dest_name)
     if os.path.exists(src_fp):
-        clean_crystal_jpg(src_fp, dest_fp)
+        clean_crystal_jpg(src_fp, dest_fp, cx, cy, r, inset_px=2.0)
 
 # 4. Defringe remaining beads already in public/beads (silver-lotus, silver-pixiu, om-mani-padme-hum, brass-ring, hetian-jade, tiger-eye, obsidian)
 remaining_beads = [

@@ -119,7 +119,7 @@ function OrderSuccessContent() {
     discountAmount: 10,
     subtotal: 118.0,
     totalAmount: 108.0,
-    paymentMethod: "credit-card",
+    paymentMethod: "stripe-card",
     paymentStatus: "paid",
     productionStatus: "confirmed",
     estimatedDelivery: "Sep 10, 2026",

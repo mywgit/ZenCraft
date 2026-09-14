@@ -24,6 +24,8 @@ interface StudioContextType {
   addBead: (materialId: string, sizeMm?: number) => void;
   replaceBead: (index: number, materialId: string) => void;
   removeBead: (index: number) => void;
+  moveBead: (fromIndex: number, direction: "left" | "right") => void;
+  reorderBeads: (fromIndex: number, toIndex: number) => void;
   clearBeads: () => void;
   loadPreset: (presetName: "grounding" | "wealth" | "shield" | "wisdom") => void;
 }
@@ -114,6 +116,33 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const moveBead = (fromIndex: number, direction: "left" | "right") => {
+    if (beads.length <= 1) return;
+    const toIndex =
+      direction === "left"
+        ? (fromIndex - 1 + beads.length) % beads.length
+        : (fromIndex + 1) % beads.length;
+
+    const newArr = [...beads];
+    const temp = newArr[fromIndex];
+    newArr[fromIndex] = newArr[toIndex];
+    newArr[toIndex] = temp;
+
+    setBeads(newArr);
+    setActiveBeadIndex(toIndex);
+  };
+
+  const reorderBeads = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || fromIndex >= beads.length || toIndex < 0 || toIndex >= beads.length) {
+      return;
+    }
+    const newArr = [...beads];
+    const [movedItem] = newArr.splice(fromIndex, 1);
+    newArr.splice(toIndex, 0, movedItem);
+    setBeads(newArr);
+    setActiveBeadIndex(toIndex);
+  };
+
   const clearBeads = () => {
     setBeads([]);
     setActiveBeadIndex(null);
@@ -202,6 +231,8 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
         addBead,
         replaceBead,
         removeBead,
+        moveBead,
+        reorderBeads,
         clearBeads,
         loadPreset,
       }}

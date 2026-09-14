@@ -2,9 +2,8 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useStudio } from "@/context/StudioContext";
-import { getMaterialById } from "@/lib/materialsData";
 import { drawRealisticBead } from "@/lib/beadTextureRenderer";
-import { Trash2, RotateCw, Eye, Sparkles, RefreshCw, Compass, Ruler } from "lucide-react";
+import { Trash2, RotateCw, Sparkles, Compass, Ruler } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { WristSizeModal } from "./WristSizeModal";
 
@@ -16,6 +15,7 @@ export function BeadCanvas() {
     wristSizeCm,
     setActiveBeadIndex,
     removeBead,
+    reorderBeads,
     clearBeads,
     energyResult,
   } = useStudio();
@@ -29,17 +29,52 @@ export function BeadCanvas() {
   const [rotationAngle, setRotationAngle] = useState(0); // 0 to 2PI in radians
   const [tiltAngle, setTiltAngle] = useState(0); // Pitch in degrees (0 = flat/top-down, 45 = deep 3D perspective)
   const [isAutoSpin, setIsAutoSpin] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartRef = useRef<{ x: number; y: number; startRot: number; startTilt: number }>({
+
+  // Drag Gesture States (Bead Drag-and-Drop vs Canvas Orbit)
+  type DragState =
+    | {
+        type: "bead";
+        beadIndex: number;
+        canvasX: number;
+        canvasY: number;
+        hasMoved: boolean;
+        hoverIndex: number | null;
+        willRemove: boolean;
+      }
+    | {
+        type: "orbit";
+        startX: number;
+        startY: number;
+        startRot: number;
+        startTilt: number;
+      }
+    | null;
+
+  const [dragState, setDragState] = useState<DragState>(null);
+  const dragStartRef = useRef<{ x: number; y: number; rawX: number; rawY: number }>({
     x: 0,
     y: 0,
-    startRot: 0,
-    startTilt: 0,
+    rawX: 0,
+    rawY: 0,
   });
 
-  // Auto spin animation loop
+  // Cache latest projected beads for hit testing
+  interface ProjectedBead {
+    index: number;
+    bead: (typeof beads)[0];
+    angle: number;
+    x2d: number;
+    y2d: number;
+    z3d: number;
+    drawRadius: number;
+    depthScale: number;
+    isSelected: boolean;
+  }
+  const projectedBeadsRef = useRef<ProjectedBead[]>([]);
+
+  // Auto spin animation loop (paused during dragging)
   useEffect(() => {
-    if (!isAutoSpin) return;
+    if (!isAutoSpin || dragState !== null) return;
     let animId: number;
     const spin = () => {
       setRotationAngle((prev) => (prev + 0.006) % (Math.PI * 2));
@@ -47,7 +82,7 @@ export function BeadCanvas() {
     };
     animId = requestAnimationFrame(spin);
     return () => cancelAnimationFrame(animId);
-  }, [isAutoSpin]);
+  }, [isAutoSpin, dragState]);
 
   // Main 3D Rendering Function
   const render3DBracelet = useCallback(() => {
@@ -97,6 +132,7 @@ export function BeadCanvas() {
     ctx.restore();
 
     if (count === 0) {
+      projectedBeadsRef.current = [];
       ctx.save();
       ctx.strokeStyle = "rgba(217, 119, 6, 0.35)";
       ctx.lineWidth = 2;
@@ -117,18 +153,6 @@ export function BeadCanvas() {
     const pitchRad = (tiltAngle * Math.PI) / 180;
     const cosPitch = Math.cos(pitchRad);
     const sinPitch = Math.sin(pitchRad);
-
-    interface ProjectedBead {
-      index: number;
-      bead: (typeof beads)[0];
-      angle: number;
-      x2d: number;
-      y2d: number;
-      z3d: number;
-      drawRadius: number;
-      depthScale: number;
-      isSelected: boolean;
-    }
 
     const projectedBeads: ProjectedBead[] = [];
 
@@ -169,7 +193,9 @@ export function BeadCanvas() {
       });
     });
 
-    // 3. Draw Braided Silk String under beads (真丝编织串线，当珠子间隙拉宽时显露)
+    projectedBeadsRef.current = projectedBeads;
+
+    // 3. Draw Braided Silk String under beads (真丝编织串线)
     ctx.save();
     ctx.strokeStyle = "rgba(78, 35, 12, 0.85)";
     ctx.lineWidth = Math.max(3, 4.5 * (cosPitch || 1));
@@ -191,14 +217,45 @@ export function BeadCanvas() {
     // 4. Sort Beads by Z-depth (Draw back beads first, front beads last)
     const sortedBeads = [...projectedBeads].sort((a, b) => a.z3d - b.z3d);
 
-    // 5. Render Guru Bead Tassel if at bottom (若佛头在下方或顶部，绘制古典真丝流苏)
+    // 5. Render Guru Bead Tassel if at bottom
     const guruBeadProj = projectedBeads[0]; // Guru is index 0
     if (guruBeadProj) {
       drawGuruTassel(ctx, guruBeadProj.x2d, guruBeadProj.y2d, guruBeadProj.drawRadius, guruBeadProj.depthScale, cosPitch);
     }
 
     // 6. Draw each bead with 3D Depth, Contact Shadows & Patina
+    const isBeadDragging = dragState?.type === "bead";
+    const draggedIndex = isBeadDragging ? dragState.beadIndex : -1;
+    const hoverIndex = isBeadDragging ? dragState.hoverIndex : -1;
+    const willRemove = isBeadDragging && dragState.willRemove;
+
     sortedBeads.forEach((pb) => {
+      // If this bead is currently being dragged, draw a subtle ghost/placeholder at its slot
+      if (pb.index === draggedIndex) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(245, 158, 11, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.arc(pb.x2d, pb.y2d, pb.drawRadius * 0.95, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        return;
+      }
+
+      // If this bead's slot is the hover insertion target, draw a golden target ring
+      if (isBeadDragging && !willRemove && pb.index === hoverIndex && hoverIndex !== draggedIndex) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(245, 158, 11, 0.95)";
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = "rgba(245, 158, 11, 0.8)";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(pb.x2d, pb.y2d, pb.drawRadius * 1.35, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       drawRealisticBead(
         ctx,
         pb.bead,
@@ -211,98 +268,251 @@ export function BeadCanvas() {
         -Math.PI / 4 // Consistent top-left studio keylight
       );
     });
-  }, [beads, activeBeadIndex, patinaLevel, rotationAngle, tiltAngle, wristSizeCm]);
+
+    // 7. Render Dragged Floating Bead on TOP of everything
+    if (isBeadDragging && dragState.hasMoved) {
+      const draggedBeadItem = beads[dragState.beadIndex];
+      if (draggedBeadItem) {
+        const baseRadius = ((draggedBeadItem.sizeMm || 10) / 10) * 21.0 * countScale;
+        const floatRadius = baseRadius * 1.15; // Slightly enlarged to feel elevated
+
+        // Drop shadow on the tray below
+        ctx.save();
+        ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+        ctx.shadowBlur = 22;
+        ctx.shadowOffsetX = 6;
+        ctx.shadowOffsetY = 16;
+
+        drawRealisticBead(
+          ctx,
+          draggedBeadItem,
+          dragState.canvasX,
+          dragState.canvasY,
+          floatRadius,
+          patinaLevel,
+          1.15,
+          !willRemove, // glow when valid slot
+          -Math.PI / 4
+        );
+        ctx.restore();
+
+        // Visual cues for removal or reorder
+        if (willRemove) {
+          // Crimson warning aura
+          ctx.save();
+          ctx.strokeStyle = "rgba(239, 68, 68, 0.9)";
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([5, 3]);
+          ctx.shadowColor = "rgba(239, 68, 68, 0.8)";
+          ctx.shadowBlur = 14;
+          ctx.beginPath();
+          ctx.arc(dragState.canvasX, dragState.canvasY, floatRadius + 9, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Release to remove badge
+          const badgeText = lang === "zh" ? "松手移除 ✕" : "Release to Remove ✕";
+          ctx.font = "bold 11px sans-serif";
+          const textWidth = ctx.measureText(badgeText).width;
+          const badgeX = dragState.canvasX - textWidth / 2 - 8;
+          const badgeY = dragState.canvasY - floatRadius - 26;
+
+          ctx.fillStyle = "rgba(127, 29, 29, 0.95)";
+          ctx.strokeStyle = "rgba(239, 68, 68, 0.85)";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.roundRect(badgeX, badgeY, textWidth + 16, 22, 11);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#fecaca";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(badgeText, dragState.canvasX, badgeY + 11);
+          ctx.restore();
+        } else if (hoverIndex !== null && hoverIndex !== draggedIndex) {
+          // Reorder target indicator badge
+          ctx.save();
+          const badgeText = lang === "zh" ? `换至第 ${hoverIndex + 1} 位` : `Move to #${hoverIndex + 1}`;
+          ctx.font = "bold 11px sans-serif";
+          const textWidth = ctx.measureText(badgeText).width;
+          const badgeX = dragState.canvasX - textWidth / 2 - 8;
+          const badgeY = dragState.canvasY - floatRadius - 26;
+
+          ctx.fillStyle = "rgba(20, 11, 6, 0.95)";
+          ctx.strokeStyle = "rgba(245, 158, 11, 0.85)";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.roundRect(badgeX, badgeY, textWidth + 16, 22, 11);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#fde68a";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(badgeText, dragState.canvasX, badgeY + 11);
+          ctx.restore();
+        }
+      }
+    }
+  }, [beads, activeBeadIndex, patinaLevel, rotationAngle, tiltAngle, wristSizeCm, dragState, lang]);
 
   useEffect(() => {
     render3DBracelet();
   }, [render3DBracelet]);
 
-  // Mouse & Touch Drag 3D Orbit Handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setIsDragging(true);
-    setIsAutoSpin(false);
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      startRot: rotationAngle,
-      startTilt: tiltAngle,
+  // Helper to get normalized 500x500 canvas coordinates from PointerEvent
+  const getCanvasCoords = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 250, y: 250 };
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = 500 / rect.width;
+    const scaleY = 500 / rect.height;
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
     };
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - dragStartRef.current.x;
-    const deltaY = e.clientY - dragStartRef.current.y;
+  // Pointer Down (Mouse & Touch) - Hit testing beads vs background orbit
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const { x, y } = getCanvasCoords(e);
+    e.currentTarget.setPointerCapture(e.pointerId);
 
-    // Drag horizontally to rotate 360°
-    const newRot = dragStartRef.current.startRot + deltaX * 0.012;
-    setRotationAngle(newRot);
+    // Hit test beads from front to back (highest z3d first)
+    const sortedForHit = [...projectedBeadsRef.current].sort((a, b) => b.z3d - a.z3d);
+    let hitIndex = -1;
 
-    // Drag vertically to tilt 3D angle (0° to 50°)
-    const newTilt = Math.max(0, Math.min(50, dragStartRef.current.startTilt - deltaY * 0.15));
-    setTiltAngle(newTilt);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // Click on Canvas to Select Bead
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (isDragging) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-
-    const width = 500;
-    const height = 500;
-    const centerX = width / 2;
-    const centerY = height / 2 - 10;
-    const count = beads.length;
-    if (count === 0) return;
-
-    const wristCm = wristSizeCm || 16;
-    const loopRadius = wristCm <= 24 ? Math.round(145 * (wristCm / 16)) : 180;
-    const countScale = count > 36 ? Math.min(1, 28 / count) : 1;
-
-    const pitchRad = (tiltAngle * Math.PI) / 180;
-    const cosPitch = Math.cos(pitchRad);
-    const sinPitch = Math.sin(pitchRad);
-
-    let closestIndex = -1;
-    let minDistance = 9999;
-
-    beads.forEach((bead, i) => {
-      const baseRadius = ((bead.sizeMm || 10) / 10) * 21.0 * countScale;
-      const beadCenterAngle = -Math.PI / 2 + rotationAngle + (i / count) * (Math.PI * 2);
-
-      const x3d = Math.cos(beadCenterAngle) * loopRadius;
-      const y3d = Math.sin(beadCenterAngle) * loopRadius;
-      const rotatedY = y3d * cosPitch;
-      const rotatedZ = y3d * sinPitch;
-
-      const cameraDistance = 450;
-      const perspectiveScale = cameraDistance / (cameraDistance - rotatedZ);
-
-      const x2d = centerX + x3d * perspectiveScale;
-      const y2d = centerY + rotatedY * perspectiveScale;
-      const dist = Math.hypot(clickX - x2d, clickY - y2d);
-
-      if (dist < baseRadius * 1.35 * perspectiveScale && dist < minDistance) {
-        minDistance = dist;
-        closestIndex = i;
+    for (const pb of sortedForHit) {
+      const dist = Math.hypot(x - pb.x2d, y - pb.y2d);
+      if (dist <= pb.drawRadius * 1.35) {
+        hitIndex = pb.index;
+        break;
       }
-    });
+    }
 
-    if (closestIndex !== -1) {
-      setActiveBeadIndex(closestIndex);
+    if (hitIndex !== -1) {
+      // Pressed on a bead -> Bead Drag-and-Drop Mode
+      setIsAutoSpin(false);
+      setActiveBeadIndex(hitIndex);
+      dragStartRef.current = { x, y, rawX: e.clientX, rawY: e.clientY };
+      setDragState({
+        type: "bead",
+        beadIndex: hitIndex,
+        canvasX: x,
+        canvasY: y,
+        hasMoved: false,
+        hoverIndex: hitIndex,
+        willRemove: false,
+      });
+    } else {
+      // Pressed on empty canvas -> 3D Orbit Rotate & Tilt Mode
+      setIsAutoSpin(false);
+      dragStartRef.current = { x, y, rawX: e.clientX, rawY: e.clientY };
+      setDragState({
+        type: "orbit",
+        startX: e.clientX,
+        startY: e.clientY,
+        startRot: rotationAngle,
+        startTilt: tiltAngle,
+      });
     }
   };
 
-  const activeBead = activeBeadIndex !== null ? beads[activeBeadIndex] : null;
-  const activeMaterial = activeBead ? getMaterialById(activeBead.materialId) : null;
+  // Pointer Move (Mouse & Touch) - Real-time Drag updates
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!dragState) return;
+
+    if (dragState.type === "orbit") {
+      const deltaX = e.clientX - dragState.startX;
+      const deltaY = e.clientY - dragState.startY;
+
+      // Drag horizontally to rotate 360°
+      const newRot = dragState.startRot + deltaX * 0.012;
+      setRotationAngle(newRot);
+
+      // Drag vertically to tilt 3D angle (0° to 50°)
+      const newTilt = Math.max(0, Math.min(50, dragState.startTilt - deltaY * 0.15));
+      setTiltAngle(newTilt);
+      return;
+    }
+
+    if (dragState.type === "bead") {
+      const { x, y } = getCanvasCoords(e);
+      const moveDist = Math.hypot(e.clientX - dragStartRef.current.rawX, e.clientY - dragStartRef.current.rawY);
+      const hasMoved = dragState.hasMoved || moveDist > 6;
+
+      const centerX = 250;
+      const centerY = 240;
+      const distFromCenter = Math.hypot(x - centerX, y - centerY);
+
+      const wristCm = wristSizeCm || 16;
+      const loopRadius = wristCm <= 24 ? Math.round(145 * (wristCm / 16)) : 180;
+
+      // Find closest bead slot in projected list
+      let closestSlotIndex = dragState.beadIndex;
+      let minSlotDist = Infinity;
+
+      projectedBeadsRef.current.forEach((pb) => {
+        const d = Math.hypot(x - pb.x2d, y - pb.y2d);
+        if (d < minSlotDist) {
+          minSlotDist = d;
+          closestSlotIndex = pb.index;
+        }
+      });
+
+      // Drag away to remove condition:
+      // 1. Dragged outward beyond bracelet loop (distFromCenter > loopRadius + 60)
+      // 2. Dragged into the center void hub (distFromCenter < 65)
+      // 3. Or distance to nearest bead slot is greater than 80px
+      const willRemove = distFromCenter > (loopRadius + 55) || distFromCenter < 65 || minSlotDist > 80;
+
+      setDragState({
+        ...dragState,
+        canvasX: x,
+        canvasY: y,
+        hasMoved,
+        hoverIndex: closestSlotIndex,
+        willRemove,
+      });
+    }
+  };
+
+  // Pointer Up (Mouse & Touch) - Drop to Reorder or Remove
+  const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!dragState) return;
+
+    if (dragState.type === "bead") {
+      if (dragState.hasMoved) {
+        if (dragState.willRemove) {
+          // Dragged away -> Remove Bead!
+          removeBead(dragState.beadIndex);
+          setActiveBeadIndex(null);
+        } else if (dragState.hoverIndex !== null && dragState.hoverIndex !== dragState.beadIndex) {
+          // Dropped on another slot -> Reorder Beads!
+          reorderBeads(dragState.beadIndex, dragState.hoverIndex);
+          setActiveBeadIndex(dragState.hoverIndex);
+        }
+      } else {
+        // Tap / Click on bead without dragging -> Select bead
+        setActiveBeadIndex(dragState.beadIndex);
+      }
+    } else if (dragState.type === "orbit") {
+      const moveDist = Math.hypot(e.clientX - dragStartRef.current.rawX, e.clientY - dragStartRef.current.rawY);
+      if (moveDist < 4) {
+        // Tapped empty background -> deselect bead
+        setActiveBeadIndex(null);
+      }
+    }
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    setDragState(null);
+  };
 
   return (
     <div className="zen-silk-tray zen-corner-brass rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden border border-amber-500/30 shadow-2xl">
@@ -369,54 +579,49 @@ export function BeadCanvas() {
         </div>
       </div>
 
-      {/* Interactive 3D Orbit Canvas */}
-      <div className="relative cursor-grab active:cursor-grabbing select-none">
+      {/* Interactive 3D Orbit & Bead Drag Canvas */}
+      <div className={`relative select-none ${dragState?.type === "bead" ? "cursor-grabbing" : "cursor-grab"}`}>
         <canvas
           ref={canvasRef}
-          onClick={handleCanvasClick}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ touchAction: "none" }}
           className="rounded-full shadow-2xl transition-transform"
         />
 
-        {/* Center Canvas Hub Status (东方金石印章宣纸风格) */}
+        {/* Center Canvas Dynamic Drag Feedback (Only shown while actively dragging beads) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4">
-          {activeMaterial ? (
-            <div className="space-y-1.5 bg-[#140b06]/95 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-amber-500/50 shadow-2xl max-w-[230px] animate-fadeIn">
-              <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-400 font-serif">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>{lang === "zh" ? "当前选中灵珠" : "Selected Bead"}</span>
-              </div>
-              <p className="text-sm font-bold text-amber-100 font-serif truncate">
-                {lang === "zh" ? activeMaterial.nameZh : activeMaterial.name}
-              </p>
-              <p className="text-xs text-amber-300/90 font-mono">
-                {activeBead?.sizeMm}mm • ${activeMaterial.basePrice}
-              </p>
-              {activeMaterial.aromaNote && (
-                <p className="text-[10px] text-amber-200/80 italic font-serif line-clamp-1">
-                  🌿 {lang === "zh" ? activeMaterial.aromaNoteZh : activeMaterial.aromaNote}
+          {dragState?.type === "bead" && dragState.hasMoved ? (
+            dragState.willRemove ? (
+              <div className="space-y-1 bg-red-950/95 backdrop-blur-md px-5 py-3 rounded-2xl border border-red-500/70 shadow-2xl animate-pulse text-center">
+                <p className="text-red-200 text-xs font-bold font-serif flex items-center justify-center gap-1.5">
+                  <Trash2 className="w-4 h-4 text-red-400" />
+                  <span>{lang === "zh" ? "松开鼠标 / 手指即可移除此珠" : "Release to remove this bead"}</span>
                 </p>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-1 bg-[#140b06]/80 px-4 py-2 rounded-xl border border-amber-500/20">
-              <p className="text-amber-300/60 text-xs font-serif">
-                {lang === "zh" ? "🖱️ 鼠标拖拽可 360° 旋转手串" : "🖱️ Drag to rotate 360° in 3D"}
-              </p>
-              <p className="text-[10px] text-amber-400/40 font-serif">
-                {lang === "zh" ? "点击任意珠子即可替换材质" : "Click any bead to replace"}
-              </p>
-            </div>
-          )}
+                <p className="text-[10px] text-red-300/70 font-serif">
+                  {lang === "zh" ? "拖回圆环手串可取消移除" : "Drag back to bracelet to cancel"}
+                </p>
+              </div>
+            ) : dragState.hoverIndex !== null && dragState.hoverIndex !== dragState.beadIndex ? (
+              <div className="space-y-1 bg-amber-950/95 backdrop-blur-md px-5 py-3 rounded-2xl border border-amber-500/60 shadow-2xl text-center">
+                <p className="text-amber-200 text-xs font-bold font-serif flex items-center justify-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span>{lang === "zh" ? `换位至第 ${dragState.hoverIndex + 1} 颗位置` : `Drop to swap with #${dragState.hoverIndex + 1}`}</span>
+                </p>
+                <p className="text-[10px] text-amber-300/70 font-serif">
+                  {lang === "zh" ? "松开手指/鼠标即可完成换位" : "Release to complete reorder"}
+                </p>
+              </div>
+            ) : null
+          ) : null}
         </div>
       </div>
 
       {/* Canvas Bottom Quick Tip */}
       <p className="text-[11px] text-amber-200/60 mt-2 text-center font-serif">
-        🪵 {lang === "zh" ? "紧密贴合无缝成串 · 支持 360° 自由旋转与 3D 景深俯仰 · 拖动下方滑块预览十年包浆" : "Seamless Mala Strung Contact • 360° 3D Orbit & Tilt • Slide below for 10-Yr Patina Transformation"}
+        🪵 {lang === "zh" ? "按住珠子即可直接拖拽换位与拖离手串移除 · 拖拽空白处 360° 旋转 · 滑块预览十年包浆" : "Direct Drag to Reorder & Remove • Drag canvas to orbit 360° • Slide below for 10-Yr Patina"}
       </p>
 
       {/* Wrist Circumference Customizer Modal */}

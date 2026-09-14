@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShieldCheck, TreePine, Sparkles, Heart, FileText, Calculator, Layers, Mail, MessageCircle, X } from "lucide-react";
+import { ZenCraftLogo } from "@/components/ZenCraftLogo";
 
 export function Footer() {
   const { lang, t } = useLanguage();
@@ -76,9 +77,9 @@ export function Footer() {
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-amber-400 font-serif font-black text-xl">禅</span>
-            <span className="text-base font-bold text-white">ZenCraft Atelier</span>
+          <div className="flex items-center gap-2.5">
+            <ZenCraftLogo size={32} />
+            <span className="text-base font-bold text-white font-serif">ZenCraft Atelier</span>
           </div>
           <p className="text-slate-400 text-xs leading-relaxed font-serif">
             {t("footerText")}

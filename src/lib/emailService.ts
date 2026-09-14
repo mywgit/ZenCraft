@@ -99,7 +99,7 @@ export function generateWorkshopWorkOrderEmailHtml(order: OrderRecord, origin: s
   const adminUrl = `${origin}/admin/orders`;
 
   const sequenceRows = (item.details?.beadsSequence || [])
-    .map((s) => `<li style="margin-bottom: 4px;"><strong>#${s.position}</strong>: ${s.nameZh} (${s.sizeMm}mm)</li>`)
+    .map((s) => `<li style="margin-bottom: 4px;"><strong>#${s.index + 1}</strong>: ${s.nameZh} (${s.sizeMm}mm)</li>`)
     .join("");
 
   const materialCountRows = (item.details?.materialCounts || [])

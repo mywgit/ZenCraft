@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n";
 import { Sparkles, ChevronDown, Menu, X } from "lucide-react";
+import { ZenCraftLogo } from "@/components/ZenCraftLogo";
 
 export function Header() {
   const { lang, setLang, t } = useLanguage();
@@ -18,12 +19,10 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-[#100a06]/85 border-b border-amber-900/40 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Brand Logo with Cinnabar Seal */}
+        {/* Brand Logo with Pure Vector Luxury Crest */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 via-red-700 to-amber-800 p-0.5 shadow-lg shadow-red-950/60 flex items-center justify-center border border-red-500/40">
-            <span className="text-white font-serif font-black text-lg group-hover:scale-110 transition-transform">
-              禅
-            </span>
+          <div className="shrink-0 group-hover:scale-105 transition-transform drop-shadow-[0_2px_10px_rgba(245,158,11,0.25)]">
+            <ZenCraftLogo size={46} />
           </div>
           <div>
             <span className="text-lg font-bold font-serif text-amber-100 tracking-wide flex items-center gap-1.5">
