@@ -5,6 +5,7 @@ import { StudioProvider } from "@/context/StudioContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Analytics } from "@/components/Analytics";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zen.puretoolhub.com"),
@@ -29,17 +30,7 @@ export const metadata: Metadata = {
   authors: [{ name: "ZenCraft Atelier Team", url: "https://zen.puretoolhub.com" }],
   creator: "ZenCraft",
   alternates: {
-    canonical: "https://zen.puretoolhub.com",
-    languages: {
-      "en-US": "https://zen.puretoolhub.com",
-      "zh-CN": "https://zen.puretoolhub.com",
-      "es-ES": "https://zen.puretoolhub.com",
-      "pt-BR": "https://zen.puretoolhub.com",
-      "de-DE": "https://zen.puretoolhub.com",
-      "fr-FR": "https://zen.puretoolhub.com",
-      "ja-JP": "https://zen.puretoolhub.com",
-      "x-default": "https://zen.puretoolhub.com",
-    },
+    canonical: "/",
   },
   openGraph: {
     title: "ZenCraft - Interactive Zen Mala & Custom Energy Bracelet Atelier",
@@ -72,6 +63,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <JsonLd />
+      </head>
       <body className="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
         <LanguageProvider>
           <StudioProvider>
