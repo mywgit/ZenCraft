@@ -43,7 +43,7 @@ export function JsonLd() {
         name: "What is the Patina Time Slider, and will the wooden beads really change color?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes! Authentic wild timbers such as Green Sandalwood and Gold Phoebe are rich in natural essential oils. As you wear and meditate with them, they absorb body warmth and natural oils, developing a lustrous, amber-like protective glass sheen (patina). Our time slider simulates this natural aging transformation from Day 1 to Year 10.",
+          text: "Yes! Authentic sacred timbers such as Gold Phoebe, Sinking Ebony, and Zambian Bloodwood are rich in natural essential oils. As you wear and meditate with them, they absorb body warmth and natural oils, developing a lustrous, amber-like protective glass sheen (patina). Our time slider simulates this natural aging transformation from Day 1 to Year 10.",
         },
       },
       {

@@ -34,7 +34,7 @@ export default function HomePage() {
       nameEn: "Imperial Gold Phoebe Nanmu",
       price: 268,
       origPrice: 350,
-      image: "/products/master-zitan.jpg",
+      image: "/products/gallery-bodhi.jpg",
       badge: "镇店之宝",
     },
     {
@@ -47,13 +47,13 @@ export default function HomePage() {
       badge: "极品原矿",
     },
     {
-      id: "master-green-sandalwood",
-      nameZh: "天然野生老料绿檀",
-      nameEn: "Wild Green Sandalwood",
-      price: 158,
-      origPrice: 198,
-      image: "/products/master-chenxiang.jpg",
-      badge: "天然香圣",
+      id: "master-phoebe-sinking",
+      nameZh: "四川百年沉水金丝楠",
+      nameEn: "Imperial Gold Phoebe",
+      price: 198,
+      origPrice: 258,
+      image: "/products/gallery-bodhi.jpg",
+      badge: "帝王圣木",
     },
   ];
 
@@ -80,7 +80,7 @@ export default function HomePage() {
       nameEn: "Imperial Liquid Gold Phoebe",
       sceneDesc: "白丝衬底 · 浮光跃金古树老料",
       price: 268,
-      image: "/products/gallery-zitan.jpg",
+      image: "/products/gallery-bloodwood.jpg",
     },
     {
       id: "master-nanhong-macro",
@@ -100,8 +100,8 @@ export default function HomePage() {
           : "What is the Patina Time Slider, and will the wooden beads really change color?",
       a:
         lang === "zh"
-          ? "是的！天然野生绿檀、金丝楠和紫檀等名贵木材富含天然油脂与活性芳香成分。随着佩戴者体温与油脂的滋养，木珠表层会氧化形成一层如琥珀琉璃般的玻璃底保护层（俗称包浆）。我们的时光机滑块让您在定制时就能直观预览 1~10 年后的温润蜕变效果。"
-          : "Yes! Authentic wild timbers such as Green Sandalwood and Gold Phoebe are rich in natural essential oils. As you wear and meditate with them, they absorb body warmth and natural oils, developing a lustrous, amber-like protective glass sheen (patina). Our time slider simulates this natural aging transformation from Day 1 to Year 10.",
+          ? "是的！四川金丝楠、沉水黑檀和赞比亚血檀等名贵硬木富含天然油脂与活性芳香成分。随着佩戴者体温与油脂的滋养，木珠表层会氧化形成一层如琥珀琉璃般的玻璃底保护层（俗称包浆）。我们的时光机滑块让您在定制时就能直观预览 1~10 年后的温润蜕变效果。"
+          : "Yes! Authentic sacred timbers such as Gold Phoebe, Sinking Ebony, and Zambian Bloodwood are rich in natural essential oils. As you wear and meditate with them, they absorb body warmth and natural oils, developing a lustrous, amber-like protective glass sheen (patina). Our time slider simulates this natural aging transformation from Day 1 to Year 10.",
     },
     {
       q:
@@ -120,8 +120,8 @@ export default function HomePage() {
           : "How is the 7-Chakras & Zodiac Energy Profile calculated?",
       a:
         lang === "zh"
-          ? "我们根据东方五行（木火土金水）与古印度阿育吠陀七脉轮（Chakra）能量学，将绿檀（心轮）、黑檀（海底轮）、青金石（三眼轮）、绿松石（喉轮）等材质的共振频率编码进算法中。您在画布上的每一步搭配，系统都会实时动态计算出最契合您的能量场平衡报告。"
-          : "Our energy engine combines Eastern Five Elements and Ayurvedic 7-Chakra crystal resonance principles. Each sacred wood and gemstone emits unique energetic frequencies (e.g. Green Sandalwood for Heart Chakra, Ebony for Root Grounding, Turquoise for Throat Truth). As you arrange your beads, the system dynamically analyzes and scores your balance.",
+          ? "我们根据东方五行（木火土金水）与古印度阿育吠陀七脉轮（Chakra）能量学，将太行崖柏（心轮）、沉水黑檀（海底轮）、青金石（三眼轮）、绿松石（喉轮）等材质的共振频率编码进算法中。您在画布上的每一步搭配，系统都会实时动态计算出最契合您的能量场平衡报告。"
+          : "Our energy engine combines Eastern Five Elements and Ayurvedic 7-Chakra crystal resonance principles. Each sacred wood and gemstone emits unique energetic frequencies (e.g. Taihang Thuja for Heart Chakra, Ebony for Root Grounding, Turquoise for Throat Truth). As you arrange your beads, the system dynamically analyzes and scores your balance.",
     },
     {
       q:
@@ -332,8 +332,8 @@ export default function HomePage() {
             </h3>
             <p className="text-xs text-amber-200/70 leading-relaxed font-serif">
               {lang === "zh"
-                ? "野生绿檀与崖柏天然散发纯净檀香，随每日把玩吸收油脂，在手中逐渐氧化为如羊脂白玉或琥珀般的温润镜面包浆。"
-                : "Verawood and cypress breathe natural aromatic essential oils. Daily meditation and wear deepens its color into a silky, jade-like heirloom."}
+                ? "太行崖柏与金丝楠天然散发清幽香气，随每日把玩吸收油脂，在手中逐渐氧化为如琥珀琉璃般的温润镜面包浆。"
+                : "Sacred cypress and gold nanmu breathe natural aromatic essential oils. Daily meditation and wear deepens its color into a silky, jade-like heirloom."}
             </p>
           </div>
 

@@ -229,11 +229,11 @@ export function calculateEnergyProfile(beads: SelectedBead[]): EnergyAnalysisRes
     aromaDescription:
       woodCount > 0
         ? "Exudes organic sacred timber aroma. Rub beads to release essential oils for immediate nervous system grounding."
-        : "Add sacred sandalwood or cypress beads to infuse natural aromatherapy.",
+        : "Add sacred cypress or golden camphor beads to infuse natural aromatherapy.",
     aromaDescriptionZh:
       woodCount > 0
         ? "散发天然野生原木清香。双手轻揉珠体即可释放天然挥发油，抚平浮躁，深层安抚神经系统。"
-        : "加入天然檀木或崖柏以获得植物芳香疗愈。",
+        : "加入太行崖柏或黄金樟以获得植物芳香疗愈。",
     blessingTitle: "Harmonized Energy Guardian",
     blessingTitleZh: "天人合一 · 专属护身符",
     blessingQuote: `Blessed with the vitality of natural ${dominantElement.toUpperCase()} element and aligned with your ${CHAKRA_METADATA[topChakra].name}.`,

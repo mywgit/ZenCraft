@@ -49,7 +49,7 @@ export function EnergyReport() {
       nameEn: mat?.name || "Sacred Bead",
       sizeMm: b.sizeMm,
       color: mat?.colors.base || "#caa472",
-      image: mat?.image || "/beads/green-sandalwood.png",
+      image: mat?.image || "/beads/gold-phoebe.png",
     };
   });
 
@@ -64,7 +64,7 @@ export function EnergyReport() {
         nameEn: mat?.name || "Sacred Bead",
         count: 0,
         sizeMm: b.sizeMm,
-        image: mat?.image || "/beads/green-sandalwood.png",
+        image: mat?.image || "/beads/gold-phoebe.png",
       };
     }
     countMap[key].count += 1;
@@ -78,7 +78,7 @@ export function EnergyReport() {
     title: `Bespoke Imperial Zen Mala (${energyResult.totalBeads} Beads)`,
     titleZh: `紫禁宫廷造办正统老料高定手串 (${energyResult.totalBeads} 颗精选)`,
     category: "custom-mala",
-    image: "/products/master-zitan.jpg",
+    image: "/products/gallery-bodhi.jpg",
     priceUsd: energyResult.totalPriceUsd,
     quantity: 1,
     details: {
@@ -324,7 +324,7 @@ export function EnergyReport() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                <span>{lang === "zh" ? "宫廷京作野生老料（紫檀/金丝楠/沉香）一对一专属定制" : "1-on-1 bespoke crafting with imperial wild-sourced timbers"}</span>
+                <span>{lang === "zh" ? "宫廷京作珍贵老料（金丝楠/黑檀/崖柏/血檀）一对一专属定制" : "1-on-1 bespoke crafting with certified compliant imperial timbers"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />

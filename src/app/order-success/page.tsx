@@ -94,7 +94,7 @@ function OrderSuccessContent() {
         title: "Bespoke Imperial Sacred Wood Mala (18 Beads)",
         titleZh: "紫禁宫廷造办正统老料高定手串 (18 颗)",
         category: "custom-mala",
-        image: "/products/master-zitan.jpg",
+        image: "/products/gallery-bodhi.jpg",
         priceUsd: 118.0,
         quantity: 1,
         details: {

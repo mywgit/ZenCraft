@@ -6,15 +6,12 @@ const beadImageCache: Record<string, HTMLImageElement> = {};
 if (typeof window !== "undefined") {
   // Eagerly preload all 30 bead assets
   const beadAssetMap: Record<string, string> = {
-    "green-sandalwood": "/beads/green-sandalwood.png",
+    "zambian-bloodwood": "/beads/bloodwood.png",
+    "chickenwing-wood": "/beads/chickenwing-wood.png",
     "gold-phoebe": "/beads/gold-phoebe.png",
     "ebony-wood": "/beads/ebony-wood.png",
-    "rosewood": "/beads/rosewood.png",
     "thuja-cypress": "/beads/thuja-cypress.png",
     "peach-wood": "/beads/peach-wood.png",
-    "red-sandalwood": "/beads/red-sandalwood.png",
-    "hainan-huanghuali": "/beads/hainan-huanghuali.png",
-    "indian-sandalwood": "/beads/indian-sandalwood.png",
     "star-moon-bodhi": "/beads/star-moon-bodhi.png",
     "white-bodhi": "/beads/white-bodhi.png",
     "golden-camphor": "/beads/golden-camphor.png",

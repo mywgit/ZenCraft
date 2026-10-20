@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   keywords: [
     "mala beads",
     "custom wood bracelet",
-    "sandalwood bracelet",
+    "gold phoebe mala",
     "buddhist prayer beads",
     "chakra healing bracelet",
     "diy bead customizer",
-    "green sandalwood mala",
+    "thuja cypress mala",
     "gold phoebe bracelet",
     "zen jewelry",
     "energy bracelet design",

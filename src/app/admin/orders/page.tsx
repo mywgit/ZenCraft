@@ -70,12 +70,12 @@ function getBeadSequenceForOrder(item: OrderRecord["items"][0]): BeadSequenceIte
     } else if (i % 2 === 0) {
       seq.push({
         index: i,
-        materialId: "green-sandalwood",
-        nameZh: "天然野生老料绿檀",
-        nameEn: "Green Sandalwood",
+        materialId: "zambian-bloodwood",
+        nameZh: "赞比亚高密老料血檀",
+        nameEn: "Zambian Bloodwood",
         sizeMm: 10,
-        color: "#5f6f52",
-        image: "/beads/green-sandalwood.png",
+        color: "#881337",
+        image: "/beads/bloodwood.png",
       });
     } else {
       seq.push({
@@ -176,14 +176,14 @@ export default function AdminOrdersPage() {
               title: "Bespoke Imperial Zen Mala (24 Beads)",
               titleZh: "紫禁宫廷造办正统老料高定手串 (24 颗精选)",
               category: "custom-mala",
-              image: "/products/master-zitan.jpg",
+              image: "/products/gallery-bodhi.jpg",
               priceUsd: 146.23,
               quantity: 1,
               details: {
                 wearerName: "Mindful Seeker",
                 beadCount: 24,
                 dominantElement: "wood",
-                materialsSummaryZh: "天然野生老料绿檀 10mm (11颗) + 四川百年金丝楠 10mm (10颗) + 纯银莲花三通 (1颗) + 黄铜隔片 (2颗)",
+                materialsSummaryZh: "赞比亚高密血檀 10mm (11颗) + 四川百年金丝楠 10mm (10颗) + 纯银莲花三通 (1颗) + 黄铜隔片 (2颗)",
               },
             },
           ],
@@ -536,7 +536,7 @@ export default function AdminOrdersPage() {
               <p className="text-xs text-amber-200/80 font-serif leading-relaxed">
                 ✦ 搭配构成:{" "}
                 {selectedOrder.items[0].details?.materialsSummaryZh ||
-                  "天然野生老料绿檀 10mm + 四川百年金丝楠 10mm + 925纯银莲花三通 + 黄铜隔片"}
+                  "赞比亚高密血檀 10mm + 四川百年金丝楠 10mm + 925纯银莲花三通 + 黄铜隔片"}
               </p>
             </div>
 

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "ZenCraft Market - Curated Ready-to-Ship Artifacts",
-    description: "Authentic aged sandalwood, gold nanmu malas, and hand-carved tea pets.",
+    description: "Authentic aged gold nanmu, sinking ebony, and hand-carved tea pets.",
     url: "https://zen.puretoolhub.com/market",
   },
 };

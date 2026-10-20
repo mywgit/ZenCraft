@@ -35,23 +35,23 @@ const StudioContext = createContext<StudioContextType | undefined>(undefined);
 // 18 Uniform 10mm Beads (Classic Standard Mala)
 const DEFAULT_PRESET_BEADS: SelectedBead[] = [
   { id: "b-0", materialId: "silver-lotus", sizeMm: 10 }, // Guru Centerpiece
-  { id: "b-1", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-2", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-1", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-2", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-3", materialId: "natural-turquoise", sizeMm: 10 },
-  { id: "b-4", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-5", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-4", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-5", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-6", materialId: "brass-ring", sizeMm: 10 },
-  { id: "b-7", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-8", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-7", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-8", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-9", materialId: "gold-phoebe", sizeMm: 10 },
-  { id: "b-10", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-11", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-10", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-11", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-12", materialId: "brass-ring", sizeMm: 10 },
-  { id: "b-13", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-14", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-13", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-14", materialId: "gold-phoebe", sizeMm: 10 },
   { id: "b-15", materialId: "natural-turquoise", sizeMm: 10 },
-  { id: "b-16", materialId: "green-sandalwood", sizeMm: 10 },
-  { id: "b-17", materialId: "green-sandalwood", sizeMm: 10 },
+  { id: "b-16", materialId: "gold-phoebe", sizeMm: 10 },
+  { id: "b-17", materialId: "gold-phoebe", sizeMm: 10 },
 ];
 
 export function StudioProvider({ children }: { children: React.ReactNode }) {

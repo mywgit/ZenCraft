@@ -58,7 +58,7 @@ export default function MarketPage() {
         </h1>
         <p className="text-xs sm:text-sm text-amber-200/70 font-serif leading-relaxed">
           {lang === "zh"
-            ? "精选大城百年老料金丝楠、高密小叶紫檀、原矿南红与纯手工立体雕刻茶宠把件。一物一图，孤品结缘，24小时内实木礼盒发货。"
+            ? "精选大城百年老料金丝楠、赞比亚高密血檀、原矿南红与纯手工立体雕刻茶宠把件。一物一图，孤品结缘，24小时内实木礼盒发货。"
             : "Hand-selected heirloom malas, dragon tea pets, and solid wood desk guardians crafted from authentic Dacheng aged timber. Ready to ship in 24 hours."}
         </p>
       </div>

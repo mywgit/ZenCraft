@@ -53,7 +53,7 @@ export function MaterialPicker() {
             onClick={() => loadPreset("grounding")}
             className="px-3 py-1 rounded-xl bg-[#140b06] hover:bg-amber-950/80 text-amber-200 hover:text-amber-100 border border-amber-900/50 text-xs font-serif transition-all"
           >
-            🌿 {lang === "zh" ? "绿檀静心" : "Grounding Calm"}
+            🌿 {lang === "zh" ? "金丝楠静心" : "Grounding Calm"}
           </button>
           <button
             onClick={() => loadPreset("wealth")}

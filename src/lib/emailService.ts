@@ -77,7 +77,7 @@ export function generateOrderConfirmationEmailHtml(order: OrderRecord, origin: s
       <div style="font-size: 12px; color: #a8a29e; line-height: 1.6;">
         <p><strong>随包裹专属礼遇包含：</strong></p>
         <ul style="padding-left: 20px; margin-top: 4px;">
-          <li>天然沉香实木珍藏礼盒 (Bespoke Wooden Gift Box)</li>
+          <li>大城京作实木珍藏礼盒 (Bespoke Wooden Gift Box)</li>
           <li>京作宫廷工坊烫金七脉轮能量防伪证书 (Gold-Foil Certificate)</li>
           <li>进口高弹力水晶穿绳与备用引线配件包</li>
         </ul>

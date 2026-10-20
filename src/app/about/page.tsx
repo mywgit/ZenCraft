@@ -41,7 +41,7 @@ export default function AboutPage() {
           </h2>
           <p>
             {lang === "zh"
-              ? "数百年来，自明清紫禁城宫廷造办处起，京作非遗木作工坊便汇聚华夏最顶尖的木作匠师，专为帝皇与皇室宗亲精雕细琢御用沉香、小叶紫檀、金丝楠与案头文房雅件。工坊承袭皇家内府最严苛的选料与车旋标准，至今仍守护着数十年自然陈化珍稀老料仓储与高精密手工车旋打磨技艺。"
+              ? "数百年来，自明清紫禁城宫廷造办处起，京作非遗木作工坊便汇聚华夏最顶尖的木作匠师，专为帝皇与皇室宗亲精雕细琢御用金丝楠、高密沉水黑檀、太行崖柏、赞比亚血檀与案头文房雅件。工坊承袭皇家内府最严苛的选料与车旋标准，至今仍守护着数十年自然陈化珍稀老料仓储与高精密手工车旋打磨技艺。"
               : "For centuries dating back to the Forbidden City's Imperial Palace Workshops (Zaobanchu), master artisans of the Jingzuo Guild crafted priceless sacred wood treasures and malas exclusively for royalty. Today, our atelier preserves this unbroken royal standard—guarding seasoned, decades-aged old stock and master-level hand-turning arts."}
           </p>
           <p>
@@ -103,8 +103,8 @@ export default function AboutPage() {
               </div>
               <p className="text-xs text-slate-400 font-sans">
                 {lang === "zh"
-                  ? "工坊严格选用野生绿檀、四川百年老料金丝楠、高密东非黑檀等国际海关免检的合规木种，零濒危违规风险，安心直邮全球。"
-                  : "We strictly use certified sustainable species (Green Sandalwood, Gold Phoebe, Ebony, Cypress) with 0 CITES violation risks."}
+                  ? "工坊严格选用四川百年老料金丝楠、高密沉水黑檀、太行陈化崖柏、赞比亚高密血檀等国际海关免检的 100% 绿色合规木种，零濒危违规风险，安心直邮全球。"
+                  : "We strictly use certified CITES-exempt species (Gold Phoebe, Sinking Ebony, Taihang Cypress, Zambian Bloodwood) with 0 customs risk."}
               </p>
             </div>
           </div>
